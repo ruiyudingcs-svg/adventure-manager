@@ -9,10 +9,11 @@ loop, not to build the full planned game.
 
 Read these documents before relevant work:
 
-- `docs/01_v0.1_product_spec.md`
-- `docs/02_core_loop_and_rules.md`
-- `docs/03_godot_architecture.md`
-- `docs/04_data_model.md`
+- `docs/README.md`
+- `docs/product/01_v0.1_product_spec.md`
+- `docs/rules/02_core_loop_and_rules.md`
+- `docs/architecture/03_godot_architecture.md`
+- `docs/architecture/04_data_model.md`
 - the task file referenced by the user
 
 When documents conflict, product scope wins over implementation convenience.
