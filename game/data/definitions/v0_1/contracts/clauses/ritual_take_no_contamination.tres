@@ -1,0 +1,56 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_cdaoa"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_6alvd"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_1ql07"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_igulq"]
+
+[sub_resource type="Resource" id="Resource_pv653"]
+script = ExtResource("1_cdaoa")
+type = &"outcome_tag_absent"
+tag_value = &"contaminated_material_taken"
+
+[sub_resource type="Resource" id="Resource_hdgev"]
+script = ExtResource("2_6alvd")
+type = &"modify_reward_percent"
+amount = -20
+reason_code = &"ritual_take_no_contamination_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_hg2sa"]
+script = ExtResource("2_6alvd")
+type = &"modify_sponsor_relation"
+amount = -6
+reason_code = &"ritual_take_no_contamination_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_tsqs3"]
+script = ExtResource("3_1ql07")
+taboo_tolerance = 3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_yv6wd"]
+script = ExtResource("2_6alvd")
+type = &"modify_sponsor_relation"
+amount = 2
+reason_code = &"ritual_take_no_contamination_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_4a4ay"]
+script = ExtResource("3_1ql07")
+taboo_tolerance = -2
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_igulq")
+id = &"ritual_take_no_contamination"
+display_name_key = &"clause.ritual_take_no_contamination.name"
+description_key = &"clause.ritual_take_no_contamination.description"
+category = &"method"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_cdaoa")]([SubResource("Resource_pv653")])
+success_effects = Array[ExtResource("2_6alvd")]([SubResource("Resource_yv6wd")])
+failure_effects = Array[ExtResource("2_6alvd")]([SubResource("Resource_hdgev"), SubResource("Resource_hg2sa")])
+breach_result_cap = &"partial"
+success_ideology_impact = SubResource("Resource_4a4ay")
+failure_ideology_impact = SubResource("Resource_tsqs3")
+success_tags = Array[StringName]([&"clause.ritual_take_no_contamination.satisfied"])
+failure_tags = Array[StringName]([&"clause.ritual_take_no_contamination.breached"])
+priority = 20

@@ -37,6 +37,7 @@ res://
 │   ├── app/
 │   │   ├── app_root.tscn
 │   │   ├── app_root.gd
+│   │   ├── game_session.gd
 │   │   └── scene_router.gd
 │   ├── core/
 │   │   ├── ids/
@@ -54,10 +55,13 @@ res://
 │   │   ├── definitions/
 │   │   └── catalogs/
 │   ├── features/
+│   │   ├── shared/
 │   │   ├── dashboard/
 │   │   ├── roster/
 │   │   ├── contract_planning/
-│   │   └── resolution/
+│   │   ├── resolution/
+│   │   ├── ending/
+│   │   └── onboarding/
 │   ├── ui/
 │   │   ├── components/
 │   │   ├── theme/
@@ -111,6 +115,11 @@ Domain 不得访问场景树、按钮、标签或动画。
 
 静态内容定义：成员模板、合同、阵营、局势、世界问题、阵营行动和触发器。通过自定义 `Resource` 和 `.tres` 文件编辑。
 
+`.tres` 使用类型化 `*DefinitionResource` authoring graph；DataCatalog 完整校验后
+把它编译为 Domain 已有的构造后只读 Definition。Authoring Resource 不直接进入
+Resolver 或 CampaignState。使用显式 ContentManifest，不扫描目录猜测内容。
+完整边界见 `docs/19_content_catalog_state_and_situation_rules.md`。
+
 ### 4.4 Features
 
 面向玩家的界面流程。每个功能目录同时包含场景、展示模型和界面脚本。
@@ -161,14 +170,20 @@ V0.1 最多使用三个 Autoload：
 ### `GameSession`
 
 持有当前 `CampaignState`，协调新游戏、读档、保存和周推进。它不包含具体公式。
+新战役必须委托纯 CampaignBootstrapper；合同预测必须委托纯
+ContractForecastService；保存和加载必须委托非 Autoload SaveService。它只在完整
+typed result 成功后替换正式 CampaignState，并对外返回 detached snapshot。
 
 ### `DataCatalog`
 
 只读加载静态定义，并通过稳定 ID 查询。
+Task 005 先实现可独立实例化和测试的类型，Task 006 提供合法默认 manifest 后才
+注册为 Autoload。加载、校验和编译在临时索引中完成，失败不得发布部分目录。
 
 ### `SceneRouter`
 
-控制四个主要界面之间的切换。
+控制 Dashboard、Contracts、Roster、Resolution 四个主要界面之间的切换。它不持有
+CampaignState，也不把 signal 当作业务工作流。
 
 禁止创建无边界的全局 `EventBus`。优先使用明确对象引用和局部 signals。只有跨越整个应用生命周期且没有自然所有者的事件，才考虑加入全局信号。
 
@@ -186,7 +201,18 @@ ContractResolver 不重新读取当前世界钟，不直接修改 CampaignState�
 
 ### `WeeklyUpkeepResolver`
 
-为周开场生成工资、维护、恢复、伤病倒计时、士气和关系自然衰减的待应用变化与原因。它不处理世界问题、合同或阵营意图。
+为周开场生成工资、治疗、维护、恢复、伤病倒计时、近期计数与资金不足后果的待应用
+变化和原因。它接收冻结的 `WeeklyParticipationSnapshot`，不读取或解释合同历史，
+也不处理世界问题、Offer、合同 Definition 或阵营意图。V0.1 不应用 morale 或成员
+关系自然衰减。
+
+### `CampaignHistoryQuery`
+
+从 `CampaignState.contract_history` 只读派生指定周的
+`WeeklyParticipationSnapshot`。它不修改状态、不持有缓存，也不复制出勤历史；
+`ContractHistoryEntry` 始终是唯一权威记录。它是 Campaign 领域的查询模块，不是
+拥有规则和状态变化的第八个领域服务。Task 011 只实现上一周参与查询，生涯统计、
+表现聚合和历史 UI 留待后续任务。
 
 ### `SituationResolver`
 
@@ -210,7 +236,7 @@ Planner 直接创建行动承诺所需数据；不创建 ContractProposalCandida
 
 将 `CampaignState` 转为版本化 Dictionary/JSON，并恢复状态。
 
-`SaveService` 属于持久化基础设施，不计入七个领域服务。前述七个领域服务应尽量为 `RefCounted`，无场景树依赖。条款、态度、紧迫度和提出方关系可以是服务内部的小型纯函数或私有 RefCounted helper，不作为额外顶层协调者。
+`SaveService` 属于持久化基础设施，不计入七个领域服务。前述七个领域服务应尽量为 `RefCounted`，无场景树依赖。只读历史查询同样不计入领域服务数量。条款、态度、紧迫度和提出方关系可以是服务内部的小型纯函数或私有 RefCounted helper，不作为额外顶层协调者。
 
 ## 8. 命令与结果模型
 
@@ -262,6 +288,7 @@ ContractDefinition + locked ContractInstantiationSnapshot
 → four PhaseResult / CheckResult pairs
 → MissionContext changes
 → preliminary weighted tier and check failure caps
+→ operational tier and deterministic member injury rolls
 → internal clause evaluation and breach caps
 → final outcome table and reward
 → internal member evaluation + sponsor relation
@@ -304,13 +331,19 @@ Signals 用于通知，不用于隐藏控制流。
 ```text
 AppRoot (Control)
 ├── Background
-├── TopBar
-├── Navigation
-├── ScreenContainer
+├── AppShell
+│   ├── Sidebar
+│   ├── TopToolbar
+│   └── ScreenContainer
 └── ModalLayer
 ```
 
 ScreenContainer 每次只挂载一个主要 Feature 场景。
+
+Sidebar 只负责四个全局目的地；标题下方只允许一行当前页面上下文选项卡；
+TopToolbar 只负责页面标题、周、Gold、Reputation、未读消息、保存和唯一主动作。
+Resolution 在没有 GameSession review snapshot 时禁用。详细布局与阶段动作见
+`docs/22_campaign_bootstrap_forecast_and_ui_shell.md` 第 4、6 节。
 
 ### Feature 场景
 
@@ -348,6 +381,11 @@ ContractCardViewData
 
 Dashboard 的世界问题 ViewData 由 Presenter 读取 `ProblemUrgencyResult`，显示紧迫度等级、问题剩余响应回合和最多两个玩家可见主要原因。精确分数只进入调试与遥测展示。
 
+合同预测 ViewData 由 ContractForecastService 使用正式 Resolver 的 64 个独立稳定
+样本生成。预测 seed 不得等于 Offer locked seed；界面只显示较可能 tier 区间、四档
+伤病风险、五档条款状态和最多两个价值观警告。Presenter 可以按 Offer ID 与 plan
+signature 做场景生命周期缓存，但缓存不写 CampaignState 或存档。
+
 ## 12. 随机数
 
 所有模拟入口都必须接收 `RandomNumberGenerator` 或明确 seed。
@@ -363,10 +401,35 @@ Dashboard 的世界问题 ViewData 由 Presenter 读取 `ProblemUrgencyResult`�
 ```text
 campaign_seed
 week_seed = hash(campaign_seed, week_index)
-offer_seed = hash(week_seed, offer_instance_id, "contract_resolution")
+offer_instance_id = stable_id("contract_offer", offered_week, faction_id,
+                              contract_definition_id, origin_type,
+                              related_problem_id, target_lock_key)
+offer_seed = StableSeed.derive(campaign_seed,
+                               [offer_instance_id, "contract_resolution"])
 contract_seed = contract_offer.locked_seed
 check_seed = hash(contract_seed, stage_id, check_id)
 ```
+
+V0.1 的 `stable_id("contract_offer", ...)` 复用 `StableSeed.derive` 的长度编码
+FNV-1a 流：以 0 为 base seed，把命名空间和六个有序片段输入后，输出
+`contract_offer_` 加八位小写十六进制摘要。空的 `related_problem_id` 以长度 0
+片段参与，不替换为临时字符串；碰撞必须作为内容错误返回，不能覆盖。
+
+行动承诺使用同一稳定摘要机制：
+
+```text
+commitment_digest = StableSeed.derive(
+    0,
+    ["faction_action_commitment", committed_week, faction_id,
+     action_definition_id, target_problem_id, target_lock_key]
+)
+commitment_instance_id = "faction_action_" + lower_hex8(commitment_digest)
+action_event_instance_id = commitment_instance_id + "_" + event_key
+```
+
+未处理 Offer 复用行动时，事件 ID 对应改用
+`offer_instance_id + "_" + event_key`。这些 ID 只用于稳定身份与去重，不作为随机
+输入；摘要碰撞必须使整批规划或生命周期事务失败。
 
 存档必须保存 campaign seed、当前周和任何已锁定的合同 seed。合同与行动提案完全同分时按稳定 Definition ID，不使用选择随机源。未处理合同按固定策略和稳定 Offer 顺序结算，也不使用随机源。
 
@@ -400,29 +463,45 @@ StateChange
 
 玩家日志、调试日志和测试断言使用同一来源。
 
+StateChange 只记录应用后的 old/new 审计。规则服务先返回类型化
+`StateOperation`，由 CampaignTransaction 按目标和字段白名单合并、冲突检测并
+应用到临时 CampaignState。禁止通过任意属性路径、反射或可执行字符串修改状态。
+
 ## 14. 存档
 
-存档格式使用带版本号的 JSON 或 Godot Variant 序列化结果。V0.1 推荐 JSON，便于调试和 Codex 检查。
+V0.1 存档格式固定为带版本号的 UTF-8 JSON，便于调试和 Codex 检查。SaveService 是
+由 GameSession 持有的普通 RefCounted，不注册第四个 Autoload。
 
 ```text
-save_version
-campaign_seed
-week_index
-guild_state
-adventurer_states
-faction_states
-situation_state
-world_problem_states
-world_event_history
-contract_history
-pending_offers
-faction_action_commitments
-message_history
-locked_resolution_seed
-declined_offer_week
+format = "adventure_manager_campaign"
+save_version = 1
+campaign_setup_id
+saved_at_unix_seconds
+campaign_state
 ```
 
 静态定义只保存 ID。加载时必须验证 ID 是否存在，并对缺失数据给出可理解错误。当前问题紧迫度、年龄和剩余响应回合不存档，加载后从状态重新派生；合同中的 `problem_urgency_at_offer`、生成原因和 `ContractInstantiationSnapshot`，以及行动承诺中的预留 influence 必须保存。
+
+只允许在 GameSession `planning` 阶段保存，包括已经接受但尚未结算的 active plan。
+WeekResolution review snapshot、ForecastViewData、Presenter cache 和派生紧迫度不保存。
+写入使用同目录临时文件、回读验证、`.bak` 恢复和最终原子替换；加载全部验证成功后
+才替换正式 CampaignState。完整任务边界见
+`tasks/016_save_service_and_round_trip.md`。
+
+Task 016 的最终实现边界：
+
+- `SaveService`、`CampaignStateCodec` 和 typed result/issue 均位于
+  `game/persistence/`，是普通 `RefCounted`，不增加 Autoload。
+- JSON 通过 `sort_keys = true` 和 full precision 写出；`campaign_state` 的
+  canonical JSON 不包含 `saved_at_unix_seconds`，供往返和确定性比较。
+- 同目录 `.tmp` 写入后必须关闭并完整回读 schema/State；验证通过后才把原文件移动
+  为 `.bak` 并替换正式文件。替换失败恢复 `.bak`，成功后删除备份。
+- 正式文件损坏但 `.bak` 合法时只返回 recovery candidate；GameSession 只有收到
+  玩家明确确认才发布备份状态。
+- 加载按 envelope、schema、CampaignState、自身引用、Catalog Definition 与 setup
+  闭包顺序验证；任何失败都保留当前会话和阶段。
+- 任意 Reason/Message 参数、history trace 与 StateChange Variant 使用 JSON 可读的
+  显式类型标签保存 `int` 和 `StringName`，避免 JSON 解析造成签名类型漂移。
 
 ## 15. 测试
 

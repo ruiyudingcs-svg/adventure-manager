@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="MethodTagDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="1_bfluv"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/method_tag_definition_resource.gd" id="2_466vi"]
+
+[sub_resource type="Resource" id="Resource_vpxqd"]
+script = ExtResource("1_bfluv")
+respect_authority = -1
+pursue_profit = 1
+taboo_tolerance = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("2_466vi")
+id = &"smuggling"
+ideology_vector = SubResource("Resource_vpxqd")
+taboo_intensity = 1

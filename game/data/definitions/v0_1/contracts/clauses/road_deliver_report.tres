@@ -1,0 +1,55 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_dm1pp"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_pbs2s"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_kq0xu"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_cgq38"]
+
+[sub_resource type="Resource" id="Resource_o81ur"]
+script = ExtResource("1_dm1pp")
+type = &"outcome_tag_present"
+tag_value = &"route_report_delivered"
+
+[sub_resource type="Resource" id="Resource_t2t6b"]
+script = ExtResource("2_pbs2s")
+type = &"modify_reward_percent"
+amount = -15
+reason_code = &"road_deliver_report_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_x2bk2"]
+script = ExtResource("2_pbs2s")
+type = &"modify_sponsor_relation"
+amount = -4
+reason_code = &"road_deliver_report_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_la8tw"]
+script = ExtResource("3_kq0xu")
+seek_knowledge = -1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_ceslg"]
+script = ExtResource("2_pbs2s")
+type = &"modify_sponsor_relation"
+amount = 2
+reason_code = &"road_deliver_report_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_eejxs"]
+script = ExtResource("3_kq0xu")
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_cgq38")
+id = &"road_deliver_report"
+display_name_key = &"clause.road_deliver_report.name"
+description_key = &"clause.road_deliver_report.description"
+category = &"delivery"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_dm1pp")]([SubResource("Resource_o81ur")])
+success_effects = Array[ExtResource("2_pbs2s")]([SubResource("Resource_ceslg")])
+failure_effects = Array[ExtResource("2_pbs2s")]([SubResource("Resource_t2t6b"), SubResource("Resource_x2bk2")])
+breach_result_cap = &"partial"
+success_ideology_impact = SubResource("Resource_eejxs")
+failure_ideology_impact = SubResource("Resource_la8tw")
+success_tags = Array[StringName]([&"clause.road_deliver_report.satisfied"])
+failure_tags = Array[StringName]([&"clause.road_deliver_report.breached"])
+priority = 20

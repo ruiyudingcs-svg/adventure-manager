@@ -1,0 +1,101 @@
+[gd_resource type="Resource" script_class="WorldProblemDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_rule_resource.gd" id="1_lk4od"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="2_d233r"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="3_0eayv"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_problem_definition_resource.gd" id="4_wixub"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/problem_urgency_rule_resource.gd" id="5_qncci"]
+
+[sub_resource type="Resource" id="Resource_leemo"]
+script = ExtResource("2_d233r")
+type = &"clock_gte"
+target_id = &"settlement_destruction"
+int_value = 18
+
+[sub_resource type="Resource" id="Resource_gvmyp"]
+script = ExtResource("1_lk4od")
+id = &"activate_mining_village_isolated_1"
+all_conditions = Array[ExtResource("2_d233r")]([SubResource("Resource_leemo")])
+
+[sub_resource type="Resource" id="Resource_8nssb"]
+script = ExtResource("3_0eayv")
+type = &"create_world_event"
+target_id = &"event_mining_village_destroyed"
+reason_code = &"problem_mining_village_isolated_escalated"
+
+[sub_resource type="Resource" id="Resource_8clm0"]
+script = ExtResource("3_0eayv")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 10
+reason_code = &"problem_mining_village_isolated_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_d8bvd"]
+script = ExtResource("3_0eayv")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 8
+reason_code = &"problem_mining_village_isolated_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_i2uoh"]
+script = ExtResource("2_d233r")
+type = &"world_event_occurred"
+target_id = &"event_mining_village_rescued"
+
+[sub_resource type="Resource" id="Resource_j1bhv"]
+script = ExtResource("1_lk4od")
+id = &"resolve_mining_village_isolated_1"
+all_conditions = Array[ExtResource("2_d233r")]([SubResource("Resource_i2uoh")])
+
+[sub_resource type="Resource" id="Resource_18c0n"]
+script = ExtResource("2_d233r")
+type = &"world_event_occurred"
+target_id = &"event_mining_survivors_recovered"
+
+[sub_resource type="Resource" id="Resource_pqwue"]
+script = ExtResource("1_lk4od")
+id = &"resolve_mining_village_isolated_2"
+all_conditions = Array[ExtResource("2_d233r")]([SubResource("Resource_18c0n")])
+
+[sub_resource type="Resource" id="Resource_llv1p"]
+script = ExtResource("2_d233r")
+type = &"clock_gte"
+target_id = &"settlement_destruction"
+int_value = 30
+
+[sub_resource type="Resource" id="Resource_sqe2c"]
+script = ExtResource("5_qncci")
+id = &"urgency_mining_route_collapsing"
+all_conditions = Array[ExtResource("2_d233r")]([SubResource("Resource_llv1p")])
+urgency_delta = 15
+reason_code = &"urgency_mining_route_collapsing"
+
+[sub_resource type="Resource" id="Resource_mdbwy"]
+script = ExtResource("2_d233r")
+type = &"clock_gte"
+target_id = &"necrotic_corruption"
+int_value = 25
+
+[sub_resource type="Resource" id="Resource_g1l6c"]
+script = ExtResource("5_qncci")
+id = &"urgency_mining_dead_at_risk"
+all_conditions = Array[ExtResource("2_d233r")]([SubResource("Resource_mdbwy")])
+urgency_delta = 10
+reason_code = &"urgency_mining_dead_at_risk"
+
+[resource]
+script = ExtResource("4_wixub")
+id = &"problem_mining_village_isolated"
+title_key = &"problem.problem_mining_village_isolated.title"
+description_key = &"problem.problem_mining_village_isolated.description"
+problem_tags = Array[StringName]([&"isolated_settlement", &"civilian_rescue"])
+base_urgency = 55
+age_urgency_per_week = 10
+age_urgency_cap = 20
+response_window_weeks = 3
+urgency_rules = Array[ExtResource("5_qncci")]([SubResource("Resource_sqe2c"), SubResource("Resource_g1l6c")])
+activation_rules = Array[ExtResource("1_lk4od")]([SubResource("Resource_gvmyp")])
+resolution_rules = Array[ExtResource("1_lk4od")]([SubResource("Resource_j1bhv"), SubResource("Resource_pqwue")])
+related_clock_ids = Array[StringName]([&"villagers_evacuated", &"settlement_destruction", &"necrotic_corruption"])
+contract_definition_ids = Array[StringName]([&"contract_rescue_mining_village"])
+escalation_effects = Array[ExtResource("3_0eayv")]([SubResource("Resource_8nssb"), SubResource("Resource_8clm0"), SubResource("Resource_d8bvd")])

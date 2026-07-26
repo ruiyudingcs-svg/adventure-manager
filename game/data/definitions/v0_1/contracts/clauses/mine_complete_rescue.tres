@@ -1,0 +1,56 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_knblr"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_qsk1x"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_4swc5"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_yofbr"]
+
+[sub_resource type="Resource" id="Resource_2qay5"]
+script = ExtResource("1_knblr")
+type = &"outcome_tag_present"
+tag_value = &"rescue_complete"
+
+[sub_resource type="Resource" id="Resource_qcxrs"]
+script = ExtResource("2_qsk1x")
+type = &"modify_reward_percent"
+amount = -20
+reason_code = &"mine_complete_rescue_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_vnm14"]
+script = ExtResource("2_qsk1x")
+type = &"modify_sponsor_relation"
+amount = -5
+reason_code = &"mine_complete_rescue_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_vuerp"]
+script = ExtResource("3_4swc5")
+protect_life = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_tt8mt"]
+script = ExtResource("2_qsk1x")
+type = &"modify_sponsor_relation"
+amount = 2
+reason_code = &"mine_complete_rescue_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_uho2b"]
+script = ExtResource("3_4swc5")
+protect_life = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_yofbr")
+id = &"mine_complete_rescue"
+display_name_key = &"clause.mine_complete_rescue.name"
+description_key = &"clause.mine_complete_rescue.description"
+category = &"delivery"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_knblr")]([SubResource("Resource_2qay5")])
+success_effects = Array[ExtResource("2_qsk1x")]([SubResource("Resource_tt8mt")])
+failure_effects = Array[ExtResource("2_qsk1x")]([SubResource("Resource_qcxrs"), SubResource("Resource_vnm14")])
+breach_result_cap = &"partial"
+success_ideology_impact = SubResource("Resource_uho2b")
+failure_ideology_impact = SubResource("Resource_vuerp")
+success_tags = Array[StringName]([&"clause.mine_complete_rescue.satisfied"])
+failure_tags = Array[StringName]([&"clause.mine_complete_rescue.breached"])
+priority = 20

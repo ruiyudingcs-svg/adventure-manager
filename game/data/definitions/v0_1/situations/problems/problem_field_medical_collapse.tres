@@ -1,0 +1,100 @@
+[gd_resource type="Resource" script_class="WorldProblemDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_rule_resource.gd" id="1_oen6p"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="2_tsemd"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="3_q1qxn"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_problem_definition_resource.gd" id="4_ewnt5"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/problem_urgency_rule_resource.gd" id="5_a51cu"]
+
+[sub_resource type="Resource" id="Resource_8jmcp"]
+script = ExtResource("2_tsemd")
+type = &"clock_gte"
+target_id = &"settlement_destruction"
+int_value = 30
+
+[sub_resource type="Resource" id="Resource_2amuf"]
+script = ExtResource("1_oen6p")
+id = &"activate_field_medical_collapse_1"
+all_conditions = Array[ExtResource("2_tsemd")]([SubResource("Resource_8jmcp")])
+
+[sub_resource type="Resource" id="Resource_6fo8r"]
+script = ExtResource("3_q1qxn")
+type = &"create_world_event"
+target_id = &"event_field_medical_system_failed"
+reason_code = &"problem_field_medical_collapse_escalated"
+
+[sub_resource type="Resource" id="Resource_ax8s6"]
+script = ExtResource("3_q1qxn")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 8
+reason_code = &"problem_field_medical_collapse_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_h3uns"]
+script = ExtResource("3_q1qxn")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 5
+reason_code = &"problem_field_medical_collapse_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_v3d50"]
+script = ExtResource("2_tsemd")
+type = &"world_event_occurred"
+target_id = &"event_field_healers_delivered"
+
+[sub_resource type="Resource" id="Resource_xny2f"]
+script = ExtResource("1_oen6p")
+id = &"resolve_field_medical_collapse_1"
+all_conditions = Array[ExtResource("2_tsemd")]([SubResource("Resource_v3d50")])
+
+[sub_resource type="Resource" id="Resource_5ewje"]
+script = ExtResource("2_tsemd")
+type = &"world_event_occurred"
+target_id = &"event_field_camp_stabilized"
+
+[sub_resource type="Resource" id="Resource_0c8k7"]
+script = ExtResource("1_oen6p")
+id = &"resolve_field_medical_collapse_2"
+all_conditions = Array[ExtResource("2_tsemd")]([SubResource("Resource_5ewje")])
+
+[sub_resource type="Resource" id="Resource_62nas"]
+script = ExtResource("2_tsemd")
+type = &"clock_gte"
+target_id = &"settlement_destruction"
+int_value = 50
+
+[sub_resource type="Resource" id="Resource_f6rd0"]
+script = ExtResource("5_a51cu")
+id = &"urgency_field_hospitals_overwhelmed"
+all_conditions = Array[ExtResource("2_tsemd")]([SubResource("Resource_62nas")])
+urgency_delta = 20
+reason_code = &"urgency_field_hospitals_overwhelmed"
+
+[sub_resource type="Resource" id="Resource_s5821"]
+script = ExtResource("2_tsemd")
+type = &"phase_is"
+target_id = &"phase_final_window"
+
+[sub_resource type="Resource" id="Resource_hx6qw"]
+script = ExtResource("5_a51cu")
+id = &"urgency_medical_last_chance"
+all_conditions = Array[ExtResource("2_tsemd")]([SubResource("Resource_s5821")])
+urgency_delta = 10
+reason_code = &"urgency_medical_last_chance"
+
+[resource]
+script = ExtResource("4_ewnt5")
+id = &"problem_field_medical_collapse"
+title_key = &"problem.problem_field_medical_collapse.title"
+description_key = &"problem.problem_field_medical_collapse.description"
+problem_tags = Array[StringName]([&"field_medical", &"civilian_evacuation"])
+base_urgency = 50
+age_urgency_per_week = 8
+age_urgency_cap = 24
+response_window_weeks = 3
+urgency_rules = Array[ExtResource("5_a51cu")]([SubResource("Resource_f6rd0"), SubResource("Resource_hx6qw")])
+activation_rules = Array[ExtResource("1_oen6p")]([SubResource("Resource_2amuf")])
+resolution_rules = Array[ExtResource("1_oen6p")]([SubResource("Resource_xny2f"), SubResource("Resource_0c8k7")])
+related_clock_ids = Array[StringName]([&"villagers_evacuated", &"settlement_destruction", &"necrotic_corruption"])
+contract_definition_ids = Array[StringName]([&"contract_escort_field_healers"])
+escalation_effects = Array[ExtResource("3_q1qxn")]([SubResource("Resource_6fo8r"), SubResource("Resource_ax8s6"), SubResource("Resource_h3uns")])

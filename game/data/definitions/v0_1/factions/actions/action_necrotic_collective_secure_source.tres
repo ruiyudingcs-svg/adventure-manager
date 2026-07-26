@@ -1,0 +1,38 @@
+[gd_resource type="Resource" script_class="FactionActionDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="1_ewmwp"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="2_nkpbe"]
+[ext_resource type="Script" path="res://game/data/definitions/factions/faction_action_definition_resource.gd" id="3_6s3if"]
+
+[sub_resource type="Resource" id="Resource_8ngre"]
+script = ExtResource("1_ewmwp")
+type = &"problem_is_active"
+target_id = &"problem_necrotic_spread"
+
+[sub_resource type="Resource" id="Resource_wo2bh"]
+script = ExtResource("2_nkpbe")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 8
+reason_code = &"action_necrotic_collective_secure_source_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_bd5ya"]
+script = ExtResource("2_nkpbe")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 2
+reason_code = &"action_necrotic_collective_secure_source_settlement_destruction"
+
+[resource]
+script = ExtResource("3_6s3if")
+id = &"action_necrotic_collective_secure_source"
+agenda_tags = Array[StringName]([&"corruption", &"secrecy"])
+target_lock_key = &"necrotic_source.secure_for_collective"
+base_intent_priority = 18
+urgency_weight = 35
+recent_repeat_cooldown = 2
+influence_cost = 7
+conditions = Array[ExtResource("1_ewmwp")]([SubResource("Resource_8ngre")])
+target_problem_tags = Array[StringName]([&"necrotic_spread"])
+effects = Array[ExtResource("2_nkpbe")]([SubResource("Resource_wo2bh"), SubResource("Resource_bd5ya")])
+event_key = &"event_necrotic_source_secured"

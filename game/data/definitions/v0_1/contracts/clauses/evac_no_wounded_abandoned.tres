@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_02hj8"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_s3xvp"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_0dvru"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_laxc7"]
+
+[sub_resource type="Resource" id="Resource_30gny"]
+script = ExtResource("1_02hj8")
+type = &"outcome_tag_present"
+tag_value = &"all_stragglers_recovered"
+
+[sub_resource type="Resource" id="Resource_yv2rb"]
+script = ExtResource("2_s3xvp")
+type = &"modify_reward_percent"
+amount = -20
+reason_code = &"clause_evac_reward_breach"
+
+[sub_resource type="Resource" id="Resource_vl5lw"]
+script = ExtResource("2_s3xvp")
+type = &"modify_sponsor_relation"
+amount = -6
+reason_code = &"clause_evac_relation_breach"
+
+[sub_resource type="Resource" id="Resource_qhh4f"]
+script = ExtResource("3_0dvru")
+protect_life = -3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_pd575"]
+script = ExtResource("3_0dvru")
+protect_life = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_laxc7")
+id = &"evac_no_wounded_abandoned"
+display_name_key = &"clause.evac_no_wounded_abandoned.name"
+description_key = &"clause.evac_no_wounded_abandoned.description"
+category = &"target_state"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_02hj8")]([SubResource("Resource_30gny")])
+failure_effects = Array[ExtResource("2_s3xvp")]([SubResource("Resource_yv2rb"), SubResource("Resource_vl5lw")])
+breach_result_cap = &"partial"
+success_ideology_impact = SubResource("Resource_pd575")
+failure_ideology_impact = SubResource("Resource_qhh4f")
+success_tags = Array[StringName]([&"clause.humane_evacuation"])
+priority = 10

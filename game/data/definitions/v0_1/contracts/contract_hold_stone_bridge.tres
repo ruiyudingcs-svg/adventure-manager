@@ -1,0 +1,1230 @@
+[gd_resource type="Resource" script_class="ContractDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_rule_resource.gd" id="1_7a44a"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="2_yot4x"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="3_6511k"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_outcome_definition_resource.gd" id="4_2m4pt"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_outcome_table_resource.gd" id="5_bryb0"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/offer_instantiation_rule_resource.gd" id="6_gjucq"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="7_12cge"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_definition_resource.gd" id="8_cdkp4"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_stage_definition_resource.gd" id="9_e4jr4"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/capability_weights_resource.gd" id="10_q6r1v"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/mission_modifier_resource.gd" id="11_trfrq"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/mission_context_delta_resource.gd" id="12_36ps6"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/member_effect_resource.gd" id="13_7wjlc"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/check_outcome_definition_resource.gd" id="14_jmfna"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/check_outcome_table_resource.gd" id="15_o2f4c"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_check_definition_resource.gd" id="16_h23x4"]
+
+[sub_resource type="Resource" id="Resource_4wb7o"]
+script = ExtResource("2_yot4x")
+type = &"phase_is"
+target_id = &"phase_open_conflict"
+
+[sub_resource type="Resource" id="Resource_hdr5k"]
+script = ExtResource("2_yot4x")
+type = &"phase_is"
+target_id = &"phase_final_window"
+
+[sub_resource type="Resource" id="Resource_dydu7"]
+script = ExtResource("1_7a44a")
+id = &"availability_hold_stone_bridge_phase"
+any_conditions = Array[ExtResource("2_yot4x")]([SubResource("Resource_4wb7o"), SubResource("Resource_hdr5k")])
+
+[sub_resource type="Resource" id="Resource_r5csb"]
+script = ExtResource("3_6511k")
+type = &"create_world_event"
+target_id = &"event_stone_bridge_secured"
+reason_code = &"event_stone_bridge_secured_exceptional"
+
+[sub_resource type="Resource" id="Resource_xjyxs"]
+script = ExtResource("4_2m4pt")
+reward_multiplier = 1.25
+fatigue_multiplier = 0.9
+injury_risk_modifier = -10
+sponsor_relation_delta = 8
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_r5csb")])
+outcome_tags = Array[StringName]([&"contract.exceptional"])
+
+[sub_resource type="Resource" id="Resource_wl06x"]
+script = ExtResource("4_2m4pt")
+reward_multiplier = 0.25
+fatigue_multiplier = 1.25
+injury_risk_modifier = 10
+sponsor_relation_delta = -4
+outcome_tags = Array[StringName]([&"contract.failure"])
+
+[sub_resource type="Resource" id="Resource_dtnxc"]
+script = ExtResource("4_2m4pt")
+reward_multiplier = 0.65
+fatigue_multiplier = 1.1
+sponsor_relation_delta = 1
+outcome_tags = Array[StringName]([&"contract.partial"])
+
+[sub_resource type="Resource" id="Resource_pa4pf"]
+script = ExtResource("4_2m4pt")
+reward_multiplier = 0.0
+fatigue_multiplier = 1.4
+injury_risk_modifier = 20
+sponsor_relation_delta = -8
+outcome_tags = Array[StringName]([&"contract.severe_failure"])
+
+[sub_resource type="Resource" id="Resource_wg4my"]
+script = ExtResource("3_6511k")
+type = &"create_world_event"
+target_id = &"event_stone_bridge_secured"
+reason_code = &"event_stone_bridge_secured_success"
+
+[sub_resource type="Resource" id="Resource_opkti"]
+script = ExtResource("4_2m4pt")
+injury_risk_modifier = -5
+sponsor_relation_delta = 5
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_wg4my")])
+outcome_tags = Array[StringName]([&"contract.success"])
+
+[sub_resource type="Resource" id="Resource_gxs8f"]
+script = ExtResource("5_bryb0")
+exceptional = SubResource("Resource_xjyxs")
+success = SubResource("Resource_opkti")
+partial = SubResource("Resource_dtnxc")
+failure = SubResource("Resource_wl06x")
+severe = SubResource("Resource_pa4pf")
+
+[sub_resource type="Resource" id="Resource_gnqno"]
+script = ExtResource("7_12cge")
+protect_life = 3
+respect_authority = 2
+taboo_tolerance = -1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_itkqq"]
+script = ExtResource("10_q6r1v")
+scouting = 0.45
+support = 0.1
+arcana = 0.2
+discipline = 0.25
+
+[sub_resource type="Resource" id="Resource_wqued"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 2
+reason_code = &"bridge_read_battlefield_exceptional_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_mvvhr"]
+script = ExtResource("12_36ps6")
+key = &"route_safety"
+amount = 3
+source_id = &"bridge_read_battlefield"
+
+[sub_resource type="Resource" id="Resource_s1ewb"]
+script = ExtResource("12_36ps6")
+key = &"intel"
+amount = 2
+source_id = &"bridge_read_battlefield"
+
+[sub_resource type="Resource" id="Resource_81qed"]
+script = ExtResource("12_36ps6")
+key = &"alert_level"
+amount = -1
+source_id = &"bridge_read_battlefield"
+
+[sub_resource type="Resource" id="Resource_okn74"]
+script = ExtResource("7_12cge")
+protect_life = 3
+respect_authority = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_r5ioc"]
+script = ExtResource("14_jmfna")
+context_deltas = Array[ExtResource("12_36ps6")]([SubResource("Resource_mvvhr"), SubResource("Resource_s1ewb"), SubResource("Resource_81qed")])
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_wqued")])
+ideology_impact = SubResource("Resource_okn74")
+outcome_tags = Array[StringName]([&"bridge_read_battlefield_exceptional"])
+
+[sub_resource type="Resource" id="Resource_u5sex"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 4
+reason_code = &"bridge_read_battlefield_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_i5gm7"]
+script = ExtResource("12_36ps6")
+key = &"alert_level"
+amount = 1
+source_id = &"bridge_read_battlefield"
+
+[sub_resource type="Resource" id="Resource_k5knm"]
+script = ExtResource("12_36ps6")
+key = &"time_pressure"
+amount = 2
+source_id = &"bridge_read_battlefield"
+
+[sub_resource type="Resource" id="Resource_cim5o"]
+script = ExtResource("7_12cge")
+protect_life = -2
+respect_authority = -1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_xcpwd"]
+script = ExtResource("13_7wjlc")
+type = &"injury_risk"
+amount = 8
+reason_code = &"bridge_read_battlefield_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_lqkjd"]
+script = ExtResource("14_jmfna")
+context_deltas = Array[ExtResource("12_36ps6")]([SubResource("Resource_i5gm7"), SubResource("Resource_k5knm")])
+member_effects = Array[ExtResource("13_7wjlc")]([SubResource("Resource_xcpwd")])
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_u5sex")])
+ideology_impact = SubResource("Resource_cim5o")
+outcome_tags = Array[StringName]([&"bridge_read_battlefield_failure"])
+
+[sub_resource type="Resource" id="Resource_gkf4r"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 1
+reason_code = &"bridge_read_battlefield_partial_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_kscj1"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 2
+reason_code = &"bridge_read_battlefield_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_j0gei"]
+script = ExtResource("12_36ps6")
+key = &"route_safety"
+amount = 1
+source_id = &"bridge_read_battlefield"
+
+[sub_resource type="Resource" id="Resource_m10dd"]
+script = ExtResource("12_36ps6")
+key = &"time_pressure"
+amount = 1
+source_id = &"bridge_read_battlefield"
+
+[sub_resource type="Resource" id="Resource_7fhc3"]
+script = ExtResource("7_12cge")
+protect_life = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_67jb1"]
+script = ExtResource("13_7wjlc")
+type = &"injury_risk"
+amount = 3
+reason_code = &"bridge_read_battlefield_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_1x4of"]
+script = ExtResource("14_jmfna")
+context_deltas = Array[ExtResource("12_36ps6")]([SubResource("Resource_j0gei"), SubResource("Resource_m10dd")])
+member_effects = Array[ExtResource("13_7wjlc")]([SubResource("Resource_67jb1")])
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_gkf4r"), SubResource("Resource_kscj1")])
+ideology_impact = SubResource("Resource_7fhc3")
+outcome_tags = Array[StringName]([&"bridge_read_battlefield_partial"])
+
+[sub_resource type="Resource" id="Resource_86sg4"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = -1
+reason_code = &"bridge_read_battlefield_severe_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_iealu"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 5
+reason_code = &"bridge_read_battlefield_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_r1r1s"]
+script = ExtResource("12_36ps6")
+key = &"alert_level"
+amount = 2
+source_id = &"bridge_read_battlefield"
+
+[sub_resource type="Resource" id="Resource_id8dh"]
+script = ExtResource("12_36ps6")
+key = &"enemy_pressure"
+amount = 2
+source_id = &"bridge_read_battlefield"
+
+[sub_resource type="Resource" id="Resource_k834y"]
+script = ExtResource("7_12cge")
+protect_life = -4
+respect_authority = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_tmsot"]
+script = ExtResource("13_7wjlc")
+type = &"injury_risk"
+amount = 15
+reason_code = &"bridge_read_battlefield_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_w8yh0"]
+script = ExtResource("14_jmfna")
+context_deltas = Array[ExtResource("12_36ps6")]([SubResource("Resource_r1r1s"), SubResource("Resource_id8dh")])
+member_effects = Array[ExtResource("13_7wjlc")]([SubResource("Resource_tmsot")])
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_86sg4"), SubResource("Resource_iealu")])
+ideology_impact = SubResource("Resource_k834y")
+outcome_tags = Array[StringName]([&"bridge_read_battlefield_severe"])
+
+[sub_resource type="Resource" id="Resource_y5l5n"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 1
+reason_code = &"bridge_read_battlefield_success_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_0teqw"]
+script = ExtResource("12_36ps6")
+key = &"route_safety"
+amount = 2
+source_id = &"bridge_read_battlefield"
+
+[sub_resource type="Resource" id="Resource_jf7kg"]
+script = ExtResource("12_36ps6")
+key = &"intel"
+amount = 1
+source_id = &"bridge_read_battlefield"
+
+[sub_resource type="Resource" id="Resource_a5c12"]
+script = ExtResource("7_12cge")
+protect_life = 2
+respect_authority = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_h2ool"]
+script = ExtResource("14_jmfna")
+context_deltas = Array[ExtResource("12_36ps6")]([SubResource("Resource_0teqw"), SubResource("Resource_jf7kg")])
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_y5l5n")])
+ideology_impact = SubResource("Resource_a5c12")
+outcome_tags = Array[StringName]([&"bridge_read_battlefield_success"])
+
+[sub_resource type="Resource" id="Resource_xxnig"]
+script = ExtResource("15_o2f4c")
+exceptional = SubResource("Resource_r5ioc")
+success = SubResource("Resource_h2ool")
+partial = SubResource("Resource_1x4of")
+failure = SubResource("Resource_lqkjd")
+severe = SubResource("Resource_w8yh0")
+
+[sub_resource type="Resource" id="Resource_i7h5a"]
+script = ExtResource("16_h23x4")
+id = &"bridge_read_battlefield"
+check_type = &"reconnaissance"
+capability_weights = SubResource("Resource_itkqq")
+difficulty = 25
+result_weight = 0.15
+failure_result_cap = &"partial"
+method_tags = Array[StringName]([&"reconnaissance", &"scouting"])
+approach_profile = &"careful"
+outcome_table = SubResource("Resource_xxnig")
+
+[sub_resource type="Resource" id="Resource_cj4ds"]
+script = ExtResource("9_e4jr4")
+id = &"hold_stone_bridge_stage_approach"
+phase = &"approach"
+check = SubResource("Resource_i7h5a")
+
+[sub_resource type="Resource" id="Resource_s24o4"]
+script = ExtResource("10_q6r1v")
+frontline = 0.45
+offense = 0.05
+scouting = 0.05
+support = 0.25
+discipline = 0.2
+
+[sub_resource type="Resource" id="Resource_chqc2"]
+script = ExtResource("11_trfrq")
+condition_type = &"context_gte"
+operand = &"intel"
+threshold = 1
+amount = 2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_nqoq5"]
+script = ExtResource("11_trfrq")
+condition_type = &"context_gte"
+operand = &"alert_level"
+threshold = 1
+amount = -2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_4bbno"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 5
+reason_code = &"bridge_hold_line_exceptional_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_f6rkg"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 4
+reason_code = &"bridge_hold_line_exceptional_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_swdc2"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = -1
+reason_code = &"bridge_hold_line_exceptional_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_wxxa7"]
+script = ExtResource("12_36ps6")
+key = &"enemy_pressure"
+amount = -2
+source_id = &"bridge_hold_line"
+
+[sub_resource type="Resource" id="Resource_uuu01"]
+script = ExtResource("7_12cge")
+protect_life = 3
+respect_authority = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_3hkxh"]
+script = ExtResource("14_jmfna")
+context_deltas = Array[ExtResource("12_36ps6")]([SubResource("Resource_wxxa7")])
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_4bbno"), SubResource("Resource_f6rkg"), SubResource("Resource_swdc2")])
+ideology_impact = SubResource("Resource_uuu01")
+outcome_tags = Array[StringName]([&"bridge_hold_line_exceptional"])
+
+[sub_resource type="Resource" id="Resource_jww44"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 1
+reason_code = &"bridge_hold_line_failure_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_jrm1i"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 7
+reason_code = &"bridge_hold_line_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_1xwev"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 1
+reason_code = &"bridge_hold_line_failure_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_jwoav"]
+script = ExtResource("12_36ps6")
+key = &"team_strain"
+amount = 2
+source_id = &"bridge_hold_line"
+
+[sub_resource type="Resource" id="Resource_o8v0e"]
+script = ExtResource("12_36ps6")
+key = &"collateral_pressure"
+amount = 2
+source_id = &"bridge_hold_line"
+
+[sub_resource type="Resource" id="Resource_qcmja"]
+script = ExtResource("7_12cge")
+protect_life = -2
+respect_authority = -1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_1yddf"]
+script = ExtResource("13_7wjlc")
+type = &"injury_risk"
+amount = 15
+reason_code = &"bridge_hold_line_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_5ejen"]
+script = ExtResource("14_jmfna")
+context_deltas = Array[ExtResource("12_36ps6")]([SubResource("Resource_jwoav"), SubResource("Resource_o8v0e")])
+member_effects = Array[ExtResource("13_7wjlc")]([SubResource("Resource_1yddf")])
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_jww44"), SubResource("Resource_jrm1i"), SubResource("Resource_1xwev")])
+ideology_impact = SubResource("Resource_qcmja")
+outcome_tags = Array[StringName]([&"bridge_hold_line_failure"])
+
+[sub_resource type="Resource" id="Resource_5yfhc"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 3
+reason_code = &"bridge_hold_line_partial_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_sbq5f"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 4
+reason_code = &"bridge_hold_line_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_yujd3"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 2
+reason_code = &"bridge_hold_line_partial_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_isx2c"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 1
+reason_code = &"bridge_hold_line_partial_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_hfpk6"]
+script = ExtResource("12_36ps6")
+key = &"team_strain"
+amount = 1
+source_id = &"bridge_hold_line"
+
+[sub_resource type="Resource" id="Resource_ipeqc"]
+script = ExtResource("12_36ps6")
+key = &"collateral_pressure"
+amount = 1
+source_id = &"bridge_hold_line"
+
+[sub_resource type="Resource" id="Resource_0e7ek"]
+script = ExtResource("7_12cge")
+protect_life = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_853sr"]
+script = ExtResource("13_7wjlc")
+type = &"injury_risk"
+amount = 8
+reason_code = &"bridge_hold_line_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_bi1ru"]
+script = ExtResource("14_jmfna")
+context_deltas = Array[ExtResource("12_36ps6")]([SubResource("Resource_hfpk6"), SubResource("Resource_ipeqc")])
+member_effects = Array[ExtResource("13_7wjlc")]([SubResource("Resource_853sr")])
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_5yfhc"), SubResource("Resource_sbq5f"), SubResource("Resource_yujd3"), SubResource("Resource_isx2c")])
+ideology_impact = SubResource("Resource_0e7ek")
+outcome_tags = Array[StringName]([&"bridge_hold_line_partial"])
+
+[sub_resource type="Resource" id="Resource_b16n4"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 9
+reason_code = &"bridge_hold_line_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_pjtgd"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = -1
+reason_code = &"bridge_hold_line_severe_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_d6gh7"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 2
+reason_code = &"bridge_hold_line_severe_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_3m72a"]
+script = ExtResource("12_36ps6")
+key = &"team_strain"
+amount = 3
+source_id = &"bridge_hold_line"
+
+[sub_resource type="Resource" id="Resource_rf0fy"]
+script = ExtResource("12_36ps6")
+key = &"collateral_pressure"
+amount = 3
+source_id = &"bridge_hold_line"
+
+[sub_resource type="Resource" id="Resource_6wu8i"]
+script = ExtResource("12_36ps6")
+key = &"extraction_pressure"
+amount = 1
+source_id = &"bridge_hold_line"
+
+[sub_resource type="Resource" id="Resource_qtw07"]
+script = ExtResource("7_12cge")
+protect_life = -4
+respect_authority = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_snhgd"]
+script = ExtResource("13_7wjlc")
+type = &"injury_risk"
+amount = 25
+reason_code = &"bridge_hold_line_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_8v7jy"]
+script = ExtResource("14_jmfna")
+context_deltas = Array[ExtResource("12_36ps6")]([SubResource("Resource_3m72a"), SubResource("Resource_rf0fy"), SubResource("Resource_6wu8i")])
+member_effects = Array[ExtResource("13_7wjlc")]([SubResource("Resource_snhgd")])
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_b16n4"), SubResource("Resource_pjtgd"), SubResource("Resource_d6gh7")])
+ideology_impact = SubResource("Resource_qtw07")
+outcome_tags = Array[StringName]([&"bridge_hold_line_severe"])
+
+[sub_resource type="Resource" id="Resource_lla3i"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 4
+reason_code = &"bridge_hold_line_success_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_tujbe"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 1
+reason_code = &"bridge_hold_line_success_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_07rhn"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 3
+reason_code = &"bridge_hold_line_success_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_ix0w2"]
+script = ExtResource("12_36ps6")
+key = &"enemy_pressure"
+amount = -1
+source_id = &"bridge_hold_line"
+
+[sub_resource type="Resource" id="Resource_6ssx0"]
+script = ExtResource("7_12cge")
+protect_life = 2
+respect_authority = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_6cdww"]
+script = ExtResource("13_7wjlc")
+type = &"injury_risk"
+amount = 3
+reason_code = &"bridge_hold_line_success_injury_risk"
+
+[sub_resource type="Resource" id="Resource_6ntoa"]
+script = ExtResource("14_jmfna")
+context_deltas = Array[ExtResource("12_36ps6")]([SubResource("Resource_ix0w2")])
+member_effects = Array[ExtResource("13_7wjlc")]([SubResource("Resource_6cdww")])
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_lla3i"), SubResource("Resource_tujbe"), SubResource("Resource_07rhn")])
+ideology_impact = SubResource("Resource_6ssx0")
+outcome_tags = Array[StringName]([&"bridge_hold_line_success"])
+
+[sub_resource type="Resource" id="Resource_otc8n"]
+script = ExtResource("15_o2f4c")
+exceptional = SubResource("Resource_3hkxh")
+success = SubResource("Resource_6ntoa")
+partial = SubResource("Resource_bi1ru")
+failure = SubResource("Resource_5ejen")
+severe = SubResource("Resource_8v7jy")
+
+[sub_resource type="Resource" id="Resource_kbabc"]
+script = ExtResource("16_h23x4")
+id = &"bridge_hold_line"
+check_type = &"protection"
+capability_weights = SubResource("Resource_s24o4")
+difficulty = 31
+result_weight = 0.3
+failure_result_cap = &"partial"
+method_tags = Array[StringName]([&"protection", &"nonlethal"])
+context_modifiers = Array[ExtResource("11_trfrq")]([SubResource("Resource_chqc2"), SubResource("Resource_nqoq5")])
+approach_profile = &"careful"
+outcome_table = SubResource("Resource_otc8n")
+
+[sub_resource type="Resource" id="Resource_vd4rn"]
+script = ExtResource("9_e4jr4")
+id = &"hold_stone_bridge_stage_main_action"
+phase = &"main_action"
+check = SubResource("Resource_kbabc")
+
+[sub_resource type="Resource" id="Resource_jftkg"]
+script = ExtResource("10_q6r1v")
+frontline = 0.25
+offense = 0.35
+scouting = 0.1
+support = 0.05
+arcana = 0.05
+discipline = 0.2
+
+[sub_resource type="Resource" id="Resource_hal60"]
+script = ExtResource("11_trfrq")
+condition_type = &"context_gte"
+operand = &"intel"
+threshold = 1
+amount = 1
+per_context_point = true
+maximum_absolute_amount = 4
+
+[sub_resource type="Resource" id="Resource_bnphq"]
+script = ExtResource("11_trfrq")
+condition_type = &"context_gte"
+operand = &"team_strain"
+threshold = 1
+amount = -2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_eg6um"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 5
+reason_code = &"bridge_break_assault_exceptional_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_jto5u"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 6
+reason_code = &"bridge_break_assault_exceptional_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_5luq2"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = -1
+reason_code = &"bridge_break_assault_exceptional_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_3bdx2"]
+script = ExtResource("12_36ps6")
+key = &"protected_civilians"
+amount = 4
+source_id = &"bridge_break_assault"
+
+[sub_resource type="Resource" id="Resource_4uec1"]
+script = ExtResource("7_12cge")
+protect_life = 3
+respect_authority = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_tfv5n"]
+script = ExtResource("14_jmfna")
+context_deltas = Array[ExtResource("12_36ps6")]([SubResource("Resource_3bdx2")])
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_eg6um"), SubResource("Resource_jto5u"), SubResource("Resource_5luq2")])
+ideology_impact = SubResource("Resource_4uec1")
+outcome_tags = Array[StringName]([&"bridge_break_assault_exceptional", &"bridge_line_held"])
+
+[sub_resource type="Resource" id="Resource_2aokj"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 1
+reason_code = &"bridge_break_assault_failure_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_8ckm3"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 8
+reason_code = &"bridge_break_assault_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_gxuqh"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 1
+reason_code = &"bridge_break_assault_failure_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_0y8p6"]
+script = ExtResource("12_36ps6")
+key = &"protected_civilians"
+amount = 1
+source_id = &"bridge_break_assault"
+
+[sub_resource type="Resource" id="Resource_36aul"]
+script = ExtResource("12_36ps6")
+key = &"alert_level"
+amount = 2
+source_id = &"bridge_break_assault"
+
+[sub_resource type="Resource" id="Resource_emq7c"]
+script = ExtResource("7_12cge")
+protect_life = -2
+respect_authority = -1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_rwvlp"]
+script = ExtResource("13_7wjlc")
+type = &"injury_risk"
+amount = 15
+reason_code = &"bridge_break_assault_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_4s6yy"]
+script = ExtResource("14_jmfna")
+context_deltas = Array[ExtResource("12_36ps6")]([SubResource("Resource_0y8p6"), SubResource("Resource_36aul")])
+member_effects = Array[ExtResource("13_7wjlc")]([SubResource("Resource_rwvlp")])
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_2aokj"), SubResource("Resource_8ckm3"), SubResource("Resource_gxuqh")])
+ideology_impact = SubResource("Resource_emq7c")
+outcome_tags = Array[StringName]([&"bridge_break_assault_failure"])
+
+[sub_resource type="Resource" id="Resource_ld3u1"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 3
+reason_code = &"bridge_break_assault_partial_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_og32e"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 5
+reason_code = &"bridge_break_assault_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_6obou"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 3
+reason_code = &"bridge_break_assault_partial_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_huwxf"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 1
+reason_code = &"bridge_break_assault_partial_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_hb3yq"]
+script = ExtResource("12_36ps6")
+key = &"protected_civilians"
+amount = 2
+source_id = &"bridge_break_assault"
+
+[sub_resource type="Resource" id="Resource_3dtyh"]
+script = ExtResource("12_36ps6")
+key = &"time_pressure"
+amount = 1
+source_id = &"bridge_break_assault"
+
+[sub_resource type="Resource" id="Resource_vnkh5"]
+script = ExtResource("7_12cge")
+protect_life = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_o24d7"]
+script = ExtResource("13_7wjlc")
+type = &"injury_risk"
+amount = 8
+reason_code = &"bridge_break_assault_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_i5ide"]
+script = ExtResource("14_jmfna")
+context_deltas = Array[ExtResource("12_36ps6")]([SubResource("Resource_hb3yq"), SubResource("Resource_3dtyh")])
+member_effects = Array[ExtResource("13_7wjlc")]([SubResource("Resource_o24d7")])
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_ld3u1"), SubResource("Resource_og32e"), SubResource("Resource_6obou"), SubResource("Resource_huwxf")])
+ideology_impact = SubResource("Resource_vnkh5")
+outcome_tags = Array[StringName]([&"bridge_break_assault_partial"])
+
+[sub_resource type="Resource" id="Resource_yxvl7"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 10
+reason_code = &"bridge_break_assault_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_wo1nn"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = -1
+reason_code = &"bridge_break_assault_severe_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_pkx6t"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 2
+reason_code = &"bridge_break_assault_severe_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_x2rxh"]
+script = ExtResource("12_36ps6")
+key = &"alert_level"
+amount = 3
+source_id = &"bridge_break_assault"
+
+[sub_resource type="Resource" id="Resource_peh75"]
+script = ExtResource("12_36ps6")
+key = &"extraction_pressure"
+amount = 2
+source_id = &"bridge_break_assault"
+
+[sub_resource type="Resource" id="Resource_tw17t"]
+script = ExtResource("7_12cge")
+protect_life = -4
+respect_authority = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_7kj85"]
+script = ExtResource("13_7wjlc")
+type = &"injury_risk"
+amount = 25
+reason_code = &"bridge_break_assault_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_smj2b"]
+script = ExtResource("14_jmfna")
+context_deltas = Array[ExtResource("12_36ps6")]([SubResource("Resource_x2rxh"), SubResource("Resource_peh75")])
+member_effects = Array[ExtResource("13_7wjlc")]([SubResource("Resource_7kj85")])
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_yxvl7"), SubResource("Resource_wo1nn"), SubResource("Resource_pkx6t")])
+ideology_impact = SubResource("Resource_tw17t")
+outcome_tags = Array[StringName]([&"bridge_break_assault_severe"])
+
+[sub_resource type="Resource" id="Resource_ej2de"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 4
+reason_code = &"bridge_break_assault_success_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_8g8cp"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 2
+reason_code = &"bridge_break_assault_success_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_cp7pw"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 5
+reason_code = &"bridge_break_assault_success_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_4l77l"]
+script = ExtResource("12_36ps6")
+key = &"protected_civilians"
+amount = 3
+source_id = &"bridge_break_assault"
+
+[sub_resource type="Resource" id="Resource_ujwtn"]
+script = ExtResource("7_12cge")
+protect_life = 2
+respect_authority = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_pb1hk"]
+script = ExtResource("13_7wjlc")
+type = &"injury_risk"
+amount = 3
+reason_code = &"bridge_break_assault_success_injury_risk"
+
+[sub_resource type="Resource" id="Resource_mwuh8"]
+script = ExtResource("14_jmfna")
+context_deltas = Array[ExtResource("12_36ps6")]([SubResource("Resource_4l77l")])
+member_effects = Array[ExtResource("13_7wjlc")]([SubResource("Resource_pb1hk")])
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_ej2de"), SubResource("Resource_8g8cp"), SubResource("Resource_cp7pw")])
+ideology_impact = SubResource("Resource_ujwtn")
+outcome_tags = Array[StringName]([&"bridge_break_assault_success", &"bridge_line_held"])
+
+[sub_resource type="Resource" id="Resource_npxwl"]
+script = ExtResource("15_o2f4c")
+exceptional = SubResource("Resource_tfv5n")
+success = SubResource("Resource_mwuh8")
+partial = SubResource("Resource_i5ide")
+failure = SubResource("Resource_4s6yy")
+severe = SubResource("Resource_smj2b")
+
+[sub_resource type="Resource" id="Resource_b3j1b"]
+script = ExtResource("16_h23x4")
+id = &"bridge_break_assault"
+check_type = &"confrontation"
+capability_weights = SubResource("Resource_jftkg")
+difficulty = 33
+result_weight = 0.35
+failure_result_cap = &"partial"
+method_tags = Array[StringName]([&"confrontation", &"protection"])
+context_modifiers = Array[ExtResource("11_trfrq")]([SubResource("Resource_hal60"), SubResource("Resource_bnphq")])
+approach_profile = &"forceful"
+outcome_table = SubResource("Resource_npxwl")
+
+[sub_resource type="Resource" id="Resource_j82is"]
+script = ExtResource("9_e4jr4")
+id = &"hold_stone_bridge_stage_special_objective"
+phase = &"special_objective"
+check = SubResource("Resource_b3j1b")
+
+[sub_resource type="Resource" id="Resource_clmyj"]
+script = ExtResource("10_q6r1v")
+frontline = 0.15
+scouting = 0.3
+support = 0.25
+arcana = 0.05
+discipline = 0.25
+
+[sub_resource type="Resource" id="Resource_p387l"]
+script = ExtResource("11_trfrq")
+condition_type = &"context_gte"
+operand = &"route_safety"
+threshold = 1
+amount = 2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_e5wlb"]
+script = ExtResource("11_trfrq")
+condition_type = &"context_gte"
+operand = &"alert_level"
+threshold = 1
+amount = -3
+per_context_point = true
+maximum_absolute_amount = 9
+
+[sub_resource type="Resource" id="Resource_lofb8"]
+script = ExtResource("11_trfrq")
+condition_type = &"context_gte"
+operand = &"extraction_pressure"
+threshold = 1
+amount = -3
+per_context_point = true
+maximum_absolute_amount = 9
+
+[sub_resource type="Resource" id="Resource_bdp4r"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 5
+reason_code = &"bridge_withdraw_exceptional_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_g8aps"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 2
+reason_code = &"bridge_withdraw_exceptional_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_b8dib"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = -1
+reason_code = &"bridge_withdraw_exceptional_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_psigr"]
+script = ExtResource("7_12cge")
+protect_life = 3
+respect_authority = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_umxtd"]
+script = ExtResource("14_jmfna")
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_bdp4r"), SubResource("Resource_g8aps"), SubResource("Resource_b8dib")])
+ideology_impact = SubResource("Resource_psigr")
+outcome_tags = Array[StringName]([&"bridge_withdraw_exceptional", &"bridge_intact"])
+
+[sub_resource type="Resource" id="Resource_7b7gr"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 3
+reason_code = &"bridge_withdraw_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_c2qnl"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 1
+reason_code = &"bridge_withdraw_failure_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_d3htj"]
+script = ExtResource("7_12cge")
+protect_life = -2
+respect_authority = -1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_8r116"]
+script = ExtResource("13_7wjlc")
+type = &"injury_risk"
+amount = 18
+reason_code = &"bridge_withdraw_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_oqk20"]
+script = ExtResource("14_jmfna")
+member_effects = Array[ExtResource("13_7wjlc")]([SubResource("Resource_8r116")])
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_7b7gr"), SubResource("Resource_c2qnl")])
+ideology_impact = SubResource("Resource_d3htj")
+outcome_tags = Array[StringName]([&"bridge_withdraw_failure"])
+
+[sub_resource type="Resource" id="Resource_rqt74"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 2
+reason_code = &"bridge_withdraw_partial_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_k4ucr"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 2
+reason_code = &"bridge_withdraw_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_7522o"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 1
+reason_code = &"bridge_withdraw_partial_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_cat6h"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 1
+reason_code = &"bridge_withdraw_partial_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_i4baf"]
+script = ExtResource("7_12cge")
+protect_life = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_pmpc4"]
+script = ExtResource("13_7wjlc")
+type = &"injury_risk"
+amount = 8
+reason_code = &"bridge_withdraw_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_hv3w7"]
+script = ExtResource("14_jmfna")
+member_effects = Array[ExtResource("13_7wjlc")]([SubResource("Resource_pmpc4")])
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_rqt74"), SubResource("Resource_k4ucr"), SubResource("Resource_7522o"), SubResource("Resource_cat6h")])
+ideology_impact = SubResource("Resource_i4baf")
+outcome_tags = Array[StringName]([&"bridge_withdraw_partial"])
+
+[sub_resource type="Resource" id="Resource_kemhm"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 4
+reason_code = &"bridge_withdraw_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_ntc7s"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = -1
+reason_code = &"bridge_withdraw_severe_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_gg45n"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 2
+reason_code = &"bridge_withdraw_severe_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_fv8ct"]
+script = ExtResource("7_12cge")
+protect_life = -4
+respect_authority = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_y7ppp"]
+script = ExtResource("13_7wjlc")
+type = &"injury_risk"
+amount = 30
+reason_code = &"bridge_withdraw_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_y0rt8"]
+script = ExtResource("14_jmfna")
+member_effects = Array[ExtResource("13_7wjlc")]([SubResource("Resource_y7ppp")])
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_kemhm"), SubResource("Resource_ntc7s"), SubResource("Resource_gg45n")])
+ideology_impact = SubResource("Resource_fv8ct")
+outcome_tags = Array[StringName]([&"bridge_withdraw_severe"])
+
+[sub_resource type="Resource" id="Resource_7825q"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 4
+reason_code = &"bridge_withdraw_success_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_e2smr"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 1
+reason_code = &"bridge_withdraw_success_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_a0k52"]
+script = ExtResource("3_6511k")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 1
+reason_code = &"bridge_withdraw_success_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_tgr0a"]
+script = ExtResource("7_12cge")
+protect_life = 2
+respect_authority = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_80lvb"]
+script = ExtResource("13_7wjlc")
+type = &"injury_risk"
+amount = 3
+reason_code = &"bridge_withdraw_success_injury_risk"
+
+[sub_resource type="Resource" id="Resource_biyaq"]
+script = ExtResource("14_jmfna")
+member_effects = Array[ExtResource("13_7wjlc")]([SubResource("Resource_80lvb")])
+campaign_effects = Array[ExtResource("3_6511k")]([SubResource("Resource_7825q"), SubResource("Resource_e2smr"), SubResource("Resource_a0k52")])
+ideology_impact = SubResource("Resource_tgr0a")
+outcome_tags = Array[StringName]([&"bridge_withdraw_success", &"bridge_intact"])
+
+[sub_resource type="Resource" id="Resource_034d6"]
+script = ExtResource("15_o2f4c")
+exceptional = SubResource("Resource_umxtd")
+success = SubResource("Resource_biyaq")
+partial = SubResource("Resource_hv3w7")
+failure = SubResource("Resource_oqk20")
+severe = SubResource("Resource_y0rt8")
+
+[sub_resource type="Resource" id="Resource_t7g4r"]
+script = ExtResource("16_h23x4")
+id = &"bridge_withdraw"
+check_type = &"extraction"
+capability_weights = SubResource("Resource_clmyj")
+difficulty = 29
+result_weight = 0.2
+failure_result_cap = &"failure"
+method_tags = Array[StringName]([&"extraction", &"evacuation"])
+context_modifiers = Array[ExtResource("11_trfrq")]([SubResource("Resource_p387l"), SubResource("Resource_e5wlb"), SubResource("Resource_lofb8")])
+approach_profile = &"careful"
+outcome_table = SubResource("Resource_034d6")
+
+[sub_resource type="Resource" id="Resource_xqeu1"]
+script = ExtResource("9_e4jr4")
+id = &"hold_stone_bridge_stage_extraction"
+phase = &"extraction"
+check = SubResource("Resource_t7g4r")
+
+[resource]
+script = ExtResource("8_cdkp4")
+id = &"contract_hold_stone_bridge"
+title_key = &"contract.contract_hold_stone_bridge.title"
+description_key = &"contract.contract_hold_stone_bridge.description"
+sponsor_faction_id = &"faction_free_adventurers"
+related_problem_id = &"problem_evacuating_civilians"
+target_lock_key = &"stone_bridge.hold_evacuation_line"
+target_problem_tags = Array[StringName]([&"defensive_line"])
+agenda_tags = Array[StringName]([&"evacuation", &"protection", &"reduce_collateral"])
+starts_unlocked = false
+repeat_policy = &"once_per_campaign"
+proposal_base_priority = 17
+urgency_weight = 35
+base_reward = 240
+base_fatigue = 14
+risk_level = 3
+offer_duration_weeks = 2
+intent_ideology_vector = SubResource("Resource_gnqno")
+expected_method_tags = Array[StringName]([&"reconnaissance", &"scouting", &"protection", &"nonlethal", &"confrontation", &"extraction", &"evacuation"])
+stages = Array[ExtResource("9_e4jr4")]([SubResource("Resource_cj4ds"), SubResource("Resource_vd4rn"), SubResource("Resource_j82is"), SubResource("Resource_xqeu1")])
+clause_ids = Array[StringName]([&"bridge_hold_line_clause", &"bridge_civilians_passed", &"bridge_intact_bonus"])
+allowed_supply_tags = Array[StringName]([&"scouting", &"protection", &"medical", &"rations"])
+final_outcome_table = SubResource("Resource_gxs8f")
+availability_rules = Array[ExtResource("1_7a44a")]([SubResource("Resource_dydu7")])
+unhandled_policy = &"escalate"

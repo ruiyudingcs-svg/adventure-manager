@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="FactionActionDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="1_hljev"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="2_vjmlw"]
+[ext_resource type="Script" path="res://game/data/definitions/factions/faction_action_definition_resource.gd" id="3_ex4wx"]
+
+[sub_resource type="Resource" id="Resource_t864r"]
+script = ExtResource("2_vjmlw")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 12
+reason_code = &"action_necrotic_collective_recover_corpses_necrotic_corruption"
+
+[resource]
+script = ExtResource("3_ex4wx")
+id = &"action_necrotic_collective_recover_corpses"
+agenda_tags = Array[StringName]([&"corruption", &"corpse_use"])
+target_lock_key = &"battlefield.recover_intact_corpses"
+base_intent_priority = 16
+urgency_weight = 30
+recent_repeat_cooldown = 1
+influence_cost = 6
+target_problem_tags = Array[StringName]([&"battlefield_corpses"])
+effects = Array[ExtResource("2_vjmlw")]([SubResource("Resource_t864r")])
+event_key = &"event_corpses_recovered_by_collective"

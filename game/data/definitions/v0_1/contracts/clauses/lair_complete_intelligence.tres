@@ -1,0 +1,61 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_sh4tf"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_o74wt"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_exqe2"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_mac1l"]
+
+[sub_resource type="Resource" id="Resource_b13o8"]
+script = ExtResource("1_sh4tf")
+type = &"outcome_tag_present"
+tag_value = &"lair_coordinates_found"
+
+[sub_resource type="Resource" id="Resource_8s0p4"]
+script = ExtResource("1_sh4tf")
+type = &"outcome_tag_present"
+tag_value = &"intelligence_delivered"
+
+[sub_resource type="Resource" id="Resource_b7c0d"]
+script = ExtResource("2_o74wt")
+type = &"modify_reward_percent"
+amount = -20
+reason_code = &"lair_complete_intelligence_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_nfabu"]
+script = ExtResource("2_o74wt")
+type = &"modify_sponsor_relation"
+amount = -6
+reason_code = &"lair_complete_intelligence_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_37ysc"]
+script = ExtResource("3_exqe2")
+seek_knowledge = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_d24m0"]
+script = ExtResource("2_o74wt")
+type = &"modify_sponsor_relation"
+amount = 2
+reason_code = &"lair_complete_intelligence_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_grvtl"]
+script = ExtResource("3_exqe2")
+seek_knowledge = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_mac1l")
+id = &"lair_complete_intelligence"
+display_name_key = &"clause.lair_complete_intelligence.name"
+description_key = &"clause.lair_complete_intelligence.description"
+category = &"delivery"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_sh4tf")]([SubResource("Resource_b13o8"), SubResource("Resource_8s0p4")])
+success_effects = Array[ExtResource("2_o74wt")]([SubResource("Resource_d24m0")])
+failure_effects = Array[ExtResource("2_o74wt")]([SubResource("Resource_b7c0d"), SubResource("Resource_nfabu")])
+breach_result_cap = &"partial"
+success_ideology_impact = SubResource("Resource_grvtl")
+failure_ideology_impact = SubResource("Resource_37ysc")
+success_tags = Array[StringName]([&"clause.lair_complete_intelligence.satisfied"])
+failure_tags = Array[StringName]([&"clause.lair_complete_intelligence.breached"])
+priority = 20

@@ -1,0 +1,47 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_mksbq"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_slr1h"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_w5j8g"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_rsu80"]
+
+[sub_resource type="Resource" id="Resource_38o4c"]
+script = ExtResource("1_mksbq")
+type = &"context_lte"
+key = &"collateral_pressure"
+int_value = 1
+
+[sub_resource type="Resource" id="Resource_v1u5s"]
+script = ExtResource("3_w5j8g")
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_873be"]
+script = ExtResource("2_slr1h")
+type = &"modify_reward_percent"
+amount = 15
+reason_code = &"bait_no_civilian_deaths_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_57gn0"]
+script = ExtResource("2_slr1h")
+type = &"modify_sponsor_relation"
+amount = 2
+reason_code = &"bait_no_civilian_deaths_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_oajto"]
+script = ExtResource("3_w5j8g")
+protect_life = 2
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_rsu80")
+id = &"bait_no_civilian_deaths"
+display_name_key = &"clause.bait_no_civilian_deaths.name"
+description_key = &"clause.bait_no_civilian_deaths.description"
+category = &"collateral"
+importance = &"bonus"
+all_conditions = Array[ExtResource("1_mksbq")]([SubResource("Resource_38o4c")])
+success_effects = Array[ExtResource("2_slr1h")]([SubResource("Resource_873be"), SubResource("Resource_57gn0")])
+success_ideology_impact = SubResource("Resource_oajto")
+failure_ideology_impact = SubResource("Resource_v1u5s")
+success_tags = Array[StringName]([&"clause.bait_no_civilian_deaths.satisfied"])
+priority = 30

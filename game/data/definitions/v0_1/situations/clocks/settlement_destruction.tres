@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ClockDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/clock_definition_resource.gd" id="1_3gv81"]
+
+[resource]
+script = ExtResource("1_3gv81")
+id = &"settlement_destruction"
+display_name_key = &"clock.settlement_destruction.name"
+initial_value = 10

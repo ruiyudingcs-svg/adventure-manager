@@ -1,0 +1,51 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_7igji"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_kysr3"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_wf0qf"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_u5isc"]
+
+[sub_resource type="Resource" id="Resource_j4s4o"]
+script = ExtResource("1_7igji")
+type = &"selected_supply_tag_present"
+tag_value = &"arcane_binding"
+
+[sub_resource type="Resource" id="Resource_4x5h2"]
+script = ExtResource("1_7igji")
+type = &"method_tag_used"
+tag_value = &"binding"
+
+[sub_resource type="Resource" id="Resource_yvubi"]
+script = ExtResource("2_kysr3")
+type = &"modify_reward_percent"
+amount = -20
+reason_code = &"clause_binding_device_reward"
+
+[sub_resource type="Resource" id="Resource_urjnp"]
+script = ExtResource("2_kysr3")
+type = &"modify_sponsor_relation"
+amount = -6
+reason_code = &"clause_binding_device_relation"
+
+[sub_resource type="Resource" id="Resource_8n25v"]
+script = ExtResource("3_wf0qf")
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_s7dmf"]
+script = ExtResource("3_wf0qf")
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_u5isc")
+id = &"binding_use_calibrated_device"
+display_name_key = &"clause.binding_use_calibrated_device.name"
+description_key = &"clause.binding_use_calibrated_device.description"
+category = &"method"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_7igji")]([SubResource("Resource_j4s4o"), SubResource("Resource_4x5h2")])
+failure_effects = Array[ExtResource("2_kysr3")]([SubResource("Resource_yvubi"), SubResource("Resource_urjnp")])
+breach_result_cap = &"partial"
+success_ideology_impact = SubResource("Resource_s7dmf")
+failure_ideology_impact = SubResource("Resource_8n25v")
+success_tags = Array[StringName]([&"clause.calibrated_binding"])
+priority = 20

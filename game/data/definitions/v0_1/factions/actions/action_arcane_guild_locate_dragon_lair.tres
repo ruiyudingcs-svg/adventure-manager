@@ -1,0 +1,50 @@
+[gd_resource type="Resource" script_class="FactionActionDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="1_6mtse"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="2_qk6ga"]
+[ext_resource type="Script" path="res://game/data/definitions/factions/faction_action_definition_resource.gd" id="3_6cvkp"]
+
+[sub_resource type="Resource" id="Resource_eafy6"]
+script = ExtResource("1_6mtse")
+type = &"world_event_not_occurred"
+target_id = &"event_dragon_killed"
+
+[sub_resource type="Resource" id="Resource_sifa7"]
+script = ExtResource("1_6mtse")
+type = &"world_event_not_occurred"
+target_id = &"event_dragon_captured"
+
+[sub_resource type="Resource" id="Resource_4f15w"]
+script = ExtResource("2_qk6ga")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = 8
+reason_code = &"action_arcane_guild_locate_dragon_lair_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_1dveg"]
+script = ExtResource("2_qk6ga")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 2
+reason_code = &"action_arcane_guild_locate_dragon_lair_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_op3u8"]
+script = ExtResource("2_qk6ga")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 1
+reason_code = &"action_arcane_guild_locate_dragon_lair_settlement_destruction"
+
+[resource]
+script = ExtResource("3_6cvkp")
+id = &"action_arcane_guild_locate_dragon_lair"
+agenda_tags = Array[StringName]([&"research"])
+target_lock_key = &"dragon_lair.locate_without_alert"
+base_intent_priority = 16
+urgency_weight = 25
+recent_repeat_cooldown = 2
+influence_cost = 6
+conditions = Array[ExtResource("1_6mtse")]([SubResource("Resource_eafy6"), SubResource("Resource_sifa7")])
+target_problem_tags = Array[StringName]([&"dragon_tracking"])
+effects = Array[ExtResource("2_qk6ga")]([SubResource("Resource_4f15w"), SubResource("Resource_1dveg"), SubResource("Resource_op3u8")])
+event_key = &"event_dragon_lair_located"

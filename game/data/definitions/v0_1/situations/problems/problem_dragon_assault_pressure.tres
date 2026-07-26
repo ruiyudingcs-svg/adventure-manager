@@ -1,0 +1,89 @@
+[gd_resource type="Resource" script_class="WorldProblemDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_rule_resource.gd" id="1_4od2x"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="2_ax578"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="3_pramk"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_problem_definition_resource.gd" id="4_fupdq"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/problem_urgency_rule_resource.gd" id="5_0eqkh"]
+
+[sub_resource type="Resource" id="Resource_43svh"]
+script = ExtResource("2_ax578")
+type = &"create_world_event"
+target_id = &"event_village_burned"
+reason_code = &"problem_dragon_assault_pressure_escalated"
+
+[sub_resource type="Resource" id="Resource_gjsa0"]
+script = ExtResource("2_ax578")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 15
+reason_code = &"problem_dragon_assault_pressure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_q02wx"]
+script = ExtResource("2_ax578")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 3
+reason_code = &"problem_dragon_assault_pressure_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_dme8t"]
+script = ExtResource("3_pramk")
+type = &"world_event_occurred"
+target_id = &"event_dragon_diverted"
+
+[sub_resource type="Resource" id="Resource_tgk2c"]
+script = ExtResource("1_4od2x")
+id = &"resolve_dragon_assault_pressure_1"
+all_conditions = Array[ExtResource("3_pramk")]([SubResource("Resource_dme8t")])
+
+[sub_resource type="Resource" id="Resource_y8d65"]
+script = ExtResource("3_pramk")
+type = &"clock_gte"
+target_id = &"dragon_exhaustion"
+int_value = 40
+
+[sub_resource type="Resource" id="Resource_m3ici"]
+script = ExtResource("1_4od2x")
+id = &"resolve_dragon_assault_pressure_2"
+all_conditions = Array[ExtResource("3_pramk")]([SubResource("Resource_y8d65")])
+
+[sub_resource type="Resource" id="Resource_uo3op"]
+script = ExtResource("3_pramk")
+type = &"clock_gte"
+target_id = &"settlement_destruction"
+int_value = 30
+
+[sub_resource type="Resource" id="Resource_2i6iw"]
+script = ExtResource("5_0eqkh")
+id = &"urgency_dragon_assault_breaking_settlements"
+all_conditions = Array[ExtResource("3_pramk")]([SubResource("Resource_uo3op")])
+urgency_delta = 20
+reason_code = &"urgency_dragon_assault_breaking_settlements"
+
+[sub_resource type="Resource" id="Resource_3wrxn"]
+script = ExtResource("3_pramk")
+type = &"phase_is"
+target_id = &"phase_final_window"
+
+[sub_resource type="Resource" id="Resource_cntm6"]
+script = ExtResource("5_0eqkh")
+id = &"urgency_dragon_assault_final_window"
+all_conditions = Array[ExtResource("3_pramk")]([SubResource("Resource_3wrxn")])
+urgency_delta = 10
+reason_code = &"urgency_dragon_assault_final_window"
+
+[resource]
+script = ExtResource("4_fupdq")
+id = &"problem_dragon_assault_pressure"
+title_key = &"problem.problem_dragon_assault_pressure.title"
+description_key = &"problem.problem_dragon_assault_pressure.description"
+problem_tags = Array[StringName]([&"dragon_assault", &"settlement_defense"])
+base_urgency = 60
+age_urgency_per_week = 8
+age_urgency_cap = 24
+response_window_weeks = 3
+urgency_rules = Array[ExtResource("5_0eqkh")]([SubResource("Resource_2i6iw"), SubResource("Resource_cntm6")])
+resolution_rules = Array[ExtResource("1_4od2x")]([SubResource("Resource_tgk2c"), SubResource("Resource_m3ici")])
+related_clock_ids = Array[StringName]([&"settlement_destruction", &"dragon_exhaustion", &"necrotic_corruption"])
+contract_definition_ids = Array[StringName]([&"contract_prepare_dragon_bait"])
+escalation_effects = Array[ExtResource("2_ax578")]([SubResource("Resource_43svh"), SubResource("Resource_gjsa0"), SubResource("Resource_q02wx")])

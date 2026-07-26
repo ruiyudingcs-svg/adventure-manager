@@ -11,7 +11,8 @@
 
 - 阶段、结局、阵营目标与五条钟：`docs/17_dragon_invasion_scenario_spec.md`。
 - 十二份合同自身的提出方、类型、阶段、条款、生成参数和代表性结果：`docs/09_contract_template_catalog.md`。
-- 三份完整数值合同：`docs/10_baseline_contracts.md`。
+- 三份完整数值基准合同：`docs/10_baseline_contracts.md`。
+- 其余九份完整数值合同：`docs/21_remaining_contract_numerical_rules.md`。
 - 九个问题、阵营行动、问题—合同—行动连接和结局路径审计：本文。
 
 本文不增加动态任务生成、NPC 外交、行动冲突、目标树状态或问题重生规则。

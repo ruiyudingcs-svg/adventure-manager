@@ -1,0 +1,47 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_uo7ic"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_b21ht"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_xengs"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_fo7er"]
+
+[sub_resource type="Resource" id="Resource_oiqoo"]
+script = ExtResource("1_uo7ic")
+type = &"context_lte"
+key = &"collateral_pressure"
+int_value = 2
+
+[sub_resource type="Resource" id="Resource_euwtn"]
+script = ExtResource("2_b21ht")
+type = &"modify_sponsor_relation"
+amount = -4
+reason_code = &"clause_evac_collateral_breach"
+
+[sub_resource type="Resource" id="Resource_tx0wl"]
+script = ExtResource("3_xengs")
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_1w3tu"]
+script = ExtResource("2_b21ht")
+type = &"modify_sponsor_relation"
+amount = 2
+reason_code = &"clause_evac_collateral_kept"
+
+[sub_resource type="Resource" id="Resource_eanpn"]
+script = ExtResource("3_xengs")
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_fo7er")
+id = &"evac_collateral_limit"
+display_name_key = &"clause.evac_collateral_limit.name"
+description_key = &"clause.evac_collateral_limit.description"
+category = &"collateral"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_uo7ic")]([SubResource("Resource_oiqoo")])
+success_effects = Array[ExtResource("2_b21ht")]([SubResource("Resource_1w3tu")])
+failure_effects = Array[ExtResource("2_b21ht")]([SubResource("Resource_euwtn")])
+success_ideology_impact = SubResource("Resource_eanpn")
+failure_ideology_impact = SubResource("Resource_tx0wl")
+failure_tags = Array[StringName]([&"clause.excessive_destruction"])
+priority = 20

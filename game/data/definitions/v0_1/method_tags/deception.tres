@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="MethodTagDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="1_ryewy"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/method_tag_definition_resource.gd" id="2_17h2y"]
+
+[sub_resource type="Resource" id="Resource_pphci"]
+script = ExtResource("1_ryewy")
+respect_authority = -1
+task_accumulation = true
+
+[resource]
+script = ExtResource("2_17h2y")
+id = &"deception"
+ideology_vector = SubResource("Resource_pphci")

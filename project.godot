@@ -10,14 +10,28 @@ config_version=5
 
 [application]
 
-config/name="adventure manager"
+config/name="Adventure Manager V0.1"
+run/main_scene="res://game/app/app_root.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+GameSession="*res://game/app/game_session.gd"
+DataCatalog="*res://game/data/catalogs/data_catalog.gd"
+SceneRouter="*res://game/app/scene_router.gd"
+
 [display]
 
+window/size/viewport_width=1280
+window/size/viewport_height=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://game/ui/localization/strings.zh_CN.translation")
+locale/fallback="zh_CN"
 
 [physics]
 

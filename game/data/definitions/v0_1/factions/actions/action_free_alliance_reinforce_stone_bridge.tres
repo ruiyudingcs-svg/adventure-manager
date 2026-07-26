@@ -1,0 +1,45 @@
+[gd_resource type="Resource" script_class="FactionActionDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="1_07sij"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="2_snwkr"]
+[ext_resource type="Script" path="res://game/data/definitions/factions/faction_action_definition_resource.gd" id="3_jtf2r"]
+
+[sub_resource type="Resource" id="Resource_jiqbm"]
+script = ExtResource("1_07sij")
+type = &"problem_is_active"
+target_id = &"problem_evacuating_civilians"
+
+[sub_resource type="Resource" id="Resource_vdxka"]
+script = ExtResource("2_snwkr")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 6
+reason_code = &"action_free_alliance_reinforce_stone_bridge_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_1shc0"]
+script = ExtResource("2_snwkr")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 4
+reason_code = &"action_free_alliance_reinforce_stone_bridge_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_1mlx1"]
+script = ExtResource("2_snwkr")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 4
+reason_code = &"action_free_alliance_reinforce_stone_bridge_settlement_destruction"
+
+[resource]
+script = ExtResource("3_jtf2r")
+id = &"action_free_alliance_reinforce_stone_bridge"
+agenda_tags = Array[StringName]([&"evacuation", &"protection"])
+target_lock_key = &"stone_bridge.hold_evacuation_line"
+base_intent_priority = 15
+urgency_weight = 30
+recent_repeat_cooldown = 2
+influence_cost = 6
+conditions = Array[ExtResource("1_07sij")]([SubResource("Resource_jiqbm")])
+target_problem_tags = Array[StringName]([&"defensive_line"])
+effects = Array[ExtResource("2_snwkr")]([SubResource("Resource_vdxka"), SubResource("Resource_1shc0"), SubResource("Resource_1mlx1")])
+event_key = &"event_stone_bridge_secured"

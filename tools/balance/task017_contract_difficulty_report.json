@@ -1,0 +1,741 @@
+{
+	"generated_by": "Task017 real ContractForecastService difficulty audit",
+	"campaign_seed": 170201,
+	"week_index": 1,
+	"check_tier_thresholds": {
+		"exceptional": 70,
+		"success": 50,
+		"partial": 30,
+		"failure": 10
+	},
+	"contract_tier_thresholds": {
+		"exceptional": 80.0,
+		"success": 60.0,
+		"partial": 40.0,
+		"failure": 20.0
+	},
+	"offers": [
+		{
+			"contract_id": "contract_locate_dragon_lair",
+			"offer_id": "contract_offer_498a1c26",
+			"evaluated_unprepared_plans": 210,
+			"unprepared_interval_counts": {
+				"partial..success": 13,
+				"partial..partial": 40,
+				"failure..partial": 144,
+				"failure..failure": 13
+			},
+			"exact_reranked_unprepared_plans": 210,
+			"best_unprepared": {
+				"member_ids": [
+					"elin_pathfinder",
+					"mara_shield",
+					"nera_hedgewitch",
+					"sister_ana"
+				],
+				"supply_ids": [],
+				"approach": "cautious",
+				"likely_tier_low": "partial",
+				"likely_tier_high": "success",
+				"plan_signature": "cautious|[&\"nera_hedgewitch\", &\"elin_pathfinder\", &\"sister_ana\", &\"mara_shield\"]|[]",
+				"tier_counts": {
+					"severe": 0,
+					"failure": 0,
+					"partial": 43,
+					"success": 21,
+					"exceptional": 0,
+					"check_score_stats": {
+						"lair_follow_tracks": {
+							"minimum": 41,
+							"maximum": 61,
+							"average": 52.05,
+							"tier_counts": {
+								"partial": 24,
+								"success": 40
+							}
+						},
+						"lair_observe_pattern": {
+							"minimum": 35,
+							"maximum": 56,
+							"average": 46.95,
+							"tier_counts": {
+								"partial": 38,
+								"success": 26
+							}
+						},
+						"lair_collect_residue": {
+							"minimum": 26,
+							"maximum": 49,
+							"average": 36.92,
+							"tier_counts": {
+								"failure": 7,
+								"partial": 57
+							}
+						},
+						"lair_withdraw_unseen": {
+							"minimum": 36,
+							"maximum": 59,
+							"average": 48.03,
+							"tier_counts": {
+								"success": 26,
+								"partial": 38
+							}
+						}
+					},
+					"initial_tier_counts": {
+						"partial": 43,
+						"success": 21
+					},
+					"operational_tier_counts": {
+						"partial": 43,
+						"success": 21
+					},
+					"clause_satisfied_counts": {
+						"lair_do_not_alert_dragon": 64,
+						"lair_complete_intelligence": 26
+					},
+					"locked_seed_tier": "partial",
+					"locked_initial_tier": "partial",
+					"locked_operational_tier": "partial",
+					"locked_check_results": [
+						{
+							"check_id": "lair_follow_tracks",
+							"score": 58,
+							"tier": "success"
+						},
+						{
+							"check_id": "lair_observe_pattern",
+							"score": 43,
+							"tier": "partial"
+						},
+						{
+							"check_id": "lair_collect_residue",
+							"score": 47,
+							"tier": "partial"
+						},
+						{
+							"check_id": "lair_withdraw_unseen",
+							"score": 47,
+							"tier": "partial"
+						}
+					],
+					"locked_clause_results": [
+						{
+							"clause_id": "lair_do_not_alert_dragon",
+							"satisfied": true,
+							"result_cap": ""
+						},
+						{
+							"clause_id": "lair_complete_intelligence",
+							"satisfied": false,
+							"result_cap": "partial"
+						},
+						{
+							"clause_id": "lair_collect_residue",
+							"satisfied": false,
+							"result_cap": ""
+						}
+					]
+				}
+			},
+			"evaluated_prepared_shortlist_plans": 155,
+			"exact_reranked_prepared_plans": 155,
+			"best_prepared": {
+				"member_ids": [
+					"elin_pathfinder",
+					"orrin_arcanist",
+					"sister_ana",
+					"veska_hunter"
+				],
+				"supply_ids": [
+					"supply_scouting"
+				],
+				"approach": "cautious",
+				"likely_tier_low": "partial",
+				"likely_tier_high": "success",
+				"plan_signature": "cautious|[&\"elin_pathfinder\", &\"orrin_arcanist\", &\"veska_hunter\", &\"sister_ana\"]|[&\"supply_scouting\"]",
+				"tier_counts": {
+					"severe": 0,
+					"failure": 1,
+					"partial": 37,
+					"success": 26,
+					"exceptional": 0,
+					"check_score_stats": {
+						"lair_follow_tracks": {
+							"minimum": 45,
+							"maximum": 65,
+							"average": 55.73,
+							"tier_counts": {
+								"success": 54,
+								"partial": 10
+							}
+						},
+						"lair_observe_pattern": {
+							"minimum": 37,
+							"maximum": 57,
+							"average": 48.72,
+							"tier_counts": {
+								"partial": 32,
+								"success": 32
+							}
+						},
+						"lair_collect_residue": {
+							"minimum": 27,
+							"maximum": 48,
+							"average": 37.84,
+							"tier_counts": {
+								"partial": 59,
+								"failure": 5
+							}
+						},
+						"lair_withdraw_unseen": {
+							"minimum": 28,
+							"maximum": 56,
+							"average": 44.64,
+							"tier_counts": {
+								"success": 20,
+								"partial": 43,
+								"failure": 1
+							}
+						}
+					},
+					"initial_tier_counts": {
+						"partial": 38,
+						"success": 26
+					},
+					"operational_tier_counts": {
+						"partial": 37,
+						"success": 26,
+						"failure": 1
+					},
+					"clause_satisfied_counts": {
+						"lair_do_not_alert_dragon": 64,
+						"lair_complete_intelligence": 31
+					},
+					"locked_seed_tier": "partial",
+					"locked_initial_tier": "partial",
+					"locked_operational_tier": "partial",
+					"locked_check_results": [
+						{
+							"check_id": "lair_follow_tracks",
+							"score": 62,
+							"tier": "success"
+						},
+						{
+							"check_id": "lair_observe_pattern",
+							"score": 43,
+							"tier": "partial"
+						},
+						{
+							"check_id": "lair_collect_residue",
+							"score": 47,
+							"tier": "partial"
+						},
+						{
+							"check_id": "lair_withdraw_unseen",
+							"score": 44,
+							"tier": "partial"
+						}
+					],
+					"locked_clause_results": [
+						{
+							"clause_id": "lair_do_not_alert_dragon",
+							"satisfied": true,
+							"result_cap": ""
+						},
+						{
+							"clause_id": "lair_complete_intelligence",
+							"satisfied": false,
+							"result_cap": "partial"
+						},
+						{
+							"clause_id": "lair_collect_residue",
+							"satisfied": false,
+							"result_cap": ""
+						}
+					]
+				}
+			}
+		},
+		{
+			"contract_id": "contract_recover_intact_corpses",
+			"offer_id": "contract_offer_c85afe93",
+			"evaluated_unprepared_plans": 210,
+			"unprepared_interval_counts": {
+				"failure..partial": 134,
+				"failure..failure": 63,
+				"severe..partial": 2,
+				"severe..failure": 11
+			},
+			"exact_reranked_unprepared_plans": 210,
+			"best_unprepared": {
+				"member_ids": [
+					"elin_pathfinder",
+					"nera_hedgewitch",
+					"orrin_arcanist",
+					"sister_ana"
+				],
+				"supply_ids": [],
+				"approach": "cautious",
+				"likely_tier_low": "failure",
+				"likely_tier_high": "partial",
+				"plan_signature": "cautious|[&\"nera_hedgewitch\", &\"elin_pathfinder\", &\"orrin_arcanist\", &\"sister_ana\"]|[]",
+				"tier_counts": {
+					"severe": 0,
+					"failure": 28,
+					"partial": 36,
+					"success": 0,
+					"exceptional": 0,
+					"check_score_stats": {
+						"corpse_avoid_patrols": {
+							"minimum": 36,
+							"maximum": 55,
+							"average": 46.03,
+							"tier_counts": {
+								"partial": 42,
+								"success": 22
+							}
+						},
+						"corpse_secure_battlefield": {
+							"minimum": 8,
+							"maximum": 30,
+							"average": 19.3,
+							"tier_counts": {
+								"failure": 59,
+								"severe": 3,
+								"partial": 2
+							}
+						},
+						"corpse_preserve_remains": {
+							"minimum": 24,
+							"maximum": 44,
+							"average": 35.03,
+							"tier_counts": {
+								"failure": 16,
+								"partial": 48
+							}
+						},
+						"corpse_smuggle_cargo": {
+							"minimum": 20,
+							"maximum": 45,
+							"average": 33.78,
+							"tier_counts": {
+								"partial": 50,
+								"failure": 14
+							}
+						}
+					},
+					"initial_tier_counts": {
+						"failure": 26,
+						"partial": 38
+					},
+					"operational_tier_counts": {
+						"failure": 28,
+						"partial": 36
+					},
+					"clause_satisfied_counts": {},
+					"locked_seed_tier": "partial",
+					"locked_initial_tier": "partial",
+					"locked_operational_tier": "partial",
+					"locked_check_results": [
+						{
+							"check_id": "corpse_avoid_patrols",
+							"score": 54,
+							"tier": "success"
+						},
+						{
+							"check_id": "corpse_secure_battlefield",
+							"score": 26,
+							"tier": "failure"
+						},
+						{
+							"check_id": "corpse_preserve_remains",
+							"score": 44,
+							"tier": "partial"
+						},
+						{
+							"check_id": "corpse_smuggle_cargo",
+							"score": 43,
+							"tier": "partial"
+						}
+					],
+					"locked_clause_results": [
+						{
+							"clause_id": "corpse_deliver_three",
+							"satisfied": false,
+							"result_cap": "partial"
+						},
+						{
+							"clause_id": "corpse_keep_sponsor_secret",
+							"satisfied": false,
+							"result_cap": "partial"
+						},
+						{
+							"clause_id": "corpse_arcane_residue",
+							"satisfied": false,
+							"result_cap": ""
+						}
+					]
+				}
+			},
+			"evaluated_prepared_shortlist_plans": 155,
+			"exact_reranked_prepared_plans": 155,
+			"best_prepared": {
+				"member_ids": [
+					"elin_pathfinder",
+					"nera_hedgewitch",
+					"orrin_arcanist",
+					"pell_quartermaster"
+				],
+				"supply_ids": [
+					"supply_arcane_binding",
+					"supply_scouting"
+				],
+				"approach": "cautious",
+				"likely_tier_low": "failure",
+				"likely_tier_high": "partial",
+				"plan_signature": "cautious|[&\"nera_hedgewitch\", &\"pell_quartermaster\", &\"elin_pathfinder\", &\"orrin_arcanist\"]|[&\"supply_arcane_binding\", &\"supply_scouting\"]",
+				"tier_counts": {
+					"severe": 0,
+					"failure": 14,
+					"partial": 50,
+					"success": 0,
+					"exceptional": 0,
+					"check_score_stats": {
+						"corpse_avoid_patrols": {
+							"minimum": 41,
+							"maximum": 61,
+							"average": 51.45,
+							"tier_counts": {
+								"success": 41,
+								"partial": 23
+							}
+						},
+						"corpse_secure_battlefield": {
+							"minimum": 10,
+							"maximum": 31,
+							"average": 20.64,
+							"tier_counts": {
+								"failure": 60,
+								"partial": 4
+							}
+						},
+						"corpse_preserve_remains": {
+							"minimum": 27,
+							"maximum": 47,
+							"average": 38.55,
+							"tier_counts": {
+								"failure": 5,
+								"partial": 59
+							}
+						},
+						"corpse_smuggle_cargo": {
+							"minimum": 23,
+							"maximum": 48,
+							"average": 35.55,
+							"tier_counts": {
+								"partial": 52,
+								"failure": 12
+							}
+						}
+					},
+					"initial_tier_counts": {
+						"failure": 11,
+						"partial": 53
+					},
+					"operational_tier_counts": {
+						"failure": 14,
+						"partial": 50
+					},
+					"clause_satisfied_counts": {},
+					"locked_seed_tier": "partial",
+					"locked_initial_tier": "partial",
+					"locked_operational_tier": "partial",
+					"locked_check_results": [
+						{
+							"check_id": "corpse_avoid_patrols",
+							"score": 59,
+							"tier": "success"
+						},
+						{
+							"check_id": "corpse_secure_battlefield",
+							"score": 28,
+							"tier": "failure"
+						},
+						{
+							"check_id": "corpse_preserve_remains",
+							"score": 47,
+							"tier": "partial"
+						},
+						{
+							"check_id": "corpse_smuggle_cargo",
+							"score": 43,
+							"tier": "partial"
+						}
+					],
+					"locked_clause_results": [
+						{
+							"clause_id": "corpse_deliver_three",
+							"satisfied": false,
+							"result_cap": "partial"
+						},
+						{
+							"clause_id": "corpse_keep_sponsor_secret",
+							"satisfied": false,
+							"result_cap": "partial"
+						},
+						{
+							"clause_id": "corpse_arcane_residue",
+							"satisfied": false,
+							"result_cap": ""
+						}
+					]
+				}
+			}
+		},
+		{
+			"contract_id": "contract_scout_eastern_road",
+			"offer_id": "contract_offer_b0f97d63",
+			"evaluated_unprepared_plans": 210,
+			"unprepared_interval_counts": {
+				"failure..success": 89,
+				"failure..partial": 28,
+				"failure..failure": 93
+			},
+			"exact_reranked_unprepared_plans": 210,
+			"best_unprepared": {
+				"member_ids": [
+					"elin_pathfinder",
+					"mara_shield",
+					"nera_hedgewitch",
+					"sister_ana"
+				],
+				"supply_ids": [],
+				"approach": "cautious",
+				"likely_tier_low": "failure",
+				"likely_tier_high": "success",
+				"plan_signature": "cautious|[&\"nera_hedgewitch\", &\"elin_pathfinder\", &\"sister_ana\", &\"mara_shield\"]|[]",
+				"tier_counts": {
+					"severe": 0,
+					"failure": 23,
+					"partial": 2,
+					"success": 39,
+					"exceptional": 0,
+					"check_score_stats": {
+						"road_find_crossing": {
+							"minimum": 45,
+							"maximum": 65,
+							"average": 54.05,
+							"tier_counts": {
+								"success": 50,
+								"partial": 14
+							}
+						},
+						"road_map_hazards": {
+							"minimum": 41,
+							"maximum": 63,
+							"average": 52.69,
+							"tier_counts": {
+								"success": 41,
+								"partial": 23
+							}
+						},
+						"road_shield_scouts": {
+							"minimum": 33,
+							"maximum": 54,
+							"average": 44.03,
+							"tier_counts": {
+								"partial": 53,
+								"success": 11
+							}
+						},
+						"road_return_report": {
+							"minimum": 41,
+							"maximum": 63,
+							"average": 53.55,
+							"tier_counts": {
+								"success": 45,
+								"partial": 19
+							}
+						}
+					},
+					"initial_tier_counts": {
+						"success": 50,
+						"partial": 14
+					},
+					"operational_tier_counts": {
+						"success": 50,
+						"partial": 14
+					},
+					"clause_satisfied_counts": {
+						"road_find_usable_route": 41,
+						"road_deliver_report": 64,
+						"road_remain_unnoticed": 64
+					},
+					"locked_seed_tier": "success",
+					"locked_initial_tier": "success",
+					"locked_operational_tier": "success",
+					"locked_check_results": [
+						{
+							"check_id": "road_find_crossing",
+							"score": 58,
+							"tier": "success"
+						},
+						{
+							"check_id": "road_map_hazards",
+							"score": 51,
+							"tier": "success"
+						},
+						{
+							"check_id": "road_shield_scouts",
+							"score": 37,
+							"tier": "partial"
+						},
+						{
+							"check_id": "road_return_report",
+							"score": 51,
+							"tier": "success"
+						}
+					],
+					"locked_clause_results": [
+						{
+							"clause_id": "road_find_usable_route",
+							"satisfied": true,
+							"result_cap": ""
+						},
+						{
+							"clause_id": "road_deliver_report",
+							"satisfied": true,
+							"result_cap": ""
+						},
+						{
+							"clause_id": "road_remain_unnoticed",
+							"satisfied": true,
+							"result_cap": ""
+						}
+					]
+				}
+			},
+			"evaluated_prepared_shortlist_plans": 95,
+			"exact_reranked_prepared_plans": 95,
+			"best_prepared": {
+				"member_ids": [
+					"elin_pathfinder",
+					"mara_shield",
+					"nera_hedgewitch",
+					"sister_ana"
+				],
+				"supply_ids": [
+					"supply_protection",
+					"supply_scouting"
+				],
+				"approach": "cautious",
+				"likely_tier_low": "failure",
+				"likely_tier_high": "success",
+				"plan_signature": "cautious|[&\"nera_hedgewitch\", &\"elin_pathfinder\", &\"sister_ana\", &\"mara_shield\"]|[&\"supply_protection\", &\"supply_scouting\"]",
+				"tier_counts": {
+					"severe": 0,
+					"failure": 16,
+					"partial": 0,
+					"success": 46,
+					"exceptional": 2,
+					"check_score_stats": {
+						"road_find_crossing": {
+							"minimum": 50,
+							"maximum": 70,
+							"average": 60.0,
+							"tier_counts": {
+								"success": 59,
+								"exceptional": 5
+							}
+						},
+						"road_map_hazards": {
+							"minimum": 43,
+							"maximum": 63,
+							"average": 54.34,
+							"tier_counts": {
+								"partial": 16,
+								"success": 48
+							}
+						},
+						"road_shield_scouts": {
+							"minimum": 38,
+							"maximum": 59,
+							"average": 47.63,
+							"tier_counts": {
+								"success": 22,
+								"partial": 42
+							}
+						},
+						"road_return_report": {
+							"minimum": 43,
+							"maximum": 63,
+							"average": 53.91,
+							"tier_counts": {
+								"success": 46,
+								"partial": 18
+							}
+						}
+					},
+					"initial_tier_counts": {
+						"success": 59,
+						"exceptional": 2,
+						"partial": 3
+					},
+					"operational_tier_counts": {
+						"success": 59,
+						"exceptional": 2,
+						"partial": 3
+					},
+					"clause_satisfied_counts": {
+						"road_deliver_report": 64,
+						"road_remain_unnoticed": 64,
+						"road_find_usable_route": 48
+					},
+					"locked_seed_tier": "success",
+					"locked_initial_tier": "success",
+					"locked_operational_tier": "success",
+					"locked_check_results": [
+						{
+							"check_id": "road_find_crossing",
+							"score": 63,
+							"tier": "success"
+						},
+						{
+							"check_id": "road_map_hazards",
+							"score": 51,
+							"tier": "success"
+						},
+						{
+							"check_id": "road_shield_scouts",
+							"score": 42,
+							"tier": "partial"
+						},
+						{
+							"check_id": "road_return_report",
+							"score": 51,
+							"tier": "success"
+						}
+					],
+					"locked_clause_results": [
+						{
+							"clause_id": "road_find_usable_route",
+							"satisfied": true,
+							"result_cap": ""
+						},
+						{
+							"clause_id": "road_deliver_report",
+							"satisfied": true,
+							"result_cap": ""
+						},
+						{
+							"clause_id": "road_remain_unnoticed",
+							"satisfied": true,
+							"result_cap": ""
+						}
+					]
+				}
+			}
+		}
+	]
+}

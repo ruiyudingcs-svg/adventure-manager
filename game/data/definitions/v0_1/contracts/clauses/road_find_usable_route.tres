@@ -1,0 +1,56 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_rxlei"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_pr0aq"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_g1eav"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_57rek"]
+
+[sub_resource type="Resource" id="Resource_swe1f"]
+script = ExtResource("1_rxlei")
+type = &"outcome_tag_present"
+tag_value = &"usable_route"
+
+[sub_resource type="Resource" id="Resource_6qpcf"]
+script = ExtResource("2_pr0aq")
+type = &"modify_reward_percent"
+amount = -30
+reason_code = &"road_find_usable_route_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_d56y3"]
+script = ExtResource("2_pr0aq")
+type = &"modify_sponsor_relation"
+amount = -8
+reason_code = &"road_find_usable_route_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_yvit7"]
+script = ExtResource("3_g1eav")
+seek_knowledge = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_d115o"]
+script = ExtResource("2_pr0aq")
+type = &"modify_sponsor_relation"
+amount = 3
+reason_code = &"road_find_usable_route_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_smq2j"]
+script = ExtResource("3_g1eav")
+seek_knowledge = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_57rek")
+id = &"road_find_usable_route"
+display_name_key = &"clause.road_find_usable_route.name"
+description_key = &"clause.road_find_usable_route.description"
+category = &"target_state"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_rxlei")]([SubResource("Resource_swe1f")])
+success_effects = Array[ExtResource("2_pr0aq")]([SubResource("Resource_d115o")])
+failure_effects = Array[ExtResource("2_pr0aq")]([SubResource("Resource_6qpcf"), SubResource("Resource_d56y3")])
+breach_result_cap = &"failure"
+success_ideology_impact = SubResource("Resource_smq2j")
+failure_ideology_impact = SubResource("Resource_yvit7")
+success_tags = Array[StringName]([&"clause.road_find_usable_route.satisfied"])
+failure_tags = Array[StringName]([&"clause.road_find_usable_route.breached"])
+priority = 10

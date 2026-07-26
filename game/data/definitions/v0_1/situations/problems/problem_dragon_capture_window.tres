@@ -1,0 +1,126 @@
+[gd_resource type="Resource" script_class="WorldProblemDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_rule_resource.gd" id="1_45xkq"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="2_ucp0u"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="3_x772f"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_problem_definition_resource.gd" id="4_lh20e"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/problem_urgency_rule_resource.gd" id="5_4jpc7"]
+
+[sub_resource type="Resource" id="Resource_qoy5h"]
+script = ExtResource("2_ucp0u")
+type = &"world_event_occurred"
+target_id = &"event_dragon_lair_located"
+
+[sub_resource type="Resource" id="Resource_5hcv8"]
+script = ExtResource("2_ucp0u")
+type = &"clock_gte"
+target_id = &"dragon_exhaustion"
+int_value = 25
+
+[sub_resource type="Resource" id="Resource_6l5h2"]
+script = ExtResource("1_45xkq")
+id = &"activate_dragon_capture_window_1"
+all_conditions = Array[ExtResource("2_ucp0u")]([SubResource("Resource_qoy5h"), SubResource("Resource_5hcv8")])
+
+[sub_resource type="Resource" id="Resource_jayva"]
+script = ExtResource("3_x772f")
+type = &"create_world_event"
+target_id = &"event_capture_window_closed"
+reason_code = &"problem_dragon_capture_window_escalated"
+
+[sub_resource type="Resource" id="Resource_hyfqc"]
+script = ExtResource("3_x772f")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 8
+reason_code = &"problem_dragon_capture_window_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_21m24"]
+script = ExtResource("3_x772f")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = -6
+reason_code = &"problem_dragon_capture_window_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_ecril"]
+script = ExtResource("3_x772f")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = -5
+reason_code = &"problem_dragon_capture_window_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_cuehk"]
+script = ExtResource("2_ucp0u")
+type = &"world_event_occurred"
+target_id = &"event_binding_towers_operational"
+
+[sub_resource type="Resource" id="Resource_uq7m4"]
+script = ExtResource("1_45xkq")
+id = &"resolve_dragon_capture_window_1"
+all_conditions = Array[ExtResource("2_ucp0u")]([SubResource("Resource_cuehk")])
+
+[sub_resource type="Resource" id="Resource_524lp"]
+script = ExtResource("2_ucp0u")
+type = &"clock_gte"
+target_id = &"capture_preparation"
+int_value = 80
+
+[sub_resource type="Resource" id="Resource_4q6cl"]
+script = ExtResource("1_45xkq")
+id = &"resolve_dragon_capture_window_2"
+all_conditions = Array[ExtResource("2_ucp0u")]([SubResource("Resource_524lp")])
+
+[sub_resource type="Resource" id="Resource_g5gfb"]
+script = ExtResource("2_ucp0u")
+type = &"clock_gte"
+target_id = &"dragon_exhaustion"
+int_value = 60
+
+[sub_resource type="Resource" id="Resource_cepwo"]
+script = ExtResource("5_4jpc7")
+id = &"urgency_dragon_binding_window_open"
+all_conditions = Array[ExtResource("2_ucp0u")]([SubResource("Resource_g5gfb")])
+urgency_delta = 20
+reason_code = &"urgency_dragon_binding_window_open"
+
+[sub_resource type="Resource" id="Resource_5imkh"]
+script = ExtResource("2_ucp0u")
+type = &"phase_is"
+target_id = &"phase_final_window"
+
+[sub_resource type="Resource" id="Resource_y4vbv"]
+script = ExtResource("5_4jpc7")
+id = &"urgency_capture_final_window"
+all_conditions = Array[ExtResource("2_ucp0u")]([SubResource("Resource_5imkh")])
+urgency_delta = 15
+reason_code = &"urgency_capture_final_window"
+
+[sub_resource type="Resource" id="Resource_ds86q"]
+script = ExtResource("2_ucp0u")
+type = &"clock_gte"
+target_id = &"necrotic_corruption"
+int_value = 60
+
+[sub_resource type="Resource" id="Resource_dhnmg"]
+script = ExtResource("5_4jpc7")
+id = &"urgency_capture_corruption_blocking"
+all_conditions = Array[ExtResource("2_ucp0u")]([SubResource("Resource_ds86q")])
+urgency_delta = 15
+reason_code = &"urgency_capture_corruption_blocking"
+
+[resource]
+script = ExtResource("4_lh20e")
+id = &"problem_dragon_capture_window"
+title_key = &"problem.problem_dragon_capture_window.title"
+description_key = &"problem.problem_dragon_capture_window.description"
+problem_tags = Array[StringName]([&"dragon_capture", &"capture_research"])
+base_urgency = 50
+age_urgency_per_week = 8
+age_urgency_cap = 24
+response_window_weeks = 4
+urgency_rules = Array[ExtResource("5_4jpc7")]([SubResource("Resource_cepwo"), SubResource("Resource_y4vbv"), SubResource("Resource_dhnmg")])
+activation_rules = Array[ExtResource("1_45xkq")]([SubResource("Resource_6l5h2")])
+resolution_rules = Array[ExtResource("1_45xkq")]([SubResource("Resource_uq7m4"), SubResource("Resource_4q6cl")])
+related_clock_ids = Array[StringName]([&"settlement_destruction", &"dragon_exhaustion", &"capture_preparation", &"necrotic_corruption"])
+contract_definition_ids = Array[StringName]([&"contract_collect_dragon_scales", &"contract_deploy_binding_towers"])
+escalation_effects = Array[ExtResource("3_x772f")]([SubResource("Resource_jayva"), SubResource("Resource_hyfqc"), SubResource("Resource_21m24"), SubResource("Resource_ecril")])

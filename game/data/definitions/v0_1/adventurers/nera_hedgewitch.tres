@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="AdventurerDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/capability_block_resource.gd" id="1_ojqtj"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/adventurer_definition_resource.gd" id="2_ux1k5"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/relationship_definition_resource.gd" id="3_p3fqf"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="4_wod3k"]
+
+[sub_resource type="Resource" id="Resource_x0r1n"]
+script = ExtResource("1_ojqtj")
+frontline = 28
+offense = 38
+scouting = 68
+support = 48
+arcana = 82
+discipline = 42
+
+[sub_resource type="Resource" id="Resource_rejr6"]
+script = ExtResource("4_wod3k")
+respect_authority = -4
+seek_knowledge = 2
+pursue_profit = 1
+taboo_tolerance = 5
+
+[resource]
+script = ExtResource("2_ux1k5")
+id = &"nera_hedgewitch"
+display_name = "Nera Hedgewitch"
+class_id = &"adept"
+base_capabilities = SubResource("Resource_x0r1n")
+traits = Array[StringName]([&"independent"])
+values = SubResource("Resource_rejr6")
+wage = 13
+bio_key = &"adventurer.nera_hedgewitch.bio"

@@ -1,0 +1,60 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_y7dah"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_wluh2"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_k7bfw"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_kcr2t"]
+
+[sub_resource type="Resource" id="Resource_2d4up"]
+script = ExtResource("1_y7dah")
+type = &"context_gte"
+key = &"collected_resources"
+int_value = 3
+
+[sub_resource type="Resource" id="Resource_de61r"]
+script = ExtResource("1_y7dah")
+type = &"outcome_tag_present"
+tag_value = &"cargo_delivered"
+
+[sub_resource type="Resource" id="Resource_f01of"]
+script = ExtResource("2_wluh2")
+type = &"modify_reward_percent"
+amount = -40
+reason_code = &"clause_corpse_delivery_reward"
+
+[sub_resource type="Resource" id="Resource_5wq34"]
+script = ExtResource("2_wluh2")
+type = &"modify_sponsor_relation"
+amount = -10
+reason_code = &"clause_corpse_delivery_breach"
+
+[sub_resource type="Resource" id="Resource_ywano"]
+script = ExtResource("3_k7bfw")
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_wower"]
+script = ExtResource("2_wluh2")
+type = &"modify_sponsor_relation"
+amount = 5
+reason_code = &"clause_corpse_delivery_relation"
+
+[sub_resource type="Resource" id="Resource_dxemy"]
+script = ExtResource("3_k7bfw")
+pursue_profit = 1
+taboo_tolerance = 2
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_kcr2t")
+id = &"corpse_deliver_three"
+display_name_key = &"clause.corpse_deliver_three.name"
+description_key = &"clause.corpse_deliver_three.description"
+category = &"delivery"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_y7dah")]([SubResource("Resource_2d4up"), SubResource("Resource_de61r")])
+success_effects = Array[ExtResource("2_wluh2")]([SubResource("Resource_wower")])
+failure_effects = Array[ExtResource("2_wluh2")]([SubResource("Resource_f01of"), SubResource("Resource_5wq34")])
+breach_result_cap = &"partial"
+success_ideology_impact = SubResource("Resource_dxemy")
+failure_ideology_impact = SubResource("Resource_ywano")
+priority = 10

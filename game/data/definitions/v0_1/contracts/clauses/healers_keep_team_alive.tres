@@ -1,0 +1,56 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_6x7am"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_7olwt"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_88oex"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_k1nac"]
+
+[sub_resource type="Resource" id="Resource_khi4e"]
+script = ExtResource("1_6x7am")
+type = &"outcome_tag_present"
+tag_value = &"healers_safe"
+
+[sub_resource type="Resource" id="Resource_n2tgu"]
+script = ExtResource("2_7olwt")
+type = &"modify_reward_percent"
+amount = -30
+reason_code = &"healers_keep_team_alive_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_sxdxh"]
+script = ExtResource("2_7olwt")
+type = &"modify_sponsor_relation"
+amount = -8
+reason_code = &"healers_keep_team_alive_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_yjr5b"]
+script = ExtResource("3_88oex")
+protect_life = -4
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_l27ws"]
+script = ExtResource("2_7olwt")
+type = &"modify_sponsor_relation"
+amount = 3
+reason_code = &"healers_keep_team_alive_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_n6fn5"]
+script = ExtResource("3_88oex")
+protect_life = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_k1nac")
+id = &"healers_keep_team_alive"
+display_name_key = &"clause.healers_keep_team_alive.name"
+description_key = &"clause.healers_keep_team_alive.description"
+category = &"personnel_safety"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_6x7am")]([SubResource("Resource_khi4e")])
+success_effects = Array[ExtResource("2_7olwt")]([SubResource("Resource_l27ws")])
+failure_effects = Array[ExtResource("2_7olwt")]([SubResource("Resource_n2tgu"), SubResource("Resource_sxdxh")])
+breach_result_cap = &"failure"
+success_ideology_impact = SubResource("Resource_n6fn5")
+failure_ideology_impact = SubResource("Resource_yjr5b")
+success_tags = Array[StringName]([&"clause.healers_keep_team_alive.satisfied"])
+failure_tags = Array[StringName]([&"clause.healers_keep_team_alive.breached"])
+priority = 10

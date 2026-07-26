@@ -1,0 +1,56 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_juea4"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_ra3va"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_32xv1"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_gobfp"]
+
+[sub_resource type="Resource" id="Resource_7y82m"]
+script = ExtResource("1_juea4")
+type = &"outcome_tag_present"
+tag_value = &"bridge_line_held"
+
+[sub_resource type="Resource" id="Resource_6ivb7"]
+script = ExtResource("2_ra3va")
+type = &"modify_reward_percent"
+amount = -30
+reason_code = &"bridge_hold_line_clause_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_fgr8x"]
+script = ExtResource("2_ra3va")
+type = &"modify_sponsor_relation"
+amount = -8
+reason_code = &"bridge_hold_line_clause_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_1toeg"]
+script = ExtResource("3_32xv1")
+protect_life = -3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_r2gq7"]
+script = ExtResource("2_ra3va")
+type = &"modify_sponsor_relation"
+amount = 3
+reason_code = &"bridge_hold_line_clause_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_aniut"]
+script = ExtResource("3_32xv1")
+protect_life = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_gobfp")
+id = &"bridge_hold_line_clause"
+display_name_key = &"clause.bridge_hold_line_clause.name"
+description_key = &"clause.bridge_hold_line_clause.description"
+category = &"target_state"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_juea4")]([SubResource("Resource_7y82m")])
+success_effects = Array[ExtResource("2_ra3va")]([SubResource("Resource_r2gq7")])
+failure_effects = Array[ExtResource("2_ra3va")]([SubResource("Resource_6ivb7"), SubResource("Resource_fgr8x")])
+breach_result_cap = &"failure"
+success_ideology_impact = SubResource("Resource_aniut")
+failure_ideology_impact = SubResource("Resource_1toeg")
+success_tags = Array[StringName]([&"clause.bridge_hold_line_clause.satisfied"])
+failure_tags = Array[StringName]([&"clause.bridge_hold_line_clause.breached"])
+priority = 10

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="SituationPhaseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/situation_phase_definition_resource.gd" id="1_crita"]
+
+[resource]
+script = ExtResource("1_crita")
+id = &"phase_final_window"
+display_name_key = &"phase_final_window.name"
+description_key = &"phase_final_window.description"
+sort_order = 2

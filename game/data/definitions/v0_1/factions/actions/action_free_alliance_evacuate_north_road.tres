@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="FactionActionDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="1_uqpus"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="2_vepvj"]
+[ext_resource type="Script" path="res://game/data/definitions/factions/faction_action_definition_resource.gd" id="3_ysqc1"]
+
+[sub_resource type="Resource" id="Resource_jpkij"]
+script = ExtResource("1_uqpus")
+type = &"world_event_occurred"
+target_id = &"event_eastern_route_secured"
+
+[sub_resource type="Resource" id="Resource_wqbcs"]
+script = ExtResource("1_uqpus")
+type = &"clock_lte"
+target_id = &"villagers_evacuated"
+int_value = 69
+
+[sub_resource type="Resource" id="Resource_rtfby"]
+script = ExtResource("2_vepvj")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 10
+reason_code = &"action_free_alliance_evacuate_north_road_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_keg1g"]
+script = ExtResource("2_vepvj")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 8
+reason_code = &"action_free_alliance_evacuate_north_road_settlement_destruction"
+
+[resource]
+script = ExtResource("3_ysqc1")
+id = &"action_free_alliance_evacuate_north_road"
+agenda_tags = Array[StringName]([&"evacuation", &"rescue"])
+target_lock_key = &"north_road.evacuate_civilians"
+base_intent_priority = 16
+urgency_weight = 30
+recent_repeat_cooldown = 2
+influence_cost = 8
+conditions = Array[ExtResource("1_uqpus")]([SubResource("Resource_jpkij"), SubResource("Resource_wqbcs")])
+target_problem_tags = Array[StringName]([&"civilian_evacuation"])
+effects = Array[ExtResource("2_vepvj")]([SubResource("Resource_rtfby"), SubResource("Resource_keg1g")])
+event_key = &"event_free_alliance_evacuated_north_road"

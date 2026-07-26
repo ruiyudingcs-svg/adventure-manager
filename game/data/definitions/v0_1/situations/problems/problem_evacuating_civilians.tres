@@ -1,0 +1,111 @@
+[gd_resource type="Resource" script_class="WorldProblemDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_rule_resource.gd" id="1_2oerd"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="2_1awix"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="3_koqkg"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_problem_definition_resource.gd" id="4_emk36"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/problem_urgency_rule_resource.gd" id="5_ihx6k"]
+
+[sub_resource type="Resource" id="Resource_ofdgp"]
+script = ExtResource("2_1awix")
+type = &"world_event_occurred"
+target_id = &"event_eastern_route_secured"
+
+[sub_resource type="Resource" id="Resource_ror53"]
+script = ExtResource("1_2oerd")
+id = &"activate_evacuating_civilians_1"
+all_conditions = Array[ExtResource("2_1awix")]([SubResource("Resource_ofdgp")])
+
+[sub_resource type="Resource" id="Resource_dqqor"]
+script = ExtResource("2_1awix")
+type = &"clock_gte"
+target_id = &"villagers_evacuated"
+int_value = 15
+
+[sub_resource type="Resource" id="Resource_ug7hv"]
+script = ExtResource("1_2oerd")
+id = &"activate_evacuating_civilians_2"
+all_conditions = Array[ExtResource("2_1awix")]([SubResource("Resource_dqqor")])
+
+[sub_resource type="Resource" id="Resource_21121"]
+script = ExtResource("3_koqkg")
+type = &"create_world_event"
+target_id = &"event_evacuation_line_collapsed"
+reason_code = &"problem_evacuating_civilians_escalated"
+
+[sub_resource type="Resource" id="Resource_m0i7p"]
+script = ExtResource("3_koqkg")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 15
+reason_code = &"problem_evacuating_civilians_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_1bicy"]
+script = ExtResource("3_koqkg")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 5
+reason_code = &"problem_evacuating_civilians_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_arxwv"]
+script = ExtResource("2_1awix")
+type = &"world_event_occurred"
+target_id = &"event_stone_bridge_secured"
+
+[sub_resource type="Resource" id="Resource_8n0c1"]
+script = ExtResource("1_2oerd")
+id = &"resolve_evacuating_civilians_1"
+all_conditions = Array[ExtResource("2_1awix")]([SubResource("Resource_arxwv")])
+
+[sub_resource type="Resource" id="Resource_veb5u"]
+script = ExtResource("2_1awix")
+type = &"clock_gte"
+target_id = &"villagers_evacuated"
+int_value = 70
+
+[sub_resource type="Resource" id="Resource_lhu1y"]
+script = ExtResource("1_2oerd")
+id = &"resolve_evacuating_civilians_2"
+all_conditions = Array[ExtResource("2_1awix")]([SubResource("Resource_veb5u")])
+
+[sub_resource type="Resource" id="Resource_y36qe"]
+script = ExtResource("2_1awix")
+type = &"clock_gte"
+target_id = &"settlement_destruction"
+int_value = 30
+
+[sub_resource type="Resource" id="Resource_w8r74"]
+script = ExtResource("5_ihx6k")
+id = &"urgency_evacuation_infrastructure_failing"
+all_conditions = Array[ExtResource("2_1awix")]([SubResource("Resource_y36qe")])
+urgency_delta = 20
+reason_code = &"urgency_evacuation_infrastructure_failing"
+
+[sub_resource type="Resource" id="Resource_dhejj"]
+script = ExtResource("2_1awix")
+type = &"phase_is"
+target_id = &"phase_final_window"
+
+[sub_resource type="Resource" id="Resource_vpwsr"]
+script = ExtResource("5_ihx6k")
+id = &"urgency_evacuation_final_window"
+all_conditions = Array[ExtResource("2_1awix")]([SubResource("Resource_dhejj")])
+urgency_delta = 10
+reason_code = &"urgency_evacuation_final_window"
+
+[resource]
+script = ExtResource("4_emk36")
+id = &"problem_evacuating_civilians"
+title_key = &"problem.problem_evacuating_civilians.title"
+description_key = &"problem.problem_evacuating_civilians.description"
+problem_tags = Array[StringName]([&"civilian_evacuation", &"defensive_line"])
+base_urgency = 45
+age_urgency_per_week = 6
+age_urgency_cap = 18
+response_window_weeks = 4
+urgency_rules = Array[ExtResource("5_ihx6k")]([SubResource("Resource_w8r74"), SubResource("Resource_vpwsr")])
+activation_rules = Array[ExtResource("1_2oerd")]([SubResource("Resource_ror53"), SubResource("Resource_ug7hv")])
+resolution_rules = Array[ExtResource("1_2oerd")]([SubResource("Resource_8n0c1"), SubResource("Resource_lhu1y")])
+related_clock_ids = Array[StringName]([&"villagers_evacuated", &"settlement_destruction", &"necrotic_corruption"])
+contract_definition_ids = Array[StringName]([&"contract_north_road_evacuation", &"contract_hold_stone_bridge"])
+escalation_effects = Array[ExtResource("3_koqkg")]([SubResource("Resource_21121"), SubResource("Resource_m0i7p"), SubResource("Resource_1bicy")])

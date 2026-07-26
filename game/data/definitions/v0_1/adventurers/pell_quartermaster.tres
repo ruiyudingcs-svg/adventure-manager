@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="AdventurerDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/capability_block_resource.gd" id="1_7ghvv"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/adventurer_definition_resource.gd" id="2_wdyxj"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/relationship_definition_resource.gd" id="3_afvk1"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="4_5ma2j"]
+
+[sub_resource type="Resource" id="Resource_xub5e"]
+script = ExtResource("1_7ghvv")
+frontline = 42
+offense = 30
+scouting = 38
+support = 80
+arcana = 25
+discipline = 78
+
+[sub_resource type="Resource" id="Resource_dj1tm"]
+script = ExtResource("4_5ma2j")
+respect_authority = 3
+pursue_profit = 5
+
+[resource]
+script = ExtResource("2_wdyxj")
+id = &"pell_quartermaster"
+display_name = "Pell Quartermaster"
+class_id = &"adept"
+base_capabilities = SubResource("Resource_xub5e")
+traits = Array[StringName]([&"cautious"])
+values = SubResource("Resource_dj1tm")
+wage = 11
+bio_key = &"adventurer.pell_quartermaster.bio"

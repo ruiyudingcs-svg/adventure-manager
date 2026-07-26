@@ -1,0 +1,45 @@
+[gd_resource type="Resource" script_class="FactionActionDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="1_o7ej8"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="2_od47q"]
+[ext_resource type="Script" path="res://game/data/definitions/factions/faction_action_definition_resource.gd" id="3_v7eu2"]
+
+[sub_resource type="Resource" id="Resource_fwmrq"]
+script = ExtResource("1_o7ej8")
+type = &"world_event_occurred"
+target_id = &"event_dragon_lair_located"
+
+[sub_resource type="Resource" id="Resource_ocy2m"]
+script = ExtResource("2_od47q")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = 10
+reason_code = &"action_arcane_guild_collect_dragon_scales_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_hq20d"]
+script = ExtResource("2_od47q")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 6
+reason_code = &"action_arcane_guild_collect_dragon_scales_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_mdd6s"]
+script = ExtResource("2_od47q")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 3
+reason_code = &"action_arcane_guild_collect_dragon_scales_settlement_destruction"
+
+[resource]
+script = ExtResource("3_v7eu2")
+id = &"action_arcane_guild_collect_dragon_scales"
+agenda_tags = Array[StringName]([&"capture", &"research", &"target_alive"])
+target_lock_key = &"dragon_capture.collect_scales"
+base_intent_priority = 16
+urgency_weight = 30
+recent_repeat_cooldown = 2
+influence_cost = 8
+conditions = Array[ExtResource("1_o7ej8")]([SubResource("Resource_fwmrq")])
+target_problem_tags = Array[StringName]([&"capture_research"])
+effects = Array[ExtResource("2_od47q")]([SubResource("Resource_ocy2m"), SubResource("Resource_hq20d"), SubResource("Resource_mdd6s")])
+event_key = &"event_low_quality_scales_collected"

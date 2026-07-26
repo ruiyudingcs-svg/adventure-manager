@@ -1,0 +1,110 @@
+[gd_resource type="Resource" script_class="WorldProblemDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_rule_resource.gd" id="1_tuitg"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="2_f1r6e"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="3_ies7x"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_problem_definition_resource.gd" id="4_ncirg"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/problem_urgency_rule_resource.gd" id="5_j3hgg"]
+
+[sub_resource type="Resource" id="Resource_nbo4i"]
+script = ExtResource("2_f1r6e")
+type = &"clock_gte"
+target_id = &"necrotic_corruption"
+int_value = 25
+
+[sub_resource type="Resource" id="Resource_1ylih"]
+script = ExtResource("1_tuitg")
+id = &"activate_necrotic_spread_1"
+all_conditions = Array[ExtResource("2_f1r6e")]([SubResource("Resource_nbo4i")])
+
+[sub_resource type="Resource" id="Resource_5umdp"]
+script = ExtResource("3_ies7x")
+type = &"create_world_event"
+target_id = &"event_necrotic_spread_surged"
+reason_code = &"problem_necrotic_spread_escalated"
+
+[sub_resource type="Resource" id="Resource_qxafn"]
+script = ExtResource("3_ies7x")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 15
+reason_code = &"problem_necrotic_spread_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_3pv54"]
+script = ExtResource("3_ies7x")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 4
+reason_code = &"problem_necrotic_spread_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_wbppk"]
+script = ExtResource("2_f1r6e")
+type = &"world_event_occurred"
+target_id = &"event_necrotic_ritual_disrupted"
+
+[sub_resource type="Resource" id="Resource_gr3i4"]
+script = ExtResource("1_tuitg")
+id = &"resolve_necrotic_spread_1"
+all_conditions = Array[ExtResource("2_f1r6e")]([SubResource("Resource_wbppk")])
+
+[sub_resource type="Resource" id="Resource_lt8vx"]
+script = ExtResource("2_f1r6e")
+type = &"world_event_occurred"
+target_id = &"event_necrotic_source_secured"
+
+[sub_resource type="Resource" id="Resource_yfpae"]
+script = ExtResource("1_tuitg")
+id = &"resolve_necrotic_spread_2"
+all_conditions = Array[ExtResource("2_f1r6e")]([SubResource("Resource_lt8vx")])
+
+[sub_resource type="Resource" id="Resource_jfj47"]
+script = ExtResource("2_f1r6e")
+type = &"world_event_occurred"
+target_id = &"event_necrotic_spread_warded"
+
+[sub_resource type="Resource" id="Resource_fp4hn"]
+script = ExtResource("1_tuitg")
+id = &"resolve_necrotic_spread_3"
+all_conditions = Array[ExtResource("2_f1r6e")]([SubResource("Resource_jfj47")])
+
+[sub_resource type="Resource" id="Resource_yqupy"]
+script = ExtResource("2_f1r6e")
+type = &"clock_gte"
+target_id = &"necrotic_corruption"
+int_value = 60
+
+[sub_resource type="Resource" id="Resource_scynp"]
+script = ExtResource("5_j3hgg")
+id = &"urgency_necrotic_conversion_near"
+all_conditions = Array[ExtResource("2_f1r6e")]([SubResource("Resource_yqupy")])
+urgency_delta = 20
+reason_code = &"urgency_necrotic_conversion_near"
+
+[sub_resource type="Resource" id="Resource_q8ryh"]
+script = ExtResource("2_f1r6e")
+type = &"phase_is"
+target_id = &"phase_final_window"
+
+[sub_resource type="Resource" id="Resource_lr2if"]
+script = ExtResource("5_j3hgg")
+id = &"urgency_necrotic_final_window"
+all_conditions = Array[ExtResource("2_f1r6e")]([SubResource("Resource_q8ryh")])
+urgency_delta = 10
+reason_code = &"urgency_necrotic_final_window"
+
+[resource]
+script = ExtResource("4_ncirg")
+id = &"problem_necrotic_spread"
+title_key = &"problem.problem_necrotic_spread.title"
+description_key = &"problem.problem_necrotic_spread.description"
+problem_tags = Array[StringName]([&"necrotic_spread", &"forbidden_ritual"])
+base_urgency = 60
+age_urgency_per_week = 10
+age_urgency_cap = 20
+response_window_weeks = 3
+urgency_rules = Array[ExtResource("5_j3hgg")]([SubResource("Resource_scynp"), SubResource("Resource_lr2if")])
+activation_rules = Array[ExtResource("1_tuitg")]([SubResource("Resource_1ylih")])
+resolution_rules = Array[ExtResource("1_tuitg")]([SubResource("Resource_gr3i4"), SubResource("Resource_yfpae"), SubResource("Resource_fp4hn")])
+related_clock_ids = Array[StringName]([&"settlement_destruction", &"necrotic_corruption"])
+contract_definition_ids = Array[StringName]([&"contract_investigate_necrotic_source", &"contract_disrupt_necrotic_ritual"])
+escalation_effects = Array[ExtResource("3_ies7x")]([SubResource("Resource_5umdp"), SubResource("Resource_qxafn"), SubResource("Resource_3pv54")])

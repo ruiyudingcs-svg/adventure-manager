@@ -1,0 +1,66 @@
+[gd_resource type="Resource" script_class="WorldProblemDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_rule_resource.gd" id="1_x7irs"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="2_r2atc"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="3_aioge"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_problem_definition_resource.gd" id="4_6okyd"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/problem_urgency_rule_resource.gd" id="5_wosib"]
+
+[sub_resource type="Resource" id="Resource_mxumi"]
+script = ExtResource("2_r2atc")
+type = &"create_world_event"
+target_id = &"event_eastern_road_lost"
+reason_code = &"problem_eastern_road_blocked_escalated"
+
+[sub_resource type="Resource" id="Resource_lgfvx"]
+script = ExtResource("2_r2atc")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 12
+reason_code = &"problem_eastern_road_blocked_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_gkak4"]
+script = ExtResource("2_r2atc")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 3
+reason_code = &"problem_eastern_road_blocked_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_12rj4"]
+script = ExtResource("3_aioge")
+type = &"world_event_occurred"
+target_id = &"event_eastern_route_secured"
+
+[sub_resource type="Resource" id="Resource_t4olw"]
+script = ExtResource("1_x7irs")
+id = &"resolve_eastern_road_blocked_1"
+all_conditions = Array[ExtResource("3_aioge")]([SubResource("Resource_12rj4")])
+
+[sub_resource type="Resource" id="Resource_pkm3o"]
+script = ExtResource("3_aioge")
+type = &"clock_gte"
+target_id = &"settlement_destruction"
+int_value = 18
+
+[sub_resource type="Resource" id="Resource_er5t2"]
+script = ExtResource("5_wosib")
+id = &"urgency_road_fire_spreading"
+all_conditions = Array[ExtResource("3_aioge")]([SubResource("Resource_pkm3o")])
+urgency_delta = 15
+reason_code = &"urgency_road_fire_spreading"
+
+[resource]
+script = ExtResource("4_6okyd")
+id = &"problem_eastern_road_blocked"
+title_key = &"problem.problem_eastern_road_blocked.title"
+description_key = &"problem.problem_eastern_road_blocked.description"
+problem_tags = Array[StringName]([&"road_route", &"evacuation_access"])
+base_urgency = 55
+age_urgency_per_week = 8
+age_urgency_cap = 24
+response_window_weeks = 3
+urgency_rules = Array[ExtResource("5_wosib")]([SubResource("Resource_er5t2")])
+resolution_rules = Array[ExtResource("1_x7irs")]([SubResource("Resource_t4olw")])
+related_clock_ids = Array[StringName]([&"settlement_destruction", &"necrotic_corruption"])
+contract_definition_ids = Array[StringName]([&"contract_scout_eastern_road"])
+escalation_effects = Array[ExtResource("2_r2atc")]([SubResource("Resource_mxumi"), SubResource("Resource_lgfvx"), SubResource("Resource_gkak4")])

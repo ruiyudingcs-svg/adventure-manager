@@ -1,0 +1,1279 @@
+[gd_resource type="Resource" script_class="ContractDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_rule_resource.gd" id="1_lhjcq"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="2_afm1i"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="3_ym7lh"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_outcome_definition_resource.gd" id="4_mw6ph"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_outcome_table_resource.gd" id="5_2smw6"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/offer_instantiation_rule_resource.gd" id="6_0t4ux"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="7_10atl"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_definition_resource.gd" id="8_umgk8"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_stage_definition_resource.gd" id="9_e1fbg"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/capability_weights_resource.gd" id="10_umr7g"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/mission_modifier_resource.gd" id="11_cwken"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/mission_context_delta_resource.gd" id="12_fo77s"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/member_effect_resource.gd" id="13_gdlmv"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/check_outcome_definition_resource.gd" id="14_gi3bk"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/check_outcome_table_resource.gd" id="15_1gqxw"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_check_definition_resource.gd" id="16_63miw"]
+
+[sub_resource type="Resource" id="Resource_sbqee"]
+script = ExtResource("2_afm1i")
+type = &"phase_is"
+target_id = &"phase_open_conflict"
+
+[sub_resource type="Resource" id="Resource_j5l73"]
+script = ExtResource("2_afm1i")
+type = &"phase_is"
+target_id = &"phase_final_window"
+
+[sub_resource type="Resource" id="Resource_eke8a"]
+script = ExtResource("1_lhjcq")
+id = &"availability_prepare_dragon_bait_phase"
+any_conditions = Array[ExtResource("2_afm1i")]([SubResource("Resource_sbqee"), SubResource("Resource_j5l73")])
+
+[sub_resource type="Resource" id="Resource_nwl2x"]
+script = ExtResource("3_ym7lh")
+type = &"create_world_event"
+target_id = &"event_dragon_diverted"
+reason_code = &"event_dragon_diverted_exceptional"
+
+[sub_resource type="Resource" id="Resource_e7077"]
+script = ExtResource("4_mw6ph")
+reward_multiplier = 1.35
+fatigue_multiplier = 0.95
+injury_risk_modifier = -10
+sponsor_relation_delta = 10
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_nwl2x")])
+outcome_tags = Array[StringName]([&"contract.exceptional"])
+
+[sub_resource type="Resource" id="Resource_hbv1x"]
+script = ExtResource("4_mw6ph")
+reward_multiplier = 0.25
+fatigue_multiplier = 1.3
+injury_risk_modifier = 10
+sponsor_relation_delta = -4
+outcome_tags = Array[StringName]([&"contract.failure"])
+
+[sub_resource type="Resource" id="Resource_pgbd4"]
+script = ExtResource("4_mw6ph")
+reward_multiplier = 0.65
+fatigue_multiplier = 1.15
+sponsor_relation_delta = 1
+outcome_tags = Array[StringName]([&"contract.partial"])
+
+[sub_resource type="Resource" id="Resource_elocw"]
+script = ExtResource("4_mw6ph")
+reward_multiplier = 0.0
+fatigue_multiplier = 1.5
+injury_risk_modifier = 20
+sponsor_relation_delta = -8
+outcome_tags = Array[StringName]([&"contract.severe_failure"])
+
+[sub_resource type="Resource" id="Resource_yqh24"]
+script = ExtResource("3_ym7lh")
+type = &"create_world_event"
+target_id = &"event_dragon_diverted"
+reason_code = &"event_dragon_diverted_success"
+
+[sub_resource type="Resource" id="Resource_crs0a"]
+script = ExtResource("4_mw6ph")
+injury_risk_modifier = -5
+sponsor_relation_delta = 6
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_yqh24")])
+outcome_tags = Array[StringName]([&"contract.success"])
+
+[sub_resource type="Resource" id="Resource_lp0wm"]
+script = ExtResource("5_2smw6")
+exceptional = SubResource("Resource_e7077")
+success = SubResource("Resource_crs0a")
+partial = SubResource("Resource_pgbd4")
+failure = SubResource("Resource_hbv1x")
+severe = SubResource("Resource_elocw")
+
+[sub_resource type="Resource" id="Resource_hb57w"]
+script = ExtResource("7_10atl")
+protect_life = -4
+respect_authority = -3
+seek_knowledge = 1
+pursue_profit = 5
+taboo_tolerance = 4
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_oe5ue"]
+script = ExtResource("10_umr7g")
+frontline = 0.05
+scouting = 0.55
+support = 0.15
+discipline = 0.25
+
+[sub_resource type="Resource" id="Resource_bcg7b"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 2
+reason_code = &"bait_select_route_exceptional_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_b41t4"]
+script = ExtResource("12_fo77s")
+key = &"route_safety"
+amount = 3
+source_id = &"bait_select_route"
+
+[sub_resource type="Resource" id="Resource_1wdpa"]
+script = ExtResource("12_fo77s")
+key = &"intel"
+amount = 2
+source_id = &"bait_select_route"
+
+[sub_resource type="Resource" id="Resource_ifcbq"]
+script = ExtResource("12_fo77s")
+key = &"alert_level"
+amount = -1
+source_id = &"bait_select_route"
+
+[sub_resource type="Resource" id="Resource_5lfqn"]
+script = ExtResource("7_10atl")
+protect_life = -2
+respect_authority = -2
+pursue_profit = 4
+taboo_tolerance = 3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_tb6kw"]
+script = ExtResource("14_gi3bk")
+context_deltas = Array[ExtResource("12_fo77s")]([SubResource("Resource_b41t4"), SubResource("Resource_1wdpa"), SubResource("Resource_ifcbq")])
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_bcg7b")])
+ideology_impact = SubResource("Resource_5lfqn")
+outcome_tags = Array[StringName]([&"bait_select_route_exceptional"])
+
+[sub_resource type="Resource" id="Resource_krt6k"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 3
+reason_code = &"bait_select_route_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_81n5j"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 2
+reason_code = &"bait_select_route_failure_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_xxhrn"]
+script = ExtResource("12_fo77s")
+key = &"alert_level"
+amount = 1
+source_id = &"bait_select_route"
+
+[sub_resource type="Resource" id="Resource_xktmv"]
+script = ExtResource("12_fo77s")
+key = &"time_pressure"
+amount = 2
+source_id = &"bait_select_route"
+
+[sub_resource type="Resource" id="Resource_emq3e"]
+script = ExtResource("7_10atl")
+protect_life = -5
+respect_authority = -3
+pursue_profit = 1
+taboo_tolerance = 5
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_n7efj"]
+script = ExtResource("13_gdlmv")
+type = &"injury_risk"
+amount = 8
+reason_code = &"bait_select_route_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_hhdsa"]
+script = ExtResource("14_gi3bk")
+context_deltas = Array[ExtResource("12_fo77s")]([SubResource("Resource_xxhrn"), SubResource("Resource_xktmv")])
+member_effects = Array[ExtResource("13_gdlmv")]([SubResource("Resource_n7efj")])
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_krt6k"), SubResource("Resource_81n5j")])
+ideology_impact = SubResource("Resource_emq3e")
+outcome_tags = Array[StringName]([&"bait_select_route_failure"])
+
+[sub_resource type="Resource" id="Resource_53a2g"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 2
+reason_code = &"bait_select_route_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_p4ma8"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 1
+reason_code = &"bait_select_route_partial_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_l041c"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 2
+reason_code = &"bait_select_route_partial_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_dept0"]
+script = ExtResource("12_fo77s")
+key = &"route_safety"
+amount = 1
+source_id = &"bait_select_route"
+
+[sub_resource type="Resource" id="Resource_v6utp"]
+script = ExtResource("12_fo77s")
+key = &"time_pressure"
+amount = 1
+source_id = &"bait_select_route"
+
+[sub_resource type="Resource" id="Resource_sg2n0"]
+script = ExtResource("7_10atl")
+protect_life = -3
+respect_authority = -1
+pursue_profit = 2
+taboo_tolerance = 3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_cs2w2"]
+script = ExtResource("13_gdlmv")
+type = &"injury_risk"
+amount = 3
+reason_code = &"bait_select_route_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_ywow1"]
+script = ExtResource("14_gi3bk")
+context_deltas = Array[ExtResource("12_fo77s")]([SubResource("Resource_dept0"), SubResource("Resource_v6utp")])
+member_effects = Array[ExtResource("13_gdlmv")]([SubResource("Resource_cs2w2")])
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_53a2g"), SubResource("Resource_p4ma8"), SubResource("Resource_l041c")])
+ideology_impact = SubResource("Resource_sg2n0")
+outcome_tags = Array[StringName]([&"bait_select_route_partial"])
+
+[sub_resource type="Resource" id="Resource_70ik5"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 4
+reason_code = &"bait_select_route_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_r6kbf"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = -1
+reason_code = &"bait_select_route_severe_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_faupo"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 3
+reason_code = &"bait_select_route_severe_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_w1i2r"]
+script = ExtResource("12_fo77s")
+key = &"alert_level"
+amount = 2
+source_id = &"bait_select_route"
+
+[sub_resource type="Resource" id="Resource_idyx7"]
+script = ExtResource("12_fo77s")
+key = &"enemy_pressure"
+amount = 2
+source_id = &"bait_select_route"
+
+[sub_resource type="Resource" id="Resource_adj7k"]
+script = ExtResource("7_10atl")
+protect_life = -5
+respect_authority = -4
+taboo_tolerance = 5
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_3lk7k"]
+script = ExtResource("13_gdlmv")
+type = &"injury_risk"
+amount = 15
+reason_code = &"bait_select_route_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_34abo"]
+script = ExtResource("14_gi3bk")
+context_deltas = Array[ExtResource("12_fo77s")]([SubResource("Resource_w1i2r"), SubResource("Resource_idyx7")])
+member_effects = Array[ExtResource("13_gdlmv")]([SubResource("Resource_3lk7k")])
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_70ik5"), SubResource("Resource_r6kbf"), SubResource("Resource_faupo")])
+ideology_impact = SubResource("Resource_adj7k")
+outcome_tags = Array[StringName]([&"bait_select_route_severe"])
+
+[sub_resource type="Resource" id="Resource_do48m"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 1
+reason_code = &"bait_select_route_success_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_n2xvd"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 1
+reason_code = &"bait_select_route_success_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_uy5i8"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 1
+reason_code = &"bait_select_route_success_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_fh5w3"]
+script = ExtResource("12_fo77s")
+key = &"route_safety"
+amount = 2
+source_id = &"bait_select_route"
+
+[sub_resource type="Resource" id="Resource_a4unr"]
+script = ExtResource("12_fo77s")
+key = &"intel"
+amount = 1
+source_id = &"bait_select_route"
+
+[sub_resource type="Resource" id="Resource_wku51"]
+script = ExtResource("7_10atl")
+protect_life = -3
+respect_authority = -2
+pursue_profit = 3
+taboo_tolerance = 3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_rjbel"]
+script = ExtResource("14_gi3bk")
+context_deltas = Array[ExtResource("12_fo77s")]([SubResource("Resource_fh5w3"), SubResource("Resource_a4unr")])
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_do48m"), SubResource("Resource_n2xvd"), SubResource("Resource_uy5i8")])
+ideology_impact = SubResource("Resource_wku51")
+outcome_tags = Array[StringName]([&"bait_select_route_success"])
+
+[sub_resource type="Resource" id="Resource_plu04"]
+script = ExtResource("15_1gqxw")
+exceptional = SubResource("Resource_tb6kw")
+success = SubResource("Resource_rjbel")
+partial = SubResource("Resource_ywow1")
+failure = SubResource("Resource_hhdsa")
+severe = SubResource("Resource_34abo")
+
+[sub_resource type="Resource" id="Resource_kgesl"]
+script = ExtResource("16_63miw")
+id = &"bait_select_route"
+check_type = &"navigation"
+capability_weights = SubResource("Resource_oe5ue")
+difficulty = 26
+result_weight = 0.15
+failure_result_cap = &"partial"
+method_tags = Array[StringName]([&"scouting", &"deception"])
+approach_profile = &"careful"
+outcome_table = SubResource("Resource_plu04")
+
+[sub_resource type="Resource" id="Resource_n1hse"]
+script = ExtResource("9_e1fbg")
+id = &"prepare_dragon_bait_stage_approach"
+phase = &"approach"
+check = SubResource("Resource_kgesl")
+
+[sub_resource type="Resource" id="Resource_kxqi5"]
+script = ExtResource("10_umr7g")
+frontline = 0.05
+offense = 0.05
+scouting = 0.15
+support = 0.3
+arcana = 0.25
+discipline = 0.2
+
+[sub_resource type="Resource" id="Resource_o3v2n"]
+script = ExtResource("11_cwken")
+condition_type = &"context_gte"
+operand = &"intel"
+threshold = 1
+amount = 2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_b60xu"]
+script = ExtResource("11_cwken")
+condition_type = &"context_gte"
+operand = &"alert_level"
+threshold = 1
+amount = -2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_1hlpt"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 2
+reason_code = &"bait_prepare_stores_exceptional_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_hihcv"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 4
+reason_code = &"bait_prepare_stores_exceptional_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_4law5"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 1
+reason_code = &"bait_prepare_stores_exceptional_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_2qo6q"]
+script = ExtResource("12_fo77s")
+key = &"enemy_pressure"
+amount = -2
+source_id = &"bait_prepare_stores"
+
+[sub_resource type="Resource" id="Resource_2bq37"]
+script = ExtResource("7_10atl")
+protect_life = -2
+respect_authority = -2
+pursue_profit = 4
+taboo_tolerance = 3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_kq7p6"]
+script = ExtResource("14_gi3bk")
+context_deltas = Array[ExtResource("12_fo77s")]([SubResource("Resource_2qo6q")])
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_1hlpt"), SubResource("Resource_hihcv"), SubResource("Resource_4law5")])
+ideology_impact = SubResource("Resource_2bq37")
+outcome_tags = Array[StringName]([&"bait_prepare_stores_exceptional"])
+
+[sub_resource type="Resource" id="Resource_un3kk"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 6
+reason_code = &"bait_prepare_stores_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_nwq1g"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 1
+reason_code = &"bait_prepare_stores_failure_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_2bqgo"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 4
+reason_code = &"bait_prepare_stores_failure_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_oxja0"]
+script = ExtResource("12_fo77s")
+key = &"team_strain"
+amount = 2
+source_id = &"bait_prepare_stores"
+
+[sub_resource type="Resource" id="Resource_nq7a6"]
+script = ExtResource("12_fo77s")
+key = &"collateral_pressure"
+amount = 2
+source_id = &"bait_prepare_stores"
+
+[sub_resource type="Resource" id="Resource_2e5sf"]
+script = ExtResource("7_10atl")
+protect_life = -5
+respect_authority = -3
+pursue_profit = 1
+taboo_tolerance = 5
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_rdg4x"]
+script = ExtResource("13_gdlmv")
+type = &"injury_risk"
+amount = 15
+reason_code = &"bait_prepare_stores_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_nlksh"]
+script = ExtResource("14_gi3bk")
+context_deltas = Array[ExtResource("12_fo77s")]([SubResource("Resource_oxja0"), SubResource("Resource_nq7a6")])
+member_effects = Array[ExtResource("13_gdlmv")]([SubResource("Resource_rdg4x")])
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_un3kk"), SubResource("Resource_nwq1g"), SubResource("Resource_2bqgo")])
+ideology_impact = SubResource("Resource_2e5sf")
+outcome_tags = Array[StringName]([&"bait_prepare_stores_failure"])
+
+[sub_resource type="Resource" id="Resource_hgmif"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 5
+reason_code = &"bait_prepare_stores_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_djtv1"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 2
+reason_code = &"bait_prepare_stores_partial_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_jtquj"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 3
+reason_code = &"bait_prepare_stores_partial_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_k032h"]
+script = ExtResource("12_fo77s")
+key = &"team_strain"
+amount = 1
+source_id = &"bait_prepare_stores"
+
+[sub_resource type="Resource" id="Resource_0amoo"]
+script = ExtResource("12_fo77s")
+key = &"collateral_pressure"
+amount = 1
+source_id = &"bait_prepare_stores"
+
+[sub_resource type="Resource" id="Resource_d4gsw"]
+script = ExtResource("7_10atl")
+protect_life = -3
+respect_authority = -1
+pursue_profit = 2
+taboo_tolerance = 3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_3usli"]
+script = ExtResource("13_gdlmv")
+type = &"injury_risk"
+amount = 8
+reason_code = &"bait_prepare_stores_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_wkdds"]
+script = ExtResource("14_gi3bk")
+context_deltas = Array[ExtResource("12_fo77s")]([SubResource("Resource_k032h"), SubResource("Resource_0amoo")])
+member_effects = Array[ExtResource("13_gdlmv")]([SubResource("Resource_3usli")])
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_hgmif"), SubResource("Resource_djtv1"), SubResource("Resource_jtquj")])
+ideology_impact = SubResource("Resource_d4gsw")
+outcome_tags = Array[StringName]([&"bait_prepare_stores_partial"])
+
+[sub_resource type="Resource" id="Resource_ma6du"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 7
+reason_code = &"bait_prepare_stores_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_m1wq5"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 5
+reason_code = &"bait_prepare_stores_severe_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_43427"]
+script = ExtResource("12_fo77s")
+key = &"team_strain"
+amount = 3
+source_id = &"bait_prepare_stores"
+
+[sub_resource type="Resource" id="Resource_njhsg"]
+script = ExtResource("12_fo77s")
+key = &"collateral_pressure"
+amount = 3
+source_id = &"bait_prepare_stores"
+
+[sub_resource type="Resource" id="Resource_7ct5m"]
+script = ExtResource("12_fo77s")
+key = &"extraction_pressure"
+amount = 1
+source_id = &"bait_prepare_stores"
+
+[sub_resource type="Resource" id="Resource_v7n05"]
+script = ExtResource("7_10atl")
+protect_life = -5
+respect_authority = -4
+taboo_tolerance = 5
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_xt6s7"]
+script = ExtResource("13_gdlmv")
+type = &"injury_risk"
+amount = 25
+reason_code = &"bait_prepare_stores_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_2smhb"]
+script = ExtResource("14_gi3bk")
+context_deltas = Array[ExtResource("12_fo77s")]([SubResource("Resource_43427"), SubResource("Resource_njhsg"), SubResource("Resource_7ct5m")])
+member_effects = Array[ExtResource("13_gdlmv")]([SubResource("Resource_xt6s7")])
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_ma6du"), SubResource("Resource_m1wq5")])
+ideology_impact = SubResource("Resource_v7n05")
+outcome_tags = Array[StringName]([&"bait_prepare_stores_severe"])
+
+[sub_resource type="Resource" id="Resource_gujgq"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 3
+reason_code = &"bait_prepare_stores_success_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_lfqof"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 3
+reason_code = &"bait_prepare_stores_success_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_pxauv"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 2
+reason_code = &"bait_prepare_stores_success_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_tn8la"]
+script = ExtResource("12_fo77s")
+key = &"enemy_pressure"
+amount = -1
+source_id = &"bait_prepare_stores"
+
+[sub_resource type="Resource" id="Resource_dj8qa"]
+script = ExtResource("7_10atl")
+protect_life = -3
+respect_authority = -2
+pursue_profit = 3
+taboo_tolerance = 3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_yolxq"]
+script = ExtResource("13_gdlmv")
+type = &"injury_risk"
+amount = 3
+reason_code = &"bait_prepare_stores_success_injury_risk"
+
+[sub_resource type="Resource" id="Resource_m1l1m"]
+script = ExtResource("14_gi3bk")
+context_deltas = Array[ExtResource("12_fo77s")]([SubResource("Resource_tn8la")])
+member_effects = Array[ExtResource("13_gdlmv")]([SubResource("Resource_yolxq")])
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_gujgq"), SubResource("Resource_lfqof"), SubResource("Resource_pxauv")])
+ideology_impact = SubResource("Resource_dj8qa")
+outcome_tags = Array[StringName]([&"bait_prepare_stores_success"])
+
+[sub_resource type="Resource" id="Resource_4dqv6"]
+script = ExtResource("15_1gqxw")
+exceptional = SubResource("Resource_kq7p6")
+success = SubResource("Resource_m1l1m")
+partial = SubResource("Resource_wkdds")
+failure = SubResource("Resource_nlksh")
+severe = SubResource("Resource_2smhb")
+
+[sub_resource type="Resource" id="Resource_n1fro"]
+script = ExtResource("16_63miw")
+id = &"bait_prepare_stores"
+check_type = &"salvage"
+capability_weights = SubResource("Resource_kxqi5")
+difficulty = 31
+failure_result_cap = &"partial"
+method_tags = Array[StringName]([&"deception", &"research"])
+context_modifiers = Array[ExtResource("11_cwken")]([SubResource("Resource_o3v2n"), SubResource("Resource_b60xu")])
+outcome_table = SubResource("Resource_4dqv6")
+
+[sub_resource type="Resource" id="Resource_mjpgd"]
+script = ExtResource("9_e1fbg")
+id = &"prepare_dragon_bait_stage_main_action"
+phase = &"main_action"
+check = SubResource("Resource_n1fro")
+
+[sub_resource type="Resource" id="Resource_ounpd"]
+script = ExtResource("10_umr7g")
+frontline = 0.05
+scouting = 0.05
+support = 0.2
+arcana = 0.45
+discipline = 0.25
+
+[sub_resource type="Resource" id="Resource_860ts"]
+script = ExtResource("11_cwken")
+condition_type = &"context_gte"
+operand = &"intel"
+threshold = 1
+amount = 1
+per_context_point = true
+maximum_absolute_amount = 4
+
+[sub_resource type="Resource" id="Resource_cmaa4"]
+script = ExtResource("11_cwken")
+condition_type = &"context_gte"
+operand = &"team_strain"
+threshold = 1
+amount = -2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_8un6x"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 3
+reason_code = &"bait_bind_lure_exceptional_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_lmjqc"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 10
+reason_code = &"bait_bind_lure_exceptional_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_15mfb"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 4
+reason_code = &"bait_bind_lure_exceptional_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_adj31"]
+script = ExtResource("12_fo77s")
+key = &"collected_resources"
+amount = 4
+source_id = &"bait_bind_lure"
+
+[sub_resource type="Resource" id="Resource_du6ws"]
+script = ExtResource("7_10atl")
+protect_life = -2
+respect_authority = -2
+pursue_profit = 4
+taboo_tolerance = 3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_n5qv4"]
+script = ExtResource("14_gi3bk")
+context_deltas = Array[ExtResource("12_fo77s")]([SubResource("Resource_adj31")])
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_8un6x"), SubResource("Resource_lmjqc"), SubResource("Resource_15mfb")])
+ideology_impact = SubResource("Resource_du6ws")
+outcome_tags = Array[StringName]([&"bait_bind_lure_exceptional", &"dragon_diverted"])
+
+[sub_resource type="Resource" id="Resource_te4c5"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 8
+reason_code = &"bait_bind_lure_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_40yht"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 1
+reason_code = &"bait_bind_lure_failure_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_yq57l"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 7
+reason_code = &"bait_bind_lure_failure_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_tmsjx"]
+script = ExtResource("12_fo77s")
+key = &"collected_resources"
+amount = 1
+source_id = &"bait_bind_lure"
+
+[sub_resource type="Resource" id="Resource_khna8"]
+script = ExtResource("12_fo77s")
+key = &"alert_level"
+amount = 2
+source_id = &"bait_bind_lure"
+
+[sub_resource type="Resource" id="Resource_dwu2c"]
+script = ExtResource("7_10atl")
+protect_life = -5
+respect_authority = -3
+pursue_profit = 1
+taboo_tolerance = 5
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_2tlyf"]
+script = ExtResource("13_gdlmv")
+type = &"injury_risk"
+amount = 15
+reason_code = &"bait_bind_lure_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_n0wg0"]
+script = ExtResource("14_gi3bk")
+context_deltas = Array[ExtResource("12_fo77s")]([SubResource("Resource_tmsjx"), SubResource("Resource_khna8")])
+member_effects = Array[ExtResource("13_gdlmv")]([SubResource("Resource_2tlyf")])
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_te4c5"), SubResource("Resource_40yht"), SubResource("Resource_yq57l")])
+ideology_impact = SubResource("Resource_dwu2c")
+outcome_tags = Array[StringName]([&"bait_bind_lure_failure"])
+
+[sub_resource type="Resource" id="Resource_vfsxt"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 6
+reason_code = &"bait_bind_lure_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_qshou"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 5
+reason_code = &"bait_bind_lure_partial_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_ef0tp"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 6
+reason_code = &"bait_bind_lure_partial_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_j6g4e"]
+script = ExtResource("12_fo77s")
+key = &"collected_resources"
+amount = 2
+source_id = &"bait_bind_lure"
+
+[sub_resource type="Resource" id="Resource_kv3kv"]
+script = ExtResource("12_fo77s")
+key = &"time_pressure"
+amount = 1
+source_id = &"bait_bind_lure"
+
+[sub_resource type="Resource" id="Resource_n8uft"]
+script = ExtResource("7_10atl")
+protect_life = -3
+respect_authority = -1
+pursue_profit = 2
+taboo_tolerance = 3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_bekk8"]
+script = ExtResource("13_gdlmv")
+type = &"injury_risk"
+amount = 8
+reason_code = &"bait_bind_lure_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_vw1br"]
+script = ExtResource("14_gi3bk")
+context_deltas = Array[ExtResource("12_fo77s")]([SubResource("Resource_j6g4e"), SubResource("Resource_kv3kv")])
+member_effects = Array[ExtResource("13_gdlmv")]([SubResource("Resource_bekk8")])
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_vfsxt"), SubResource("Resource_qshou"), SubResource("Resource_ef0tp")])
+ideology_impact = SubResource("Resource_n8uft")
+outcome_tags = Array[StringName]([&"bait_bind_lure_partial"])
+
+[sub_resource type="Resource" id="Resource_5qyrq"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 9
+reason_code = &"bait_bind_lure_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_v85so"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = -1
+reason_code = &"bait_bind_lure_severe_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_beu30"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 8
+reason_code = &"bait_bind_lure_severe_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_m78uf"]
+script = ExtResource("12_fo77s")
+key = &"alert_level"
+amount = 3
+source_id = &"bait_bind_lure"
+
+[sub_resource type="Resource" id="Resource_s4f77"]
+script = ExtResource("12_fo77s")
+key = &"extraction_pressure"
+amount = 2
+source_id = &"bait_bind_lure"
+
+[sub_resource type="Resource" id="Resource_p368f"]
+script = ExtResource("7_10atl")
+protect_life = -5
+respect_authority = -4
+taboo_tolerance = 5
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_naakb"]
+script = ExtResource("13_gdlmv")
+type = &"injury_risk"
+amount = 25
+reason_code = &"bait_bind_lure_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_qy5ic"]
+script = ExtResource("14_gi3bk")
+context_deltas = Array[ExtResource("12_fo77s")]([SubResource("Resource_m78uf"), SubResource("Resource_s4f77")])
+member_effects = Array[ExtResource("13_gdlmv")]([SubResource("Resource_naakb")])
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_5qyrq"), SubResource("Resource_v85so"), SubResource("Resource_beu30")])
+ideology_impact = SubResource("Resource_p368f")
+outcome_tags = Array[StringName]([&"bait_bind_lure_severe"])
+
+[sub_resource type="Resource" id="Resource_q08vj"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 4
+reason_code = &"bait_bind_lure_success_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_qq1bs"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 8
+reason_code = &"bait_bind_lure_success_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_mp8e3"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 5
+reason_code = &"bait_bind_lure_success_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_xo6tj"]
+script = ExtResource("12_fo77s")
+key = &"collected_resources"
+amount = 3
+source_id = &"bait_bind_lure"
+
+[sub_resource type="Resource" id="Resource_lugms"]
+script = ExtResource("7_10atl")
+protect_life = -3
+respect_authority = -2
+pursue_profit = 3
+taboo_tolerance = 3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_wtprr"]
+script = ExtResource("13_gdlmv")
+type = &"injury_risk"
+amount = 3
+reason_code = &"bait_bind_lure_success_injury_risk"
+
+[sub_resource type="Resource" id="Resource_8dnwg"]
+script = ExtResource("14_gi3bk")
+context_deltas = Array[ExtResource("12_fo77s")]([SubResource("Resource_xo6tj")])
+member_effects = Array[ExtResource("13_gdlmv")]([SubResource("Resource_wtprr")])
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_q08vj"), SubResource("Resource_qq1bs"), SubResource("Resource_mp8e3")])
+ideology_impact = SubResource("Resource_lugms")
+outcome_tags = Array[StringName]([&"bait_bind_lure_success", &"dragon_diverted"])
+
+[sub_resource type="Resource" id="Resource_bu84n"]
+script = ExtResource("15_1gqxw")
+exceptional = SubResource("Resource_n5qv4")
+success = SubResource("Resource_8dnwg")
+partial = SubResource("Resource_vw1br")
+failure = SubResource("Resource_n0wg0")
+severe = SubResource("Resource_qy5ic")
+
+[sub_resource type="Resource" id="Resource_g8hip"]
+script = ExtResource("16_63miw")
+id = &"bait_bind_lure"
+check_type = &"ritual"
+capability_weights = SubResource("Resource_ounpd")
+difficulty = 35
+result_weight = 0.4
+failure_result_cap = &"partial"
+method_tags = Array[StringName]([&"ritual", &"necromancy"])
+context_modifiers = Array[ExtResource("11_cwken")]([SubResource("Resource_860ts"), SubResource("Resource_cmaa4")])
+approach_profile = &"careful"
+outcome_table = SubResource("Resource_bu84n")
+
+[sub_resource type="Resource" id="Resource_djnyx"]
+script = ExtResource("9_e1fbg")
+id = &"prepare_dragon_bait_stage_special_objective"
+phase = &"special_objective"
+check = SubResource("Resource_g8hip")
+
+[sub_resource type="Resource" id="Resource_5ickc"]
+script = ExtResource("10_umr7g")
+frontline = 0.15
+scouting = 0.3
+support = 0.25
+arcana = 0.05
+discipline = 0.25
+
+[sub_resource type="Resource" id="Resource_ufli1"]
+script = ExtResource("11_cwken")
+condition_type = &"context_gte"
+operand = &"route_safety"
+threshold = 1
+amount = 2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_j65pj"]
+script = ExtResource("11_cwken")
+condition_type = &"context_gte"
+operand = &"alert_level"
+threshold = 1
+amount = -3
+per_context_point = true
+maximum_absolute_amount = 9
+
+[sub_resource type="Resource" id="Resource_diwhe"]
+script = ExtResource("11_cwken")
+condition_type = &"context_gte"
+operand = &"extraction_pressure"
+threshold = 1
+amount = -3
+per_context_point = true
+maximum_absolute_amount = 9
+
+[sub_resource type="Resource" id="Resource_s62n1"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 1
+reason_code = &"bait_leave_unseen_exceptional_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_oxsch"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 3
+reason_code = &"bait_leave_unseen_exceptional_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_umokp"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 1
+reason_code = &"bait_leave_unseen_exceptional_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_22yj4"]
+script = ExtResource("7_10atl")
+protect_life = -2
+respect_authority = -2
+pursue_profit = 4
+taboo_tolerance = 3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_xcmu1"]
+script = ExtResource("14_gi3bk")
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_s62n1"), SubResource("Resource_oxsch"), SubResource("Resource_umokp")])
+ideology_impact = SubResource("Resource_22yj4")
+outcome_tags = Array[StringName]([&"bait_leave_unseen_exceptional", &"operation_hidden"])
+
+[sub_resource type="Resource" id="Resource_8pi50"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 5
+reason_code = &"bait_leave_unseen_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_lqbsn"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 5
+reason_code = &"bait_leave_unseen_failure_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_p04ue"]
+script = ExtResource("7_10atl")
+protect_life = -5
+respect_authority = -3
+pursue_profit = 1
+taboo_tolerance = 5
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_xhxie"]
+script = ExtResource("13_gdlmv")
+type = &"injury_risk"
+amount = 18
+reason_code = &"bait_leave_unseen_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_k6yj3"]
+script = ExtResource("14_gi3bk")
+member_effects = Array[ExtResource("13_gdlmv")]([SubResource("Resource_xhxie")])
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_8pi50"), SubResource("Resource_lqbsn")])
+ideology_impact = SubResource("Resource_p04ue")
+outcome_tags = Array[StringName]([&"bait_leave_unseen_failure"])
+
+[sub_resource type="Resource" id="Resource_c2jbd"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 4
+reason_code = &"bait_leave_unseen_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_0dy05"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 1
+reason_code = &"bait_leave_unseen_partial_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_wwfv4"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 4
+reason_code = &"bait_leave_unseen_partial_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_3g2re"]
+script = ExtResource("7_10atl")
+protect_life = -3
+respect_authority = -1
+pursue_profit = 2
+taboo_tolerance = 3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_13i4w"]
+script = ExtResource("13_gdlmv")
+type = &"injury_risk"
+amount = 8
+reason_code = &"bait_leave_unseen_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_15wl3"]
+script = ExtResource("14_gi3bk")
+member_effects = Array[ExtResource("13_gdlmv")]([SubResource("Resource_13i4w")])
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_c2jbd"), SubResource("Resource_0dy05"), SubResource("Resource_wwfv4")])
+ideology_impact = SubResource("Resource_3g2re")
+outcome_tags = Array[StringName]([&"bait_leave_unseen_partial"])
+
+[sub_resource type="Resource" id="Resource_ovmq5"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 6
+reason_code = &"bait_leave_unseen_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_85jje"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = -1
+reason_code = &"bait_leave_unseen_severe_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_hbv8d"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 6
+reason_code = &"bait_leave_unseen_severe_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_ce71g"]
+script = ExtResource("7_10atl")
+protect_life = -5
+respect_authority = -4
+taboo_tolerance = 5
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_mp0id"]
+script = ExtResource("13_gdlmv")
+type = &"injury_risk"
+amount = 30
+reason_code = &"bait_leave_unseen_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_lvhbc"]
+script = ExtResource("14_gi3bk")
+member_effects = Array[ExtResource("13_gdlmv")]([SubResource("Resource_mp0id")])
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_ovmq5"), SubResource("Resource_85jje"), SubResource("Resource_hbv8d")])
+ideology_impact = SubResource("Resource_ce71g")
+outcome_tags = Array[StringName]([&"bait_leave_unseen_severe"])
+
+[sub_resource type="Resource" id="Resource_22jrl"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 2
+reason_code = &"bait_leave_unseen_success_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_x3ali"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 2
+reason_code = &"bait_leave_unseen_success_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_nep0j"]
+script = ExtResource("3_ym7lh")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 2
+reason_code = &"bait_leave_unseen_success_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_a73bc"]
+script = ExtResource("7_10atl")
+protect_life = -3
+respect_authority = -2
+pursue_profit = 3
+taboo_tolerance = 3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_k48wj"]
+script = ExtResource("13_gdlmv")
+type = &"injury_risk"
+amount = 3
+reason_code = &"bait_leave_unseen_success_injury_risk"
+
+[sub_resource type="Resource" id="Resource_3746j"]
+script = ExtResource("14_gi3bk")
+member_effects = Array[ExtResource("13_gdlmv")]([SubResource("Resource_k48wj")])
+campaign_effects = Array[ExtResource("3_ym7lh")]([SubResource("Resource_22jrl"), SubResource("Resource_x3ali"), SubResource("Resource_nep0j")])
+ideology_impact = SubResource("Resource_a73bc")
+outcome_tags = Array[StringName]([&"bait_leave_unseen_success", &"operation_hidden"])
+
+[sub_resource type="Resource" id="Resource_i4cmk"]
+script = ExtResource("15_1gqxw")
+exceptional = SubResource("Resource_xcmu1")
+success = SubResource("Resource_3746j")
+partial = SubResource("Resource_15wl3")
+failure = SubResource("Resource_k6yj3")
+severe = SubResource("Resource_lvhbc")
+
+[sub_resource type="Resource" id="Resource_48vri"]
+script = ExtResource("16_63miw")
+id = &"bait_leave_unseen"
+check_type = &"extraction"
+capability_weights = SubResource("Resource_5ickc")
+difficulty = 32
+result_weight = 0.2
+failure_result_cap = &"failure"
+method_tags = Array[StringName]([&"stealth", &"smuggling"])
+context_modifiers = Array[ExtResource("11_cwken")]([SubResource("Resource_ufli1"), SubResource("Resource_j65pj"), SubResource("Resource_diwhe")])
+approach_profile = &"careful"
+outcome_table = SubResource("Resource_i4cmk")
+
+[sub_resource type="Resource" id="Resource_najfi"]
+script = ExtResource("9_e1fbg")
+id = &"prepare_dragon_bait_stage_extraction"
+phase = &"extraction"
+check = SubResource("Resource_48vri")
+
+[resource]
+script = ExtResource("8_umgk8")
+id = &"contract_prepare_dragon_bait"
+title_key = &"contract.contract_prepare_dragon_bait.title"
+description_key = &"contract.contract_prepare_dragon_bait.description"
+sponsor_faction_id = &"faction_necrotic_collective"
+related_problem_id = &"problem_dragon_assault_pressure"
+target_lock_key = &"dragon_bait.prepare_village_stores"
+target_problem_tags = Array[StringName]([&"dragon_assault"])
+agenda_tags = Array[StringName]([&"corruption", &"dragon_bait", &"secrecy"])
+allow_agenda_origin = true
+starts_unlocked = false
+proposal_base_priority = 15
+urgency_weight = 30
+recent_repeat_cooldown = 2
+base_reward = 320
+base_fatigue = 15
+risk_level = 4
+offer_duration_weeks = 2
+intent_ideology_vector = SubResource("Resource_hb57w")
+expected_method_tags = Array[StringName]([&"scouting", &"deception", &"research", &"ritual", &"necromancy", &"stealth", &"smuggling"])
+stages = Array[ExtResource("9_e1fbg")]([SubResource("Resource_n1hse"), SubResource("Resource_mjpgd"), SubResource("Resource_djnyx"), SubResource("Resource_najfi")])
+clause_ids = Array[StringName]([&"bait_divert_dragon", &"bait_keep_sponsor_secret", &"bait_no_civilian_deaths"])
+allowed_supply_tags = Array[StringName]([&"scouting", &"protection", &"arcane_binding", &"rations"])
+final_outcome_table = SubResource("Resource_lp0wm")
+availability_rules = Array[ExtResource("1_lhjcq")]([SubResource("Resource_eke8a")])
+unhandled_policy = &"npc_or_escalate"
+npc_completion_action_id = &"action_necrotic_collective_prepare_dragon_bait"

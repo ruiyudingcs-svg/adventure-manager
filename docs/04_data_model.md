@@ -10,6 +10,11 @@
 
 ## 2. 静态定义
 
+`.tres` authoring 层使用带 `@export` 字段的 `*DefinitionResource` 和一个显式
+`ContentManifest`。CatalogValidator 校验并编译后，DataCatalog 只发布本章定义的
+构造后只读运行时对象。两层之间不得共享可变集合；完整规则见
+`docs/19_content_catalog_state_and_situation_rules.md`。
+
 ### 2.1 AdventurerDefinition
 
 ```text
@@ -24,6 +29,15 @@ starting_relationships: Array[RelationshipDefinition]
 wage: int
 bio_key: StringName
 ```
+
+#### 2.1.1 RelationshipDefinition
+
+```text
+target_id: StringName
+base_value: int
+```
+
+关系是稀疏有向记录，`base_value` 合法范围为 -100 至 +100。同一 AdventurerDefinition 内 `target_id` 唯一；不要求反方向记录存在。
 
 ### 2.2 CapabilityBlock
 
@@ -57,15 +71,24 @@ modifiers: Array[ConditionalModifier]
 ```
 
 V0.1 的 ConditionalModifier 只支持少量白名单条件，不实现通用脚本表达式。
+Gate B 的 trait 手段规则只允许 `docs/15_staged_contract_resolution_rules.md`
+第 5.1 节列出的八种 trait 和 preferred/opposed tag 表；命中值固定为
+`+3/-4`，不得由内容资源覆写，也不得把 trait ID 当作可执行规则。
 
 #### 2.4.1 MethodTagDefinition
 
 ```text
 id: StringName
 ideology_vector: IdeologyVector
+taboo_intensity: int       # 0..2
 ```
 
 实际使用的 method tag 必须引用该定义。任务后同一 method tag 每份合同只累计一次 `ideology_vector`，不运行标签专用脚本。
+`taboo_intensity` 只能使用 Gate B 固定表：necromancy、sacrifice 为 2；
+coercion、corpse_handling、preservation、smuggling 为 1；其他已登记 tag 为 0。
+Task 006 首批 19 个 method tag 的固定价值向量见
+`docs/15_staged_contract_resolution_rules.md` 第 5.1 节；该向量和禁忌强度都是
+静态内容，不由合同结果或角色 trait 覆写。
 
 ### 2.5 ContractDefinition
 
@@ -300,6 +323,8 @@ outcome_tags
 ```
 
 成员士气由统一任务后评价产生；结果消息由 ContractResolution 投影；后续合同由 outcome tag 与 SituationRule 解锁。
+V0.1 五档 `injury_risk_modifier` 固定为 Exceptional `-10`、Success `-5`、
+Partial `0`、Failure `+10`、Severe `+20`，内容不得覆盖。
 
 ### 2.7 SupplyDefinition
 
@@ -312,6 +337,30 @@ modifiers: Array[ConditionalModifier]
 consumed_on_use: bool
 ```
 
+V0.1 最多选择两个不同补给 ID。补给效果只允许以下固定规则：
+
+- scouting：navigation check `+5`
+- medical：rescue check `+5`、any injury `-5`、heavy injury `-2`
+- protection：protection check `+5`、any injury `-3`、heavy injury `-4`
+- arcane_binding：只触发合同 check 显式声明的 supply modifier
+- rations：每名成员未乘结果倍率的疲劳 `-4`
+
+首批补给的固定采购成本为：
+
+| supply ID | tag | cost |
+|---|---|---:|
+| `supply_medical` | `medical` | 10 |
+| `supply_scouting` | `scouting` | 8 |
+| `supply_protection` | `protection` | 12 |
+| `supply_arcane_binding` | `arcane_binding` | 20 |
+| `supply_rations` | `rations` | 6 |
+
+这些成本由后续 Offer/承诺事务锁定和扣除；Resolver 仍只读取补给效果，不直接扣款。
+
+`ConditionalModifier` 只能结构化表达上述匹配条件和数值；不允许新增内容自定义的
+全局伤病、疲劳或 check 公式。完整应用顺序见
+`docs/15_staged_contract_resolution_rules.md` 第 5.2—5.5 节。
+
 ### 2.8 FactionDefinition
 
 ```text
@@ -320,8 +369,11 @@ display_name_key: StringName
 description_key: StringName
 agenda_weights: Array[FactionAgendaWeight]
 preferred_ideology: IdeologyVector
-weekly_action_table: Array[FactionActionDefinition]
+weekly_action_ids: Array[StringName]
 ```
+
+`weekly_action_ids` 是行动所有权的唯一来源。DataCatalog 按 ID 返回 detached
+`FactionActionDefinition`；行动定义本身不重复保存 owner 字段。
 
 #### 2.8.1 FactionAgendaWeight
 
@@ -445,7 +497,7 @@ event_key: StringName
 - `npc_or_escalate`
 - `escalate`
 
-`npc_or_expire` 与 `npc_or_escalate` 必须配置 `npc_completion_action_id`，并引用提出方 `weekly_action_table` 中已有的 `FactionActionDefinition`。其他两种策略必须留空该字段。NPC 完成复用该行动的 `conditions`、`influence_cost`、`effects` 和 `event_key`，不在 ContractDefinition 中复制效果。
+`npc_or_expire` 与 `npc_or_escalate` 必须配置 `npc_completion_action_id`，并引用提出方 `weekly_action_ids` 中已有的 `FactionActionDefinition`。其他两种策略必须留空该字段。NPC 完成复用该行动的 `conditions`、`influence_cost`、`effects` 和 `event_key`，不在 ContractDefinition 中复制效果。
 
 使用 `npc_or_escalate` 或 `escalate` 的 ContractDefinition 必须存在非空模板问题锚点。若同一模板以 followup 或 agenda 来源生成 Offer，运行时 `related_problem_id` 为空；NPC 路径仍可执行，但任何 `escalated` 后备结果降为 `expired`。未处理结算不配置条件数组、优先级、Agenda 权重或随机分支。`npc_completed` 只在合同越过有效期后的未处理结算中产生。V0.1 不允许提出方撤回，也不在 pending 期间由第三方行动提前产生终止状态。
 
@@ -479,7 +531,6 @@ V0.1 条件类型白名单：
 - clock_lte
 - phase_is
 - week_gte
-- faction_relation_gte
 - contract_completed
 - problem_is_active
 - problem_is_resolved
@@ -493,7 +544,6 @@ V0.1 条件类型白名单：
 - unlock_contract
 - add_message
 - set_ending
-- modify_faction_relation
 - create_problem
 - resolve_problem
 - create_world_event
@@ -519,7 +569,7 @@ target_id: StringName
 int_value: int
 ```
 
-`target_id` 根据 type 引用钟、阶段、周、阵营、合同、问题或世界事件；不需要阈值的条件忽略 `int_value`。type 必须来自本节既有条件白名单。
+`target_id` 根据 type 引用钟、阶段、周、合同、问题或世界事件；不需要阈值的条件忽略 `int_value`。type 必须来自本节既有条件白名单。
 
 #### 2.14.3 WorldEffect
 
@@ -530,7 +580,7 @@ amount: int
 reason_code: StringName
 ```
 
-`target_id` 根据 type 引用钟、阶段、结局、阵营、合同、问题、事件或消息 key；非数值效果忽略 `amount`。所有效果必须携带稳定 reason code，并来自本节既有效果白名单。
+`target_id` 根据 type 引用钟、阶段、结局、合同、问题、事件或消息 key；非数值效果忽略 `amount`。所有效果必须携带稳定 reason code，并来自本节既有效果白名单。
 
 #### 2.14.4 ClockDelta
 
@@ -541,6 +591,36 @@ reason_code: StringName
 ```
 
 ClockDelta 是 `modify_clock` 的静态简写，用于 SituationDefinition 的每周被动变化；提交时转换成普通 WorldEffect 并参与同一批合并与裁剪。
+
+### 2.15 CampaignSetupDefinition
+
+```text
+id: StringName
+situation_definition_id: StringName
+adventurer_ids: Array[StringName]
+faction_setups: Array[FactionSetupDefinition]
+initial_active_problem_ids: Array[StringName]
+initial_gold: int
+initial_reputation: int
+initial_base_cohesion: int
+weekly_maintenance: int
+```
+
+```text
+FactionSetupDefinition
+- faction_id: StringName
+- initial_relation: int
+- initial_influence: int
+```
+
+正式 manifest 恰好发布一个 `campaign_setup_dragon_invasion_v0_1`。它显式引用八名
+成员、三个阵营、唯一 Situation 和三个开局 active 问题；初值固定为 Gold 250、
+Reputation 20、base Cohesion 50、weekly maintenance 25，阵营 relation 0 与
+influence 60。完整构造规则见
+`docs/22_campaign_bootstrap_forecast_and_ui_shell.md`。
+
+Setup 是静态只读 Definition，不进入 CampaignState，也不允许包含 Node、Callable、
+可执行字符串或运行时 State。DataCatalog 返回 detached runtime Definition。
 
 ## 3. 运行时状态
 
@@ -564,6 +644,9 @@ declined_offer_week: int
 ending_id: StringName
 ```
 
+V0.1 正式存档 schema 使用 `save_version = 1`；`week_index` 从 0 开始且不得为负。
+任何后续 schema 升级必须显式迁移，而不是静默接受未知版本。
+
 ### 3.2 GuildState
 
 ```text
@@ -572,6 +655,13 @@ reputation: int
 base_cohesion: int
 weekly_maintenance: int
 ```
+
+`gold` 与 `weekly_maintenance` 不得为负；`reputation` 与
+`base_cohesion` 的合法范围均为 0 至 100。事务中的多个增减先求和，再在最终
+字段上裁剪一次。
+
+V0.1 不保存补给库存。计划选择的补给按 Definition cost 在周末原子事务中购买并
+消费；失败不扣金币。ContractResolution 锁定总成本和消费 ID。
 
 ### 3.3 AdventurerState
 
@@ -589,6 +679,24 @@ recent_neglect_count: int
 ```
 
 基础能力和价值观从 Definition 读取。V0.1 不保存离队计数或永久移除成员；预测态度为 Opposed 且 morale 不高于 20 时，派遣命令验证失败。
+
+Gate D 规定 `recent_assignment_count` 与 `recent_neglect_count` 表示连续周数并封顶
+3。计数根据上一周冻结参与快照更新，不是独立历史来源。Morale 和
+`relationship_deltas` 在 V0.1 没有自然漂移。伤病恢复期间 severity 保持不变；
+`recovery_weeks_remaining` 归零的周开场清除伤势并恢复 available。完整规则见
+`docs/20_weekly_upkeep_and_history_rules.md`。
+
+#### 3.3.1 AdventurerSnapshot
+
+Task 002 的只读结算快照至少投影稳定成员 ID、能力、价值观、疲劳、士气、伤势、可用性、恢复周数、近期冷落次数、trait IDs 和：
+
+```text
+wage: int
+relationship_values: Dictionary[StringName, int]
+```
+
+`wage` 必须大于 0，供锁定报酬四人均分后的 `reward_fit` 使用。
+`relationship_values` 是 `starting_relationships + relationship_deltas` 的独立稀疏有向副本，key 为目标成员 ID。进入合同结算的有效值必须在 -100 至 +100；缺少 key 表示没有显式记录，而不是显式的 0。Resolver 按 `docs/15_staged_contract_resolution_rules.md` 第 4.1 节从四人快照派生六个成员对，不读取 Definition、State 或完整 CampaignState。
 
 ### 3.4 FactionState
 
@@ -612,6 +720,9 @@ problems: Dictionary[StringName, WorldProblemState]
 ending_id: StringName
 ```
 
+`clock_values` 的每个运行时值均裁剪到 0 至 100；字典 key、阶段、触发器、
+解锁合同、问题和结局只保存稳定 ID。
+
 ### 3.6 WorldProblemState
 
 ```text
@@ -627,6 +738,11 @@ resolution_reason_code: StringName
 `status` 白名单为 `inactive`、`active`、`resolved`、`escalated`、`closed`。
 
 问题激活时，如果 `response_window_weeks >= 1`，锁定 `response_deadline_week = opened_week + response_window_weeks - 1`；没有期限时保存 -1。`age_weeks`、`remaining_turns` 和当前紧迫度均为派生值，不写入 WorldProblemState。
+
+生命周期字段必须保持一致：`inactive` 的三个周数字均为 -1；非 inactive 状态必须
+具有非负 `opened_week`；deadline 若存在则不得早于 opened week；只有 terminal
+状态可以具有非负 `closed_week`，而 `resolved`、`escalated`、`closed` 必须具有
+closed week。非空的 `source_event_id` 和 `resolution_reason_code` 必须是稳定 ID。
 
 ### 3.7 WorldEventState
 
@@ -655,6 +771,7 @@ offered_week: int
 expires_week: int
 offered_reward: int
 applied_relation_tier: StringName
+sponsor_relation_snapshot: int
 problem_urgency_at_offer: int
 generation_reason_entries: Array[ReasonEntry]
 locked_seed: int
@@ -686,12 +803,15 @@ remaining_turns = expires_week - week_index + 1
 关系档位：
 
 ```text
-relation < 25:     duration_bonus = 0, reward_multiplier = 1.00
-relation 25..59:  duration_bonus = 1, reward_multiplier = 1.10
-relation >= 60:   duration_bonus = 2, reward_multiplier = 1.20
+relation < 25:     standard,  duration_bonus = 0, reward_multiplier = 1.00
+relation 25..59:  favorable, duration_bonus = 1, reward_multiplier = 1.10
+relation >= 60:   trusted,   duration_bonus = 2, reward_multiplier = 1.20
 ```
 
-档位不叠加，报酬四舍五入为整数金币。V0.1 的关系档位不参与阵营行动选择；提出方不存在撤回判断。
+档位不叠加，报酬使用 `round_away` 四舍五入为整数金币且只舍入一次。
+`sponsor_relation_snapshot` 在创建时锁定精确的 -100 至 100 关系值；三档字段
+只解释期限和报酬，不能替代精确值参与成员认可度。V0.1 的关系档位不参与阵营
+行动选择；提出方不存在撤回判断。
 
 #### 3.8.1 ContractInstantiationSnapshot
 
@@ -734,6 +854,20 @@ world_event_ids: Array[StringName]
 
 resolved 承诺可以在 10 至 15 周战役内保留在该数组中作为行动历史；只有 `status == committed` 的条目参与周末结算和目标锁判断。
 
+承诺 ID 固定为：
+
+```text
+digest = StableSeed.derive(
+    0,
+    ["faction_action_commitment", committed_week, faction_id,
+     action_definition_id, target_problem_id, target_lock_key]
+)
+instance_id = "faction_action_" + lower_hex8(digest)
+```
+
+行动结算事件 ID 为 `instance_id + "_" + event_key`。同一输入必须得到相同
+承诺、事件和 reason 顺序；任何 ID 碰撞都拒绝整批事务。
+
 ### 3.10 ContractPlanState
 
 ```text
@@ -742,6 +876,37 @@ selected_member_ids: Array[StringName]
 selected_supply_ids: Array[StringName]
 approach: StringName
 ```
+
+Task 004 的纯逻辑输入将保存为只读运行时投影，不修改存档 schema：
+
+```text
+EffectiveContract
+- instance_id: StringName
+- definition_id: StringName
+- offered_reward: int
+- base_fatigue: int
+- risk_level: int
+- sponsor_relation_snapshot: int
+- intent_ideology_vector: IdeologyVector
+- expected_method_tags: Array[StringName]
+- allowed_supply_tags: Array[StringName]
+- stages: Array[ContractStageDefinition]
+- clauses: Array[ContractClauseDefinition]
+- initial_context_deltas: Array[MissionContextDelta]
+- final_outcome_table: ContractOutcomeTable
+
+ContractPlan
+- members: Array[AdventurerSnapshot]
+- selected_supplies: Array[SupplyDefinition]
+- approach: StringName
+```
+
+`EffectiveContract` 是 Offer 与静态定义在结算边界上的完整锁定输入；
+`ContractPlan` 使用类型化 SupplyDefinition，不以裸 tag 或 Dictionary 代替。
+这些对象均不得持有或修改 CampaignState。
+
+构造 EffectiveContract 时必须显式传入 detached clause 与 MethodTagDefinition
+集合；Offer 服务不得从 DataCatalog Autoload 隐式读取它们。
 
 ### 3.11 ContractHistoryEntry
 
@@ -768,6 +933,20 @@ generation_reason_entries
 ```
 
 未被玩家接受的合同也写入历史；其 `member_ids`、`supply_ids`、`approach` 和 `result_tier` 为空。
+
+`ContractHistoryEntry` 是玩家合同及成员参与历史的唯一权威记录。V0.1 不另存成员
+出勤表、累计次数或最近周数组。`CampaignHistoryQuery` 只能读取已提交记录，并将
+指定周的玩家 resolved `member_ids` 投影为：
+
+```text
+WeeklyParticipationSnapshot
+- week_index: int
+- assigned_member_ids: Array[StringName]
+```
+
+成员 ID 稳定排序、去重。declined、expired、npc_completed、escalated 和阵营行动
+不进入参与快照；没有玩家合同的周返回空数组。同一周存在多份玩家 resolved 合同
+属于历史不一致。快照是临时只读值，不写入 CampaignState 或存档。
 
 ### 3.12 MessageState
 
@@ -803,6 +982,47 @@ MessageRequest
 
 `MessageState.importance` 白名单为 `low`、`normal`、`high`、`critical`。`MessageState.category` 白名单为 `upkeep`、`world_event`、`contract_offer`、`contract_lifecycle`、`faction_action`、`contract_result`、`week_summary`。
 
+### 3.13 SaveEnvelope 与 CampaignState DTO（schema v1）
+
+正式存档根对象固定为：
+
+```text
+format: "adventure_manager_campaign"
+save_version: 1
+campaign_setup_id: String
+saved_at_unix_seconds: int
+campaign_state: CampaignStateDTO
+```
+
+`CampaignStateDTO` 完整保存第 3.1 节字段，其中 `adventurers`、`factions`、
+`SituationState.clock_values`、`SituationState.problems` 和
+`AdventurerState.relationship_deltas` 使用稳定 ID 作为 JSON object key。其余
+Offer、承诺、历史、事件、消息、ReasonEntry、StateChange、实例化快照与
+MissionContext 按各自权威数组顺序保存。`active_plan` 没有时为 JSON `null`。
+
+以下数据明确不进入 DTO：
+
+- `ProblemUrgencyResult`、问题年龄和 remaining turns
+- `ForecastViewData` 与 Presenter cache
+- `WeekOpeningResult`
+- `WeekResolution` 和 Resolution review snapshot
+- 静态 Definition 数值图
+
+JSON object key 使用稳定排序写出；数组不因序列化重新排序。除
+`saved_at_unix_seconds` 外，同一 CampaignState 的 canonical state JSON 必须完全
+一致。JSON 本身无法区分整数与浮点、`String` 与 `StringName`，因此只在
+Reason/Message parameters、history trace 和 StateChange old/new 这类任意 Variant
+位置使用显式标签：
+
+```json
+{"__type": "integer", "value": 7}
+{"__type": "string_name", "value": "problem_dragon_location_unknown"}
+```
+
+已知 schema 字段仍使用普通 JSON number/string，并由 codec 按字段类型恢复。
+加载必须构造全新的嵌套 State，运行 `CampaignState.validate()`，再验证所有 Definition
+ID 属于 `campaign_setup_id` 的内容闭包；不得把 DTO Dictionary 直接作为权威状态。
+
 ## 4. 结果与日志
 
 ### 4.1 ReasonEntry
@@ -832,6 +1052,24 @@ reason_codes: Array[StringName]
 ```
 
 同一最终字段变化保存所有非零来源的 reason code，顺序由统一结算源顺序确定。对应的完整 `ReasonEntry` 仍保存在 ResolutionTrace 或周结算结果中。
+
+#### 4.2.1 StateOperation
+
+```text
+target_kind: StringName
+target_id: StringName
+field_id: StringName
+operation: StringName
+value: Variant
+reason_code: StringName
+source_order: int
+```
+
+`operation` 白名单为 `add_int`、`set_id`、`add_unique`、`remove_unique`、
+`append_record`。StateOperation 是合并前的待应用意图，StateChange 是成功应用后
+的审计结果。字段必须由 `target_kind + field_id` 白名单 dispatch，不把
+`field_path` 当作可执行属性路径。合并、冲突和原子规则见
+`docs/19_content_catalog_state_and_situation_rules.md` 第 5 节。
 
 ### 4.3 FactionIntentCandidate
 
@@ -919,7 +1157,7 @@ MissionContext 只存在于一次合同结算中，不写回 CampaignState。需
 check_id: StringName
 phase: StringName
 check_type: StringName
-score: float
+score: int
 result_tier: StringName
 result_weight: float
 seed: int
@@ -934,6 +1172,8 @@ outcome_tags: Array[StringName]
 ```
 
 `context_before` 必须是解析该判定前的不可变值快照，不能引用随后继续修改的 MissionContext 实例。四个 check 固定执行，不存在 skipped 状态。
+
+`score` 是 64 位浮点 raw score 按 `round_away` 舍入后得到的不裁剪整数。发生舍入时，`reason_entries` 包含仅 debug 可见的 `score_rounding`，使全部评分原因 amount 之和等于最终 score。完整精度、随机和惩罚规则见 `docs/15_staged_contract_resolution_rules.md` 第 4 节。
 
 ### 4.8 PhaseResult
 
@@ -959,17 +1199,42 @@ ideology_impact: IdeologyVector
 outcome_tags: Array[StringName]
 ```
 
+### 4.9.1 MemberOutcome
+
+```text
+member_id: StringName
+fatigue_delta: int
+injury_result: StringName       # none / light / heavy
+injury_seed: int
+injury_roll: int
+any_injury_chance: int
+heavy_injury_chance: int
+injury_severity_after: int
+recovery_weeks_after: int
+is_available_after: bool
+morale_delta: int
+reason_entries: Array[ReasonEntry]
+```
+
+伤病概率读取任务开始时快照疲劳，并使用 operational tier；
+疲劳倍率和任务后结果读取 final tier。MemberOutcome 只描述待应用终值，
+不得直接修改 AdventurerState。
+
 ### 4.10 ContractResolution
 
 ```text
 contract_instance_id
+initial_result_tier
+operational_result_tier
 result_tier
 contract_score
 phase_results: Array[PhaseResult]
 clause_results: Array[ClauseResult]
 final_context: MissionContext
 reward
-member_outcomes
+supply_cost_total: int
+consumed_supply_ids: Array[StringName]
+member_outcomes: Array[MemberOutcome]
 sponsor_relation_delta: int
 situation_outcomes
 outcome_tags
@@ -985,8 +1250,14 @@ state_changes
 
 启动新游戏前运行 CatalogValidator：
 
-- ID 唯一
+- ContentManifest 显式列出全部资源，不通过目录扫描发现内容
+- 正式 manifest 恰好包含一个 CampaignSetupDefinition，且 setup ID 唯一
+- setup 恰好引用八名不重复成员、三个不重复阵营、一个 Situation 和三个开局问题
+- setup 的成员、阵营、Situation、问题引用均存在并属于同一 V0.1 内容闭包
+- setup 的 Gold、Reputation、Cohesion、维护、阵营 relation/influence 符合 Gate F
+- ID 在整个 manifest 内全局唯一
 - 引用 ID 存在
+- authoring Resource 编译结果与源资源不共享可变数组、Dictionary 或子资源
 - `base_urgency` 在 0 至 100
 - `age_urgency_per_week` 和 `age_urgency_cap` 非负
 - `response_window_weeks` 为 -1 或至少为 1
@@ -1012,9 +1283,12 @@ state_changes
 - pending Offer、新 Offer 和行动承诺的精确 target lock 全局唯一
 - 阵营行动不包含 objective group、stance、contest 或退款字段
 - 能力与价值观范围合法
-- MethodTagDefinition ID 唯一，所有预期和实际 method tag 都有定义
+- 成员工资大于 0；成员快照包含 Gate B 所需的工资、trait、冷落、伤势、恢复和可用性字段
+- trait 只使用 Gate B 八项白名单；MethodTagDefinition ID 唯一，所有预期、条款引用和实际 method tag 都有定义
+- MethodTagDefinition 的 `taboo_intensity` 与固定 0/1/2 表一致
 - 每个 CheckOutcomeTable 和 ContractOutcomeTable 的五个结果等级齐全
 - ContractOutcomeTable 五档的 `sponsor_relation_delta` 在 -20 至 +20
+- 所有 V0.1 ContractOutcomeTable 五档 `injury_risk_modifier` 固定为 -10/-5/0/+10/+20
 - 每份合同恰好包含四个顺序正确且 ID 唯一的阶段
 - 每阶段恰好一个 check，四个 check ID 唯一且类型在白名单中
 - 每个 check 的 `approach_profile` 在白名单内，不存在合同自定义 Approach 数值表
@@ -1022,6 +1296,8 @@ state_changes
 - 四个 `result_weight` 都大于 0 且合计接近 1.0
 - check 不包含 required、conditions、optional、toggle 或 skipped 字段
 - `expected_method_tags` 覆盖所有玩家在规划阶段应知的必然手段
+- `risk_level` 为 1 至 5，锁定提出方关系为 -100 至 +100，锁定报酬和基础疲劳非负
+- allowed supply tags、SupplyDefinition tag 和补给 ConditionalModifier 只使用 Gate B 固定白名单与数值
 - MissionModifier、TraceCondition、上下文 key 和效果类型在白名单中
 - Bonus 条款没有 failure penalty 或 breach_result_cap
 - 所有条款公开且不包含 evaluation phase、visibility 或情报字段
@@ -1035,6 +1311,7 @@ state_changes
 - 实例化规则只修改难度与初始 MissionContext，不保存源规则或世界事实
 - 恶化策略的模板必须有问题锚点；followup 或 agenda 来源 Offer 运行时无问题锚点，不得应用恶化效果
 - 触发规则效果类型在白名单中
+- 世界条件不包含 `faction_relation_gte`，世界效果不包含 `modify_faction_relation`
 - 合同至少有一种可达的 availability rule 状态
 - 每个非结局阶段、每个阵营至少有一份可达 fallback Agenda 合同
 - SituationPhaseDefinition ID 唯一、排序稳定，且恰好一个阶段标记为 terminal
@@ -1050,20 +1327,26 @@ state_changes
 
 验证失败时禁止开始游戏，并输出资源路径、字段和错误。
 
-## 6. 初始八名成员建议
+## 6. 首批八名成员基线
 
-| ID | 职业 | 主要能力 | 价值冲突定位 |
-|---|---|---|---|
-| mara_shield | Vanguard | frontline, discipline | 服从权威，厌恶鲁莽牺牲 |
-| toren_hammer | Vanguard | offense, frontline | 重视利润和胜利，附带损失容忍高 |
-| elin_pathfinder | Ranger | scouting, discipline | 独立，重视平民生命 |
-| veska_hunter | Ranger | offense, scouting | 野心强，喜爱高风险合同 |
-| sister_ana | Adept | support, protect_life | 强烈反对死灵和牺牲 |
-| orrin_arcanist | Adept | arcana, knowledge | 重视研究，可接受部分危险手段 |
-| pell_quartermaster | Adept | support, discipline | 务实、重视现金流 |
-| nera_hedgewitch | Adept | arcana, scouting | 禁忌容忍高，不信任权威 |
+Task 006 将下表锁定为 V0.1 首批 `AdventurerDefinition`。能力顺序为
+`F/O/Sc/Su/Ar/D`（frontline、offense、scouting、support、arcana、
+discipline）；价值顺序为 `L/A/K/P/T`（protect_life、respect_authority、
+seek_knowledge、pursue_profit、taboo_tolerance）。
 
-这些只是第一批设计锚点；每人还需一项弱点，避免形成无争议最佳阵容。
+| ID | class | F/O/Sc/Su/Ar/D | L/A/K/P/T | traits | wage |
+|---|---|---|---|---|---:|
+| `mara_shield` | `vanguard` | 78/42/35/52/18/82 | +2/+4/-1/-1/-3 | loyal | 12 |
+| `toren_hammer` | `vanguard` | 72/82/28/32/12/55 | -1/0/-2/+4/+3 | ruthless | 13 |
+| `elin_pathfinder` | `ranger` | 38/45/84/40/20/76 | +4/-2/+1/0/-2 | independent | 11 |
+| `veska_hunter` | `ranger` | 45/78/72/30/18/48 | -1/-1/0/+2/+1 | ambitious | 12 |
+| `sister_ana` | `adept` | 30/22/35/88/52/72 | +5/+2/+1/-2/-5 | compassionate, devout | 12 |
+| `orrin_arcanist` | `adept` | 25/35/42/55/86/65 | 0/+1/+5/0/+2 | scholarly | 14 |
+| `pell_quartermaster` | `adept` | 42/30/38/80/25/78 | 0/+3/0/+5/0 | cautious | 11 |
+| `nera_hedgewitch` | `adept` | 28/38/68/48/82/42 | 0/-4/+2/+1/+5 | independent | 13 |
+
+这些数值是静态角色模板，不是黄金合同测试队伍。每名成员都保留至少一项明显弱项；
+疲劳、士气、伤势、成长和当前关系仍只存在于 `AdventurerState`。
 
 ## 7. 初始合同类别
 
@@ -1074,4 +1357,7 @@ state_changes
 - 3 份捕获、研究或仪式准备
 - 2 份高收益但有伦理代价的合同
 
-完整 ID、提出方、问题锚点、阶段骨架、条款和世界方向见 `docs/09_contract_template_catalog.md`。三份数值化基准合同见 `docs/10_baseline_contracts.md`。每类至少有一份会改变后续合同池。
+完整 ID、提出方、问题锚点、阶段骨架、条款和世界方向见
+`docs/09_contract_template_catalog.md`。三份数值化基准合同见
+`docs/10_baseline_contracts.md`，其余九份完整数值见
+`docs/21_remaining_contract_numerical_rules.md`。每类至少有一份会改变后续合同池。

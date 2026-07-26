@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="SituationPhaseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/situation_phase_definition_resource.gd" id="1_qrip0"]
+
+[resource]
+script = ExtResource("1_qrip0")
+id = &"phase_early_crisis"
+display_name_key = &"phase_early_crisis.name"
+description_key = &"phase_early_crisis.description"

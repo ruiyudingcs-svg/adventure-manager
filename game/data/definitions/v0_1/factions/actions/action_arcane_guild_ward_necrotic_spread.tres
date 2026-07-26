@@ -1,0 +1,45 @@
+[gd_resource type="Resource" script_class="FactionActionDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="1_53i2u"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="2_byre4"]
+[ext_resource type="Script" path="res://game/data/definitions/factions/faction_action_definition_resource.gd" id="3_5p23w"]
+
+[sub_resource type="Resource" id="Resource_g6qj3"]
+script = ExtResource("1_53i2u")
+type = &"problem_is_active"
+target_id = &"problem_necrotic_spread"
+
+[sub_resource type="Resource" id="Resource_wpmoh"]
+script = ExtResource("2_byre4")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = -8
+reason_code = &"action_arcane_guild_ward_necrotic_spread_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_bg3m5"]
+script = ExtResource("2_byre4")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = 2
+reason_code = &"action_arcane_guild_ward_necrotic_spread_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_5ewv0"]
+script = ExtResource("2_byre4")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 1
+reason_code = &"action_arcane_guild_ward_necrotic_spread_settlement_destruction"
+
+[resource]
+script = ExtResource("3_5p23w")
+id = &"action_arcane_guild_ward_necrotic_spread"
+agenda_tags = Array[StringName]([&"contain_necrotic"])
+target_lock_key = &"necrotic_ward.contain_spread"
+base_intent_priority = 17
+urgency_weight = 35
+recent_repeat_cooldown = 1
+influence_cost = 6
+conditions = Array[ExtResource("1_53i2u")]([SubResource("Resource_g6qj3")])
+target_problem_tags = Array[StringName]([&"necrotic_spread"])
+effects = Array[ExtResource("2_byre4")]([SubResource("Resource_wpmoh"), SubResource("Resource_bg3m5"), SubResource("Resource_5ewv0")])
+event_key = &"event_necrotic_spread_warded"

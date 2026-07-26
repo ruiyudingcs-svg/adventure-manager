@@ -1,0 +1,101 @@
+[gd_resource type="Resource" script_class="WorldProblemDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_rule_resource.gd" id="1_biweq"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="2_lww44"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="3_b4fy4"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_problem_definition_resource.gd" id="4_nfvk5"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/problem_urgency_rule_resource.gd" id="5_eqctn"]
+
+[sub_resource type="Resource" id="Resource_q8vx0"]
+script = ExtResource("2_lww44")
+type = &"clock_gte"
+target_id = &"settlement_destruction"
+int_value = 20
+
+[sub_resource type="Resource" id="Resource_t3xxq"]
+script = ExtResource("1_biweq")
+id = &"activate_battlefield_corpses_1"
+all_conditions = Array[ExtResource("2_lww44")]([SubResource("Resource_q8vx0")])
+
+[sub_resource type="Resource" id="Resource_i1vyr"]
+script = ExtResource("3_b4fy4")
+type = &"create_world_event"
+target_id = &"event_battlefield_dead_rose"
+reason_code = &"problem_battlefield_corpses_escalated"
+
+[sub_resource type="Resource" id="Resource_p3n30"]
+script = ExtResource("3_b4fy4")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 15
+reason_code = &"problem_battlefield_corpses_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_ekr7x"]
+script = ExtResource("3_b4fy4")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 5
+reason_code = &"problem_battlefield_corpses_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_kd7ae"]
+script = ExtResource("2_lww44")
+type = &"world_event_occurred"
+target_id = &"event_corpses_delivered"
+
+[sub_resource type="Resource" id="Resource_b82db"]
+script = ExtResource("1_biweq")
+id = &"resolve_battlefield_corpses_1"
+all_conditions = Array[ExtResource("2_lww44")]([SubResource("Resource_kd7ae")])
+
+[sub_resource type="Resource" id="Resource_oo30d"]
+script = ExtResource("2_lww44")
+type = &"world_event_occurred"
+target_id = &"event_corpses_recovered_by_collective"
+
+[sub_resource type="Resource" id="Resource_fklt8"]
+script = ExtResource("1_biweq")
+id = &"resolve_battlefield_corpses_2"
+all_conditions = Array[ExtResource("2_lww44")]([SubResource("Resource_oo30d")])
+
+[sub_resource type="Resource" id="Resource_s5oly"]
+script = ExtResource("2_lww44")
+type = &"clock_gte"
+target_id = &"necrotic_corruption"
+int_value = 25
+
+[sub_resource type="Resource" id="Resource_pnpev"]
+script = ExtResource("5_eqctn")
+id = &"urgency_corpses_begin_turning"
+all_conditions = Array[ExtResource("2_lww44")]([SubResource("Resource_s5oly")])
+urgency_delta = 20
+reason_code = &"urgency_corpses_begin_turning"
+
+[sub_resource type="Resource" id="Resource_uqv4y"]
+script = ExtResource("2_lww44")
+type = &"clock_gte"
+target_id = &"settlement_destruction"
+int_value = 30
+
+[sub_resource type="Resource" id="Resource_ypxjs"]
+script = ExtResource("5_eqctn")
+id = &"urgency_more_battlefield_dead"
+all_conditions = Array[ExtResource("2_lww44")]([SubResource("Resource_uqv4y")])
+urgency_delta = 10
+reason_code = &"urgency_more_battlefield_dead"
+
+[resource]
+script = ExtResource("4_nfvk5")
+id = &"problem_battlefield_corpses"
+title_key = &"problem.problem_battlefield_corpses.title"
+description_key = &"problem.problem_battlefield_corpses.description"
+problem_tags = Array[StringName]([&"battlefield_corpses", &"necrotic_material"])
+base_urgency = 50
+age_urgency_per_week = 12
+age_urgency_cap = 24
+response_window_weeks = 2
+urgency_rules = Array[ExtResource("5_eqctn")]([SubResource("Resource_pnpev"), SubResource("Resource_ypxjs")])
+activation_rules = Array[ExtResource("1_biweq")]([SubResource("Resource_t3xxq")])
+resolution_rules = Array[ExtResource("1_biweq")]([SubResource("Resource_b82db"), SubResource("Resource_fklt8")])
+related_clock_ids = Array[StringName]([&"settlement_destruction", &"necrotic_corruption"])
+contract_definition_ids = Array[StringName]([&"contract_recover_intact_corpses"])
+escalation_effects = Array[ExtResource("3_b4fy4")]([SubResource("Resource_i1vyr"), SubResource("Resource_p3n30"), SubResource("Resource_ekr7x")])

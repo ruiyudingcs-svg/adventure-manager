@@ -1,6 +1,6 @@
 # Task 001 — Project Bootstrap
 
-状态：Ready  
+状态：Completed
 里程碑：Milestone 0  
 依赖：无
 
@@ -95,11 +95,11 @@ godot --headless --path . --script res://tests/run_all.gd
 
 ## Completion checklist
 
-- [ ] 只修改 Allowed files。
-- [ ] 无 Autoload 和 addon。
-- [ ] UI 脚本不含游戏公式。
-- [ ] headless 测试实际运行并记录结果。
-- [ ] `git diff` 中没有 `.godot/` 或其他生成文件。
+- [x] 只修改 Allowed files。
+- [x] 无 Autoload 和 addon。
+- [x] UI 脚本不含游戏公式。
+- [x] headless 测试实际运行并记录结果。
+- [x] `git diff` 中没有 `.godot/` 或其他生成文件。
 
 ## Expected report
 
@@ -108,4 +108,3 @@ godot --headless --path . --script res://tests/run_all.gd
 - 精确测试命令、退出码和摘要
 - Godot 警告
 - 假设与未完成项
-

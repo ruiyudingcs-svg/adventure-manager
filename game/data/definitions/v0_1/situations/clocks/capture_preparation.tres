@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="ClockDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/clock_definition_resource.gd" id="1_d2ivc"]
+
+[resource]
+script = ExtResource("1_d2ivc")
+id = &"capture_preparation"
+display_name_key = &"clock.capture_preparation.name"

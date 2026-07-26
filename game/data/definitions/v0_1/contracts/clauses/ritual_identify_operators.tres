@@ -1,0 +1,46 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_3yf3v"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_0fi0y"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_la6jy"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_ktovq"]
+
+[sub_resource type="Resource" id="Resource_23pyl"]
+script = ExtResource("1_3yf3v")
+type = &"outcome_tag_present"
+tag_value = &"ritualists_identified"
+
+[sub_resource type="Resource" id="Resource_eqlfa"]
+script = ExtResource("3_la6jy")
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_ogprb"]
+script = ExtResource("2_0fi0y")
+type = &"modify_reward_percent"
+amount = 10
+reason_code = &"ritual_identify_operators_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_q6vdr"]
+script = ExtResource("2_0fi0y")
+type = &"modify_sponsor_relation"
+amount = 2
+reason_code = &"ritual_identify_operators_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_5g3ru"]
+script = ExtResource("3_la6jy")
+seek_knowledge = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_ktovq")
+id = &"ritual_identify_operators"
+display_name_key = &"clause.ritual_identify_operators.name"
+description_key = &"clause.ritual_identify_operators.description"
+category = &"delivery"
+importance = &"bonus"
+all_conditions = Array[ExtResource("1_3yf3v")]([SubResource("Resource_23pyl")])
+success_effects = Array[ExtResource("2_0fi0y")]([SubResource("Resource_ogprb"), SubResource("Resource_q6vdr")])
+success_ideology_impact = SubResource("Resource_5g3ru")
+failure_ideology_impact = SubResource("Resource_eqlfa")
+success_tags = Array[StringName]([&"clause.ritual_identify_operators.satisfied"])
+priority = 30

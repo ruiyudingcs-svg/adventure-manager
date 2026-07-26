@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="AdventurerDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/capability_block_resource.gd" id="1_stx06"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/adventurer_definition_resource.gd" id="2_l7aq4"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/relationship_definition_resource.gd" id="3_xua1g"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="4_qlca0"]
+
+[sub_resource type="Resource" id="Resource_tnpat"]
+script = ExtResource("1_stx06")
+frontline = 72
+offense = 82
+scouting = 28
+support = 32
+arcana = 12
+discipline = 55
+
+[sub_resource type="Resource" id="Resource_hwgi8"]
+script = ExtResource("4_qlca0")
+protect_life = -1
+seek_knowledge = -2
+pursue_profit = 4
+taboo_tolerance = 3
+
+[resource]
+script = ExtResource("2_l7aq4")
+id = &"toren_hammer"
+display_name = "Toren Hammer"
+class_id = &"vanguard"
+base_capabilities = SubResource("Resource_tnpat")
+traits = Array[StringName]([&"ruthless"])
+values = SubResource("Resource_hwgi8")
+wage = 13
+bio_key = &"adventurer.toren_hammer.bio"

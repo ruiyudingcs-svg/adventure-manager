@@ -1,0 +1,102 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://game/features/roster/roster_view.gd" id="1_view"]
+[ext_resource type="Script" path="res://game/features/roster/roster_controller.gd" id="2_controller"]
+
+[node name="RosterScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_view")
+
+[node name="Controller" type="Node" parent="."]
+script = ExtResource("2_controller")
+
+[node name="EmptyLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "尚未开始战役。"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Content" type="HSplitContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+split_offset = 280
+
+[node name="MemberPanel" type="PanelContainer" parent="Content"]
+custom_minimum_size = Vector2(260, 0)
+layout_mode = 2
+
+[node name="MemberScroll" type="ScrollContainer" parent="Content/MemberPanel"]
+layout_mode = 2
+
+[node name="MemberList" type="VBoxContainer" parent="Content/MemberPanel/MemberScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Tabs" type="TabContainer" parent="Content"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Members" type="ScrollContainer" parent="Content/Tabs"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Content/Tabs/Members"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 22
+
+[node name="MemberDetails" type="VBoxContainer" parent="Content/Tabs/Members/Margin"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="Relationships" type="ScrollContainer" parent="Content/Tabs"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Content/Tabs/Relationships"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 22
+
+[node name="RelationshipsList" type="VBoxContainer" parent="Content/Tabs/Relationships/Margin"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Recent Records" type="ScrollContainer" parent="Content/Tabs"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Content/Tabs/Recent Records"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 22
+
+[node name="RecordsList" type="VBoxContainer" parent="Content/Tabs/Recent Records/Margin"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8

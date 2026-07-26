@@ -1,0 +1,57 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_pf72k"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_03gnl"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_82nx4"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_ux0rw"]
+
+[sub_resource type="Resource" id="Resource_1kihl"]
+script = ExtResource("1_pf72k")
+type = &"context_gte"
+key = &"protected_civilians"
+int_value = 3
+
+[sub_resource type="Resource" id="Resource_pomwk"]
+script = ExtResource("2_03gnl")
+type = &"modify_reward_percent"
+amount = -15
+reason_code = &"bridge_civilians_passed_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_1g6im"]
+script = ExtResource("2_03gnl")
+type = &"modify_sponsor_relation"
+amount = -4
+reason_code = &"bridge_civilians_passed_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_ysefs"]
+script = ExtResource("3_82nx4")
+protect_life = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_847gt"]
+script = ExtResource("2_03gnl")
+type = &"modify_sponsor_relation"
+amount = 2
+reason_code = &"bridge_civilians_passed_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_2f6dk"]
+script = ExtResource("3_82nx4")
+protect_life = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_ux0rw")
+id = &"bridge_civilians_passed"
+display_name_key = &"clause.bridge_civilians_passed.name"
+description_key = &"clause.bridge_civilians_passed.description"
+category = &"collateral"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_pf72k")]([SubResource("Resource_1kihl")])
+success_effects = Array[ExtResource("2_03gnl")]([SubResource("Resource_847gt")])
+failure_effects = Array[ExtResource("2_03gnl")]([SubResource("Resource_pomwk"), SubResource("Resource_1g6im")])
+breach_result_cap = &"partial"
+success_ideology_impact = SubResource("Resource_2f6dk")
+failure_ideology_impact = SubResource("Resource_ysefs")
+success_tags = Array[StringName]([&"clause.bridge_civilians_passed.satisfied"])
+failure_tags = Array[StringName]([&"clause.bridge_civilians_passed.breached"])
+priority = 20

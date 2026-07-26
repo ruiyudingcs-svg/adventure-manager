@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_1gw5q"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_4l76m"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_jduhi"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_wy5oy"]
+
+[sub_resource type="Resource" id="Resource_ohiwa"]
+script = ExtResource("1_1gw5q")
+type = &"method_tag_not_used"
+tag_value = &"necromancy"
+
+[sub_resource type="Resource" id="Resource_mwwqq"]
+script = ExtResource("2_4l76m")
+type = &"modify_reward_percent"
+amount = -25
+reason_code = &"clause_binding_necromancy_reward"
+
+[sub_resource type="Resource" id="Resource_l8ecg"]
+script = ExtResource("2_4l76m")
+type = &"modify_sponsor_relation"
+amount = -8
+reason_code = &"clause_binding_necromancy_relation"
+
+[sub_resource type="Resource" id="Resource_5wj78"]
+script = ExtResource("3_jduhi")
+respect_authority = -2
+taboo_tolerance = 3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_jakis"]
+script = ExtResource("3_jduhi")
+taboo_tolerance = -1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_wy5oy")
+id = &"binding_no_necromancy"
+display_name_key = &"clause.binding_no_necromancy.name"
+description_key = &"clause.binding_no_necromancy.description"
+category = &"method"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_1gw5q")]([SubResource("Resource_ohiwa")])
+failure_effects = Array[ExtResource("2_4l76m")]([SubResource("Resource_mwwqq"), SubResource("Resource_l8ecg")])
+breach_result_cap = &"failure"
+success_ideology_impact = SubResource("Resource_jakis")
+failure_ideology_impact = SubResource("Resource_5wj78")
+priority = 30

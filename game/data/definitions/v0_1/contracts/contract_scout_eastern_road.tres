@@ -1,0 +1,1076 @@
+[gd_resource type="Resource" script_class="ContractDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_rule_resource.gd" id="1_ou260"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="2_5c85h"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="3_8t7sk"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_outcome_definition_resource.gd" id="4_2gjuj"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_outcome_table_resource.gd" id="5_m7ndr"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/offer_instantiation_rule_resource.gd" id="6_p0klm"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="7_cktgs"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_definition_resource.gd" id="8_13xuj"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_stage_definition_resource.gd" id="9_ihok6"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/capability_weights_resource.gd" id="10_auhu8"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/mission_modifier_resource.gd" id="11_jh8av"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/mission_context_delta_resource.gd" id="12_m76kd"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/member_effect_resource.gd" id="13_paau8"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/check_outcome_definition_resource.gd" id="14_26135"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/check_outcome_table_resource.gd" id="15_c5bvd"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_check_definition_resource.gd" id="16_csfla"]
+
+[sub_resource type="Resource" id="Resource_qwkh5"]
+script = ExtResource("2_5c85h")
+type = &"phase_is"
+target_id = &"phase_early_crisis"
+
+[sub_resource type="Resource" id="Resource_dist1"]
+script = ExtResource("2_5c85h")
+type = &"phase_is"
+target_id = &"phase_open_conflict"
+
+[sub_resource type="Resource" id="Resource_ufrke"]
+script = ExtResource("2_5c85h")
+type = &"phase_is"
+target_id = &"phase_final_window"
+
+[sub_resource type="Resource" id="Resource_l5cph"]
+script = ExtResource("1_ou260")
+id = &"availability_scout_eastern_road_phase"
+any_conditions = Array[ExtResource("2_5c85h")]([SubResource("Resource_qwkh5"), SubResource("Resource_dist1"), SubResource("Resource_ufrke")])
+
+[sub_resource type="Resource" id="Resource_a3sow"]
+script = ExtResource("3_8t7sk")
+type = &"create_world_event"
+target_id = &"event_eastern_route_secured"
+reason_code = &"event_eastern_route_secured_exceptional"
+
+[sub_resource type="Resource" id="Resource_okda6"]
+script = ExtResource("4_2gjuj")
+reward_multiplier = 1.25
+fatigue_multiplier = 0.9
+injury_risk_modifier = -10
+sponsor_relation_delta = 8
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_a3sow")])
+outcome_tags = Array[StringName]([&"contract.exceptional"])
+
+[sub_resource type="Resource" id="Resource_1k72h"]
+script = ExtResource("4_2gjuj")
+reward_multiplier = 0.25
+fatigue_multiplier = 1.25
+injury_risk_modifier = 10
+sponsor_relation_delta = -4
+outcome_tags = Array[StringName]([&"contract.failure"])
+
+[sub_resource type="Resource" id="Resource_yxa3a"]
+script = ExtResource("4_2gjuj")
+reward_multiplier = 0.65
+fatigue_multiplier = 1.1
+sponsor_relation_delta = 1
+outcome_tags = Array[StringName]([&"contract.partial"])
+
+[sub_resource type="Resource" id="Resource_l6dy8"]
+script = ExtResource("4_2gjuj")
+reward_multiplier = 0.0
+fatigue_multiplier = 1.4
+injury_risk_modifier = 20
+sponsor_relation_delta = -8
+outcome_tags = Array[StringName]([&"contract.severe_failure"])
+
+[sub_resource type="Resource" id="Resource_137xc"]
+script = ExtResource("3_8t7sk")
+type = &"create_world_event"
+target_id = &"event_eastern_route_secured"
+reason_code = &"event_eastern_route_secured_success"
+
+[sub_resource type="Resource" id="Resource_ywi46"]
+script = ExtResource("4_2gjuj")
+injury_risk_modifier = -5
+sponsor_relation_delta = 5
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_137xc")])
+outcome_tags = Array[StringName]([&"contract.success"])
+
+[sub_resource type="Resource" id="Resource_wk1o6"]
+script = ExtResource("5_m7ndr")
+exceptional = SubResource("Resource_okda6")
+success = SubResource("Resource_ywi46")
+partial = SubResource("Resource_yxa3a")
+failure = SubResource("Resource_1k72h")
+severe = SubResource("Resource_l6dy8")
+
+[sub_resource type="Resource" id="Resource_xp8tf"]
+script = ExtResource("7_cktgs")
+protect_life = 2
+seek_knowledge = 1
+taboo_tolerance = -1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_w2ue0"]
+script = ExtResource("10_auhu8")
+frontline = 0.05
+scouting = 0.55
+support = 0.15
+discipline = 0.25
+
+[sub_resource type="Resource" id="Resource_ehj5t"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 2
+reason_code = &"road_find_crossing_exceptional_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_y4g37"]
+script = ExtResource("12_m76kd")
+key = &"route_safety"
+amount = 3
+source_id = &"road_find_crossing"
+
+[sub_resource type="Resource" id="Resource_1jdfo"]
+script = ExtResource("12_m76kd")
+key = &"intel"
+amount = 2
+source_id = &"road_find_crossing"
+
+[sub_resource type="Resource" id="Resource_gukq4"]
+script = ExtResource("12_m76kd")
+key = &"alert_level"
+amount = -1
+source_id = &"road_find_crossing"
+
+[sub_resource type="Resource" id="Resource_w624g"]
+script = ExtResource("7_cktgs")
+protect_life = 2
+seek_knowledge = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_yo0p0"]
+script = ExtResource("14_26135")
+context_deltas = Array[ExtResource("12_m76kd")]([SubResource("Resource_y4g37"), SubResource("Resource_1jdfo"), SubResource("Resource_gukq4")])
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_ehj5t")])
+ideology_impact = SubResource("Resource_w624g")
+outcome_tags = Array[StringName]([&"road_find_crossing_exceptional"])
+
+[sub_resource type="Resource" id="Resource_oapje"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 3
+reason_code = &"road_find_crossing_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_rmnt5"]
+script = ExtResource("12_m76kd")
+key = &"alert_level"
+amount = 1
+source_id = &"road_find_crossing"
+
+[sub_resource type="Resource" id="Resource_igm7f"]
+script = ExtResource("12_m76kd")
+key = &"time_pressure"
+amount = 2
+source_id = &"road_find_crossing"
+
+[sub_resource type="Resource" id="Resource_lx8w1"]
+script = ExtResource("7_cktgs")
+protect_life = -1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_4cdwt"]
+script = ExtResource("13_paau8")
+type = &"injury_risk"
+amount = 8
+reason_code = &"road_find_crossing_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_falmi"]
+script = ExtResource("14_26135")
+context_deltas = Array[ExtResource("12_m76kd")]([SubResource("Resource_rmnt5"), SubResource("Resource_igm7f")])
+member_effects = Array[ExtResource("13_paau8")]([SubResource("Resource_4cdwt")])
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_oapje")])
+ideology_impact = SubResource("Resource_lx8w1")
+outcome_tags = Array[StringName]([&"road_find_crossing_failure"])
+
+[sub_resource type="Resource" id="Resource_regox"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 1
+reason_code = &"road_find_crossing_partial_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_5kx40"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 2
+reason_code = &"road_find_crossing_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_ty3d1"]
+script = ExtResource("12_m76kd")
+key = &"route_safety"
+amount = 1
+source_id = &"road_find_crossing"
+
+[sub_resource type="Resource" id="Resource_k5kg2"]
+script = ExtResource("12_m76kd")
+key = &"time_pressure"
+amount = 1
+source_id = &"road_find_crossing"
+
+[sub_resource type="Resource" id="Resource_ct0n6"]
+script = ExtResource("7_cktgs")
+seek_knowledge = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_13i6m"]
+script = ExtResource("13_paau8")
+type = &"injury_risk"
+amount = 3
+reason_code = &"road_find_crossing_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_4bvfj"]
+script = ExtResource("14_26135")
+context_deltas = Array[ExtResource("12_m76kd")]([SubResource("Resource_ty3d1"), SubResource("Resource_k5kg2")])
+member_effects = Array[ExtResource("13_paau8")]([SubResource("Resource_13i6m")])
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_regox"), SubResource("Resource_5kx40")])
+ideology_impact = SubResource("Resource_ct0n6")
+outcome_tags = Array[StringName]([&"road_find_crossing_partial"])
+
+[sub_resource type="Resource" id="Resource_13e3d"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 4
+reason_code = &"road_find_crossing_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_wckef"]
+script = ExtResource("12_m76kd")
+key = &"alert_level"
+amount = 2
+source_id = &"road_find_crossing"
+
+[sub_resource type="Resource" id="Resource_35xta"]
+script = ExtResource("12_m76kd")
+key = &"enemy_pressure"
+amount = 2
+source_id = &"road_find_crossing"
+
+[sub_resource type="Resource" id="Resource_x6jgf"]
+script = ExtResource("7_cktgs")
+protect_life = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_vagr2"]
+script = ExtResource("13_paau8")
+type = &"injury_risk"
+amount = 15
+reason_code = &"road_find_crossing_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_twso3"]
+script = ExtResource("14_26135")
+context_deltas = Array[ExtResource("12_m76kd")]([SubResource("Resource_wckef"), SubResource("Resource_35xta")])
+member_effects = Array[ExtResource("13_paau8")]([SubResource("Resource_vagr2")])
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_13e3d")])
+ideology_impact = SubResource("Resource_x6jgf")
+outcome_tags = Array[StringName]([&"road_find_crossing_severe"])
+
+[sub_resource type="Resource" id="Resource_p7wdo"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 1
+reason_code = &"road_find_crossing_success_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_enw7a"]
+script = ExtResource("12_m76kd")
+key = &"route_safety"
+amount = 2
+source_id = &"road_find_crossing"
+
+[sub_resource type="Resource" id="Resource_30jg4"]
+script = ExtResource("12_m76kd")
+key = &"intel"
+amount = 1
+source_id = &"road_find_crossing"
+
+[sub_resource type="Resource" id="Resource_8attb"]
+script = ExtResource("7_cktgs")
+protect_life = 1
+seek_knowledge = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_3eunt"]
+script = ExtResource("14_26135")
+context_deltas = Array[ExtResource("12_m76kd")]([SubResource("Resource_enw7a"), SubResource("Resource_30jg4")])
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_p7wdo")])
+ideology_impact = SubResource("Resource_8attb")
+outcome_tags = Array[StringName]([&"road_find_crossing_success"])
+
+[sub_resource type="Resource" id="Resource_oxs2x"]
+script = ExtResource("15_c5bvd")
+exceptional = SubResource("Resource_yo0p0")
+success = SubResource("Resource_3eunt")
+partial = SubResource("Resource_4bvfj")
+failure = SubResource("Resource_falmi")
+severe = SubResource("Resource_twso3")
+
+[sub_resource type="Resource" id="Resource_ger28"]
+script = ExtResource("16_csfla")
+id = &"road_find_crossing"
+check_type = &"navigation"
+capability_weights = SubResource("Resource_w2ue0")
+difficulty = 19
+failure_result_cap = &"partial"
+method_tags = Array[StringName]([&"scouting"])
+approach_profile = &"careful"
+outcome_table = SubResource("Resource_oxs2x")
+
+[sub_resource type="Resource" id="Resource_nr6fv"]
+script = ExtResource("9_ihok6")
+id = &"scout_eastern_road_stage_approach"
+phase = &"approach"
+check = SubResource("Resource_ger28")
+
+[sub_resource type="Resource" id="Resource_e27tw"]
+script = ExtResource("10_auhu8")
+scouting = 0.45
+support = 0.1
+arcana = 0.2
+discipline = 0.25
+
+[sub_resource type="Resource" id="Resource_vgheg"]
+script = ExtResource("11_jh8av")
+condition_type = &"context_gte"
+operand = &"intel"
+threshold = 1
+amount = 2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_lpqdi"]
+script = ExtResource("11_jh8av")
+condition_type = &"context_gte"
+operand = &"alert_level"
+threshold = 1
+amount = -2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_u7iss"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 2
+reason_code = &"road_map_hazards_exceptional_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_5ylu5"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = -1
+reason_code = &"road_map_hazards_exceptional_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_h4v1a"]
+script = ExtResource("12_m76kd")
+key = &"enemy_pressure"
+amount = -2
+source_id = &"road_map_hazards"
+
+[sub_resource type="Resource" id="Resource_p6ssj"]
+script = ExtResource("7_cktgs")
+protect_life = 2
+seek_knowledge = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_baewh"]
+script = ExtResource("14_26135")
+context_deltas = Array[ExtResource("12_m76kd")]([SubResource("Resource_h4v1a")])
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_u7iss"), SubResource("Resource_5ylu5")])
+ideology_impact = SubResource("Resource_p6ssj")
+outcome_tags = Array[StringName]([&"road_map_hazards_exceptional", &"usable_route"])
+
+[sub_resource type="Resource" id="Resource_2ftly"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 2
+reason_code = &"road_map_hazards_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_2d3bc"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 1
+reason_code = &"road_map_hazards_failure_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_2h300"]
+script = ExtResource("12_m76kd")
+key = &"team_strain"
+amount = 2
+source_id = &"road_map_hazards"
+
+[sub_resource type="Resource" id="Resource_ohwve"]
+script = ExtResource("12_m76kd")
+key = &"collateral_pressure"
+amount = 2
+source_id = &"road_map_hazards"
+
+[sub_resource type="Resource" id="Resource_qaori"]
+script = ExtResource("7_cktgs")
+protect_life = -1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_fo6od"]
+script = ExtResource("13_paau8")
+type = &"injury_risk"
+amount = 15
+reason_code = &"road_map_hazards_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_dxtd4"]
+script = ExtResource("14_26135")
+context_deltas = Array[ExtResource("12_m76kd")]([SubResource("Resource_2h300"), SubResource("Resource_ohwve")])
+member_effects = Array[ExtResource("13_paau8")]([SubResource("Resource_fo6od")])
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_2ftly"), SubResource("Resource_2d3bc")])
+ideology_impact = SubResource("Resource_qaori")
+outcome_tags = Array[StringName]([&"road_map_hazards_failure"])
+
+[sub_resource type="Resource" id="Resource_s8tl8"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 1
+reason_code = &"road_map_hazards_partial_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_ti6lo"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 1
+reason_code = &"road_map_hazards_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_7fpnd"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 1
+reason_code = &"road_map_hazards_partial_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_wlfnd"]
+script = ExtResource("12_m76kd")
+key = &"team_strain"
+amount = 1
+source_id = &"road_map_hazards"
+
+[sub_resource type="Resource" id="Resource_pc6q4"]
+script = ExtResource("12_m76kd")
+key = &"collateral_pressure"
+amount = 1
+source_id = &"road_map_hazards"
+
+[sub_resource type="Resource" id="Resource_mpwlr"]
+script = ExtResource("7_cktgs")
+seek_knowledge = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_hut1p"]
+script = ExtResource("13_paau8")
+type = &"injury_risk"
+amount = 8
+reason_code = &"road_map_hazards_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_ivc3u"]
+script = ExtResource("14_26135")
+context_deltas = Array[ExtResource("12_m76kd")]([SubResource("Resource_wlfnd"), SubResource("Resource_pc6q4")])
+member_effects = Array[ExtResource("13_paau8")]([SubResource("Resource_hut1p")])
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_s8tl8"), SubResource("Resource_ti6lo"), SubResource("Resource_7fpnd")])
+ideology_impact = SubResource("Resource_mpwlr")
+outcome_tags = Array[StringName]([&"road_map_hazards_partial"])
+
+[sub_resource type="Resource" id="Resource_ftm6v"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 3
+reason_code = &"road_map_hazards_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_qc525"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 2
+reason_code = &"road_map_hazards_severe_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_d0t4b"]
+script = ExtResource("12_m76kd")
+key = &"team_strain"
+amount = 3
+source_id = &"road_map_hazards"
+
+[sub_resource type="Resource" id="Resource_5ljug"]
+script = ExtResource("12_m76kd")
+key = &"collateral_pressure"
+amount = 3
+source_id = &"road_map_hazards"
+
+[sub_resource type="Resource" id="Resource_oyjee"]
+script = ExtResource("12_m76kd")
+key = &"extraction_pressure"
+amount = 1
+source_id = &"road_map_hazards"
+
+[sub_resource type="Resource" id="Resource_6uuxs"]
+script = ExtResource("7_cktgs")
+protect_life = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_d27rf"]
+script = ExtResource("13_paau8")
+type = &"injury_risk"
+amount = 25
+reason_code = &"road_map_hazards_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_vfkgd"]
+script = ExtResource("14_26135")
+context_deltas = Array[ExtResource("12_m76kd")]([SubResource("Resource_d0t4b"), SubResource("Resource_5ljug"), SubResource("Resource_oyjee")])
+member_effects = Array[ExtResource("13_paau8")]([SubResource("Resource_d27rf")])
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_ftm6v"), SubResource("Resource_qc525")])
+ideology_impact = SubResource("Resource_6uuxs")
+outcome_tags = Array[StringName]([&"road_map_hazards_severe"])
+
+[sub_resource type="Resource" id="Resource_bum06"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 1
+reason_code = &"road_map_hazards_success_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_gu2e1"]
+script = ExtResource("12_m76kd")
+key = &"enemy_pressure"
+amount = -1
+source_id = &"road_map_hazards"
+
+[sub_resource type="Resource" id="Resource_s48rn"]
+script = ExtResource("7_cktgs")
+protect_life = 1
+seek_knowledge = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_h3nyp"]
+script = ExtResource("13_paau8")
+type = &"injury_risk"
+amount = 3
+reason_code = &"road_map_hazards_success_injury_risk"
+
+[sub_resource type="Resource" id="Resource_n8vfu"]
+script = ExtResource("14_26135")
+context_deltas = Array[ExtResource("12_m76kd")]([SubResource("Resource_gu2e1")])
+member_effects = Array[ExtResource("13_paau8")]([SubResource("Resource_h3nyp")])
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_bum06")])
+ideology_impact = SubResource("Resource_s48rn")
+outcome_tags = Array[StringName]([&"road_map_hazards_success", &"usable_route"])
+
+[sub_resource type="Resource" id="Resource_ji3wr"]
+script = ExtResource("15_c5bvd")
+exceptional = SubResource("Resource_baewh")
+success = SubResource("Resource_n8vfu")
+partial = SubResource("Resource_ivc3u")
+failure = SubResource("Resource_dxtd4")
+severe = SubResource("Resource_vfkgd")
+
+[sub_resource type="Resource" id="Resource_01mop"]
+script = ExtResource("16_csfla")
+id = &"road_map_hazards"
+check_type = &"reconnaissance"
+capability_weights = SubResource("Resource_e27tw")
+difficulty = 22
+result_weight = 0.3
+failure_result_cap = &"partial"
+method_tags = Array[StringName]([&"reconnaissance", &"scouting"])
+context_modifiers = Array[ExtResource("11_jh8av")]([SubResource("Resource_vgheg"), SubResource("Resource_lpqdi")])
+approach_profile = &"careful"
+outcome_table = SubResource("Resource_ji3wr")
+
+[sub_resource type="Resource" id="Resource_rl2x7"]
+script = ExtResource("9_ihok6")
+id = &"scout_eastern_road_stage_main_action"
+phase = &"main_action"
+check = SubResource("Resource_01mop")
+
+[sub_resource type="Resource" id="Resource_aj38q"]
+script = ExtResource("10_auhu8")
+frontline = 0.45
+offense = 0.05
+scouting = 0.05
+support = 0.25
+discipline = 0.2
+
+[sub_resource type="Resource" id="Resource_gu0wj"]
+script = ExtResource("11_jh8av")
+condition_type = &"context_gte"
+operand = &"intel"
+threshold = 1
+amount = 1
+per_context_point = true
+maximum_absolute_amount = 4
+
+[sub_resource type="Resource" id="Resource_byqmk"]
+script = ExtResource("11_jh8av")
+condition_type = &"context_gte"
+operand = &"team_strain"
+threshold = 1
+amount = -2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_7c2ri"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 2
+reason_code = &"road_shield_scouts_exceptional_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_pix0t"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = -1
+reason_code = &"road_shield_scouts_exceptional_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_5dt6w"]
+script = ExtResource("12_m76kd")
+key = &"intel"
+amount = 4
+source_id = &"road_shield_scouts"
+
+[sub_resource type="Resource" id="Resource_nep1a"]
+script = ExtResource("7_cktgs")
+protect_life = 2
+seek_knowledge = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_0o22h"]
+script = ExtResource("14_26135")
+context_deltas = Array[ExtResource("12_m76kd")]([SubResource("Resource_5dt6w")])
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_7c2ri"), SubResource("Resource_pix0t")])
+ideology_impact = SubResource("Resource_nep1a")
+outcome_tags = Array[StringName]([&"road_shield_scouts_exceptional"])
+
+[sub_resource type="Resource" id="Resource_u3q6o"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 3
+reason_code = &"road_shield_scouts_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_twinp"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 1
+reason_code = &"road_shield_scouts_failure_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_b70ch"]
+script = ExtResource("12_m76kd")
+key = &"intel"
+amount = 1
+source_id = &"road_shield_scouts"
+
+[sub_resource type="Resource" id="Resource_2vshd"]
+script = ExtResource("12_m76kd")
+key = &"alert_level"
+amount = 2
+source_id = &"road_shield_scouts"
+
+[sub_resource type="Resource" id="Resource_5e66f"]
+script = ExtResource("7_cktgs")
+protect_life = -1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_nbov7"]
+script = ExtResource("13_paau8")
+type = &"injury_risk"
+amount = 15
+reason_code = &"road_shield_scouts_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_dxqhr"]
+script = ExtResource("14_26135")
+context_deltas = Array[ExtResource("12_m76kd")]([SubResource("Resource_b70ch"), SubResource("Resource_2vshd")])
+member_effects = Array[ExtResource("13_paau8")]([SubResource("Resource_nbov7")])
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_u3q6o"), SubResource("Resource_twinp")])
+ideology_impact = SubResource("Resource_5e66f")
+outcome_tags = Array[StringName]([&"road_shield_scouts_failure"])
+
+[sub_resource type="Resource" id="Resource_2cmsd"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 1
+reason_code = &"road_shield_scouts_partial_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_v7pb0"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 2
+reason_code = &"road_shield_scouts_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_uf7bj"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 1
+reason_code = &"road_shield_scouts_partial_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_6kbt7"]
+script = ExtResource("12_m76kd")
+key = &"intel"
+amount = 2
+source_id = &"road_shield_scouts"
+
+[sub_resource type="Resource" id="Resource_q3l36"]
+script = ExtResource("12_m76kd")
+key = &"time_pressure"
+amount = 1
+source_id = &"road_shield_scouts"
+
+[sub_resource type="Resource" id="Resource_tb6tf"]
+script = ExtResource("7_cktgs")
+seek_knowledge = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_p1r8v"]
+script = ExtResource("13_paau8")
+type = &"injury_risk"
+amount = 8
+reason_code = &"road_shield_scouts_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_exsnm"]
+script = ExtResource("14_26135")
+context_deltas = Array[ExtResource("12_m76kd")]([SubResource("Resource_6kbt7"), SubResource("Resource_q3l36")])
+member_effects = Array[ExtResource("13_paau8")]([SubResource("Resource_p1r8v")])
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_2cmsd"), SubResource("Resource_v7pb0"), SubResource("Resource_uf7bj")])
+ideology_impact = SubResource("Resource_tb6tf")
+outcome_tags = Array[StringName]([&"road_shield_scouts_partial"])
+
+[sub_resource type="Resource" id="Resource_7vso1"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 4
+reason_code = &"road_shield_scouts_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_g1icl"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 2
+reason_code = &"road_shield_scouts_severe_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_y7ly4"]
+script = ExtResource("12_m76kd")
+key = &"alert_level"
+amount = 3
+source_id = &"road_shield_scouts"
+
+[sub_resource type="Resource" id="Resource_ghw0e"]
+script = ExtResource("12_m76kd")
+key = &"extraction_pressure"
+amount = 2
+source_id = &"road_shield_scouts"
+
+[sub_resource type="Resource" id="Resource_2arbl"]
+script = ExtResource("7_cktgs")
+protect_life = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_t6781"]
+script = ExtResource("13_paau8")
+type = &"injury_risk"
+amount = 25
+reason_code = &"road_shield_scouts_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_amtq2"]
+script = ExtResource("14_26135")
+context_deltas = Array[ExtResource("12_m76kd")]([SubResource("Resource_y7ly4"), SubResource("Resource_ghw0e")])
+member_effects = Array[ExtResource("13_paau8")]([SubResource("Resource_t6781")])
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_7vso1"), SubResource("Resource_g1icl")])
+ideology_impact = SubResource("Resource_2arbl")
+outcome_tags = Array[StringName]([&"road_shield_scouts_severe"])
+
+[sub_resource type="Resource" id="Resource_ubcio"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 1
+reason_code = &"road_shield_scouts_success_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_ldfpe"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 1
+reason_code = &"road_shield_scouts_success_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_40cwm"]
+script = ExtResource("12_m76kd")
+key = &"intel"
+amount = 3
+source_id = &"road_shield_scouts"
+
+[sub_resource type="Resource" id="Resource_0a4pw"]
+script = ExtResource("7_cktgs")
+protect_life = 1
+seek_knowledge = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_3ijid"]
+script = ExtResource("13_paau8")
+type = &"injury_risk"
+amount = 3
+reason_code = &"road_shield_scouts_success_injury_risk"
+
+[sub_resource type="Resource" id="Resource_y1e23"]
+script = ExtResource("14_26135")
+context_deltas = Array[ExtResource("12_m76kd")]([SubResource("Resource_40cwm")])
+member_effects = Array[ExtResource("13_paau8")]([SubResource("Resource_3ijid")])
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_ubcio"), SubResource("Resource_ldfpe")])
+ideology_impact = SubResource("Resource_0a4pw")
+outcome_tags = Array[StringName]([&"road_shield_scouts_success"])
+
+[sub_resource type="Resource" id="Resource_1ivyr"]
+script = ExtResource("15_c5bvd")
+exceptional = SubResource("Resource_0o22h")
+success = SubResource("Resource_y1e23")
+partial = SubResource("Resource_exsnm")
+failure = SubResource("Resource_dxqhr")
+severe = SubResource("Resource_amtq2")
+
+[sub_resource type="Resource" id="Resource_yjn6w"]
+script = ExtResource("16_csfla")
+id = &"road_shield_scouts"
+check_type = &"protection"
+capability_weights = SubResource("Resource_aj38q")
+difficulty = 24
+result_weight = 0.2
+failure_result_cap = &"partial"
+method_tags = Array[StringName]([&"protection", &"nonlethal"])
+context_modifiers = Array[ExtResource("11_jh8av")]([SubResource("Resource_gu0wj"), SubResource("Resource_byqmk")])
+approach_profile = &"careful"
+outcome_table = SubResource("Resource_1ivyr")
+
+[sub_resource type="Resource" id="Resource_puop7"]
+script = ExtResource("9_ihok6")
+id = &"scout_eastern_road_stage_special_objective"
+phase = &"special_objective"
+check = SubResource("Resource_yjn6w")
+
+[sub_resource type="Resource" id="Resource_b6ke8"]
+script = ExtResource("10_auhu8")
+frontline = 0.15
+scouting = 0.3
+support = 0.25
+arcana = 0.05
+discipline = 0.25
+
+[sub_resource type="Resource" id="Resource_tegn5"]
+script = ExtResource("11_jh8av")
+condition_type = &"context_gte"
+operand = &"route_safety"
+threshold = 1
+amount = 2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_7bkce"]
+script = ExtResource("11_jh8av")
+condition_type = &"context_gte"
+operand = &"alert_level"
+threshold = 1
+amount = -3
+per_context_point = true
+maximum_absolute_amount = 9
+
+[sub_resource type="Resource" id="Resource_eods4"]
+script = ExtResource("11_jh8av")
+condition_type = &"context_gte"
+operand = &"extraction_pressure"
+threshold = 1
+amount = -3
+per_context_point = true
+maximum_absolute_amount = 9
+
+[sub_resource type="Resource" id="Resource_ak58g"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 3
+reason_code = &"road_return_report_exceptional_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_msu23"]
+script = ExtResource("7_cktgs")
+protect_life = 2
+seek_knowledge = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_xilt2"]
+script = ExtResource("14_26135")
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_ak58g")])
+ideology_impact = SubResource("Resource_msu23")
+outcome_tags = Array[StringName]([&"road_return_report_exceptional", &"route_report_delivered"])
+
+[sub_resource type="Resource" id="Resource_gqc13"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 2
+reason_code = &"road_return_report_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_3sd1k"]
+script = ExtResource("7_cktgs")
+protect_life = -1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_pu55y"]
+script = ExtResource("13_paau8")
+type = &"injury_risk"
+amount = 18
+reason_code = &"road_return_report_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_3d6mq"]
+script = ExtResource("14_26135")
+member_effects = Array[ExtResource("13_paau8")]([SubResource("Resource_pu55y")])
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_gqc13")])
+ideology_impact = SubResource("Resource_3sd1k")
+outcome_tags = Array[StringName]([&"road_return_report_failure"])
+
+[sub_resource type="Resource" id="Resource_fw7aw"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 1
+reason_code = &"road_return_report_partial_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_ogw03"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 1
+reason_code = &"road_return_report_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_6c736"]
+script = ExtResource("7_cktgs")
+seek_knowledge = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_l4gp5"]
+script = ExtResource("13_paau8")
+type = &"injury_risk"
+amount = 8
+reason_code = &"road_return_report_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_g2p68"]
+script = ExtResource("14_26135")
+member_effects = Array[ExtResource("13_paau8")]([SubResource("Resource_l4gp5")])
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_fw7aw"), SubResource("Resource_ogw03")])
+ideology_impact = SubResource("Resource_6c736")
+outcome_tags = Array[StringName]([&"road_return_report_partial", &"route_report_delivered"])
+
+[sub_resource type="Resource" id="Resource_imyq0"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 3
+reason_code = &"road_return_report_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_l5jap"]
+script = ExtResource("7_cktgs")
+protect_life = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_mifsp"]
+script = ExtResource("13_paau8")
+type = &"injury_risk"
+amount = 30
+reason_code = &"road_return_report_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_gd7fq"]
+script = ExtResource("14_26135")
+member_effects = Array[ExtResource("13_paau8")]([SubResource("Resource_mifsp")])
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_imyq0")])
+ideology_impact = SubResource("Resource_l5jap")
+outcome_tags = Array[StringName]([&"road_return_report_severe"])
+
+[sub_resource type="Resource" id="Resource_0xuor"]
+script = ExtResource("3_8t7sk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 2
+reason_code = &"road_return_report_success_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_hr06n"]
+script = ExtResource("7_cktgs")
+protect_life = 1
+seek_knowledge = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_e5mcv"]
+script = ExtResource("13_paau8")
+type = &"injury_risk"
+amount = 3
+reason_code = &"road_return_report_success_injury_risk"
+
+[sub_resource type="Resource" id="Resource_kp3v2"]
+script = ExtResource("14_26135")
+member_effects = Array[ExtResource("13_paau8")]([SubResource("Resource_e5mcv")])
+campaign_effects = Array[ExtResource("3_8t7sk")]([SubResource("Resource_0xuor")])
+ideology_impact = SubResource("Resource_hr06n")
+outcome_tags = Array[StringName]([&"road_return_report_success", &"route_report_delivered"])
+
+[sub_resource type="Resource" id="Resource_add1v"]
+script = ExtResource("15_c5bvd")
+exceptional = SubResource("Resource_xilt2")
+success = SubResource("Resource_kp3v2")
+partial = SubResource("Resource_g2p68")
+failure = SubResource("Resource_3d6mq")
+severe = SubResource("Resource_gd7fq")
+
+[sub_resource type="Resource" id="Resource_m3ix7"]
+script = ExtResource("16_csfla")
+id = &"road_return_report"
+check_type = &"extraction"
+capability_weights = SubResource("Resource_b6ke8")
+difficulty = 23
+failure_result_cap = &"failure"
+method_tags = Array[StringName]([&"extraction", &"scouting"])
+context_modifiers = Array[ExtResource("11_jh8av")]([SubResource("Resource_tegn5"), SubResource("Resource_7bkce"), SubResource("Resource_eods4")])
+approach_profile = &"careful"
+outcome_table = SubResource("Resource_add1v")
+
+[sub_resource type="Resource" id="Resource_o8gr3"]
+script = ExtResource("9_ihok6")
+id = &"scout_eastern_road_stage_extraction"
+phase = &"extraction"
+check = SubResource("Resource_m3ix7")
+
+[resource]
+script = ExtResource("8_13xuj")
+id = &"contract_scout_eastern_road"
+title_key = &"contract.contract_scout_eastern_road.title"
+description_key = &"contract.contract_scout_eastern_road.description"
+sponsor_faction_id = &"faction_free_adventurers"
+related_problem_id = &"problem_eastern_road_blocked"
+target_lock_key = &"eastern_road.scout_route"
+target_problem_tags = Array[StringName]([&"road_route"])
+agenda_tags = Array[StringName]([&"evacuation", &"rescue"])
+allow_agenda_origin = true
+proposal_base_priority = 8
+urgency_weight = 25
+recent_repeat_cooldown = 1
+base_reward = 160
+base_fatigue = 8
+risk_level = 2
+offer_duration_weeks = 3
+intent_ideology_vector = SubResource("Resource_xp8tf")
+expected_method_tags = Array[StringName]([&"scouting", &"reconnaissance", &"protection", &"nonlethal", &"extraction"])
+stages = Array[ExtResource("9_ihok6")]([SubResource("Resource_nr6fv"), SubResource("Resource_rl2x7"), SubResource("Resource_puop7"), SubResource("Resource_o8gr3")])
+clause_ids = Array[StringName]([&"road_find_usable_route", &"road_deliver_report", &"road_remain_unnoticed"])
+allowed_supply_tags = Array[StringName]([&"scouting", &"protection", &"rations"])
+final_outcome_table = SubResource("Resource_wk1o6")
+availability_rules = Array[ExtResource("1_ou260")]([SubResource("Resource_l5cph")])
+unhandled_policy = &"escalate"

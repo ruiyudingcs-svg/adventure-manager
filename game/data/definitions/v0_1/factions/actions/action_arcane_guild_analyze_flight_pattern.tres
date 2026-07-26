@@ -1,0 +1,45 @@
+[gd_resource type="Resource" script_class="FactionActionDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="1_xdhhb"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="2_a8dh7"]
+[ext_resource type="Script" path="res://game/data/definitions/factions/faction_action_definition_resource.gd" id="3_tdanf"]
+
+[sub_resource type="Resource" id="Resource_g7v8i"]
+script = ExtResource("1_xdhhb")
+type = &"problem_is_active"
+target_id = &"problem_dragon_assault_pressure"
+
+[sub_resource type="Resource" id="Resource_paq24"]
+script = ExtResource("2_a8dh7")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = 4
+reason_code = &"action_arcane_guild_analyze_flight_pattern_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_cjqgb"]
+script = ExtResource("2_a8dh7")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 2
+reason_code = &"action_arcane_guild_analyze_flight_pattern_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_jxbs5"]
+script = ExtResource("2_a8dh7")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 1
+reason_code = &"action_arcane_guild_analyze_flight_pattern_settlement_destruction"
+
+[resource]
+script = ExtResource("3_tdanf")
+id = &"action_arcane_guild_analyze_flight_pattern"
+agenda_tags = Array[StringName]([&"research", &"capture"])
+target_lock_key = &"dragon_flight.analyze"
+base_intent_priority = 8
+urgency_weight = 20
+recent_repeat_cooldown = 1
+influence_cost = 4
+conditions = Array[ExtResource("1_xdhhb")]([SubResource("Resource_g7v8i")])
+target_problem_tags = Array[StringName]([&"dragon_assault"])
+effects = Array[ExtResource("2_a8dh7")]([SubResource("Resource_paq24"), SubResource("Resource_cjqgb"), SubResource("Resource_jxbs5")])
+event_key = &"event_dragon_flight_pattern_analyzed"

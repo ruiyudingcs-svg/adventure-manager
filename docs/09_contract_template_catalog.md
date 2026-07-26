@@ -9,7 +9,12 @@
 
 十二份模板已经按 `docs/17_dragon_invasion_scenario_spec.md` 的阵营目标与进度钟，以及 `docs/18_dragon_invasion_problem_and_action_catalog.md` 的问题和行动完成覆盖审计。模板总数固定为十二份。
 
-本文件暂不固定除三份基准合同外的精确 check 难度、五档数值、疲劳、伤病率和全部 MissionContextDelta。合同来源、资格和筛选规则已由 `docs/11_contract_proposal_generation.md` 固定；精确世界状态实例绑定见 `docs/12_contract_instantiation_and_commitment.md`。
+本文件不重复保存合同的完整实现数值。三份基准合同见
+`docs/10_baseline_contracts.md`；其余九份合同的精确 check 难度、五档数值、疲劳、
+伤病率、条款和 MissionContextDelta 已由 Gate E 固定在
+`docs/21_remaining_contract_numerical_rules.md`。合同来源、资格和筛选规则由
+`docs/11_contract_proposal_generation.md` 固定；精确世界状态实例绑定见
+`docs/12_contract_instantiation_and_commitment.md`。
 
 ## 2. 内容 ID
 
@@ -303,7 +308,10 @@
 
 ## 11. 代表性世界结果校准
 
-以下数值固定“四个 check 全部得到 Success”与“四个 check 全部得到 Failure”时的净 campaign delta，作为其余九份合同拆分逐阶段结果的校准目标。三份基准合同的数值直接汇总自 `docs/10_baseline_contracts.md`。
+以下数值固定“四个 check 全部得到 Success”与“四个 check 全部得到 Failure”时的净 campaign delta。三份基准合同的数值直接汇总自
+`docs/10_baseline_contracts.md`；其余九份合同必须按
+`docs/21_remaining_contract_numerical_rules.md` 拆分到逐阶段五档结果，本文的净值
+不能作为 final outcome 再次应用。
 
 缩写：`E` 撤离，`D` 毁坏，`X` 巨龙疲劳，`P` 捕获准备，`C` 死灵污染。
 

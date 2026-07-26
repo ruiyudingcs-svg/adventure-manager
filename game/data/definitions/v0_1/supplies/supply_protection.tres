@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="SupplyDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/conditional_modifier_resource.gd" id="1_2luyj"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/supply_definition_resource.gd" id="2_6xlyn"]
+
+[sub_resource type="Resource" id="Resource_npnl3"]
+script = ExtResource("1_2luyj")
+target_type = &"check"
+match_tag = &"protection"
+amount = 5
+reason_code = &"supply_protection_check"
+
+[sub_resource type="Resource" id="Resource_wrx4u"]
+script = ExtResource("1_2luyj")
+target_type = &"injury_any"
+amount = -3
+reason_code = &"supply_protection_any_injury"
+
+[sub_resource type="Resource" id="Resource_a8wcy"]
+script = ExtResource("1_2luyj")
+target_type = &"injury_heavy"
+amount = -4
+reason_code = &"supply_protection_heavy_injury"
+
+[resource]
+script = ExtResource("2_6xlyn")
+id = &"supply_protection"
+display_name_key = &"supply.protection.name"
+cost = 12
+tags = Array[StringName]([&"protection"])
+modifiers = Array[ExtResource("1_2luyj")]([SubResource("Resource_npnl3"), SubResource("Resource_wrx4u"), SubResource("Resource_a8wcy")])

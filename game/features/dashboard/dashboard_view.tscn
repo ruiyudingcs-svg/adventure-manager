@@ -1,0 +1,167 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://game/features/dashboard/dashboard_view.gd" id="1_view"]
+[ext_resource type="Script" path="res://game/features/dashboard/dashboard_controller.gd" id="2_controller"]
+
+[node name="DashboardScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_view")
+
+[node name="Controller" type="Node" parent="."]
+script = ExtResource("2_controller")
+
+[node name="EmptyLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "尚未开始战役。"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Tabs" type="TabContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 16
+
+[node name="Overview" type="ScrollContainer" parent="Tabs"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Tabs/Overview"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 22
+
+[node name="Layout" type="VBoxContainer" parent="Tabs/Overview/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="OverviewSummary" type="Label" parent="Tabs/Overview/Margin/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+
+[node name="ClocksHeading" type="Label" parent="Tabs/Overview/Margin/Layout"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "局势进度"
+
+[node name="ClocksList" type="VBoxContainer" parent="Tabs/Overview/Margin/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="OffersHeading" type="Label" parent="Tabs/Overview/Margin/Layout"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "本周合同"
+
+[node name="OffersList" type="HBoxContainer" parent="Tabs/Overview/Margin/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Bottom" type="HBoxContainer" parent="Tabs/Overview/Margin/Layout"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="ActionsPanel" type="PanelContainer" parent="Tabs/Overview/Margin/Layout/Bottom"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ActionsMargin" type="MarginContainer" parent="Tabs/Overview/Margin/Layout/Bottom/ActionsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="ActionsLayout" type="VBoxContainer" parent="Tabs/Overview/Margin/Layout/Bottom/ActionsPanel/ActionsMargin"]
+layout_mode = 2
+
+[node name="Heading" type="Label" parent="Tabs/Overview/Margin/Layout/Bottom/ActionsPanel/ActionsMargin/ActionsLayout"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "NPC 行动预告"
+
+[node name="ActionsList" type="VBoxContainer" parent="Tabs/Overview/Margin/Layout/Bottom/ActionsPanel/ActionsMargin/ActionsLayout"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AlertsPanel" type="PanelContainer" parent="Tabs/Overview/Margin/Layout/Bottom"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AlertsMargin" type="MarginContainer" parent="Tabs/Overview/Margin/Layout/Bottom/AlertsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="AlertsLayout" type="VBoxContainer" parent="Tabs/Overview/Margin/Layout/Bottom/AlertsPanel/AlertsMargin"]
+layout_mode = 2
+
+[node name="Heading" type="Label" parent="Tabs/Overview/Margin/Layout/Bottom/AlertsPanel/AlertsMargin/AlertsLayout"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "待处理警报"
+
+[node name="AlertsList" type="VBoxContainer" parent="Tabs/Overview/Margin/Layout/Bottom/AlertsPanel/AlertsMargin/AlertsLayout"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Problems" type="ScrollContainer" parent="Tabs"]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Tabs/Problems"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 22
+
+[node name="ProblemsList" type="VBoxContainer" parent="Tabs/Problems/Margin"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Inbox" type="HSplitContainer" parent="Tabs"]
+layout_mode = 2
+split_offset = 390
+
+[node name="ListScroll" type="ScrollContainer" parent="Tabs/Inbox"]
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
+
+[node name="InboxList" type="VBoxContainer" parent="Tabs/Inbox/ListScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DetailPanel" type="PanelContainer" parent="Tabs/Inbox"]
+layout_mode = 2
+
+[node name="MessageDetail" type="RichTextLabel" parent="Tabs/Inbox/DetailPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+text = "选择一封消息查看详情。"

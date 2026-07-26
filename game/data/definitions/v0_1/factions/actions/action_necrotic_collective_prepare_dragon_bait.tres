@@ -1,0 +1,45 @@
+[gd_resource type="Resource" script_class="FactionActionDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="1_08a5g"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="2_cm75b"]
+[ext_resource type="Script" path="res://game/data/definitions/factions/faction_action_definition_resource.gd" id="3_u37xh"]
+
+[sub_resource type="Resource" id="Resource_v6x63"]
+script = ExtResource("1_08a5g")
+type = &"problem_is_active"
+target_id = &"problem_dragon_assault_pressure"
+
+[sub_resource type="Resource" id="Resource_ihg2c"]
+script = ExtResource("2_cm75b")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 10
+reason_code = &"action_necrotic_collective_prepare_dragon_bait_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_c3fe7"]
+script = ExtResource("2_cm75b")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 10
+reason_code = &"action_necrotic_collective_prepare_dragon_bait_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_urbij"]
+script = ExtResource("2_cm75b")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 6
+reason_code = &"action_necrotic_collective_prepare_dragon_bait_necrotic_corruption"
+
+[resource]
+script = ExtResource("3_u37xh")
+id = &"action_necrotic_collective_prepare_dragon_bait"
+agenda_tags = Array[StringName]([&"corruption", &"dragon_bait", &"secrecy"])
+target_lock_key = &"dragon_bait.prepare_village_stores"
+base_intent_priority = 17
+urgency_weight = 35
+recent_repeat_cooldown = 2
+influence_cost = 8
+conditions = Array[ExtResource("1_08a5g")]([SubResource("Resource_v6x63")])
+target_problem_tags = Array[StringName]([&"dragon_assault"])
+effects = Array[ExtResource("2_cm75b")]([SubResource("Resource_ihg2c"), SubResource("Resource_c3fe7"), SubResource("Resource_urbij")])
+event_key = &"event_dragon_diverted"

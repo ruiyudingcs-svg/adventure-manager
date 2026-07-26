@@ -1,0 +1,1177 @@
+[gd_resource type="Resource" script_class="ContractDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_rule_resource.gd" id="1_ejnow"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="2_hh4p7"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="3_8dyvk"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_outcome_definition_resource.gd" id="4_mw56b"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_outcome_table_resource.gd" id="5_3kc66"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/offer_instantiation_rule_resource.gd" id="6_jv4u5"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="7_gmcuf"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_definition_resource.gd" id="8_wgsjf"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_stage_definition_resource.gd" id="9_0a43a"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/capability_weights_resource.gd" id="10_lvi1w"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/mission_modifier_resource.gd" id="11_yv85j"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/mission_context_delta_resource.gd" id="12_rk2od"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/member_effect_resource.gd" id="13_tce3f"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/check_outcome_definition_resource.gd" id="14_ane00"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/check_outcome_table_resource.gd" id="15_3woh5"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_check_definition_resource.gd" id="16_e7rme"]
+
+[sub_resource type="Resource" id="Resource_psbmo"]
+script = ExtResource("2_hh4p7")
+type = &"phase_is"
+target_id = &"phase_early_crisis"
+
+[sub_resource type="Resource" id="Resource_4qsd1"]
+script = ExtResource("2_hh4p7")
+type = &"phase_is"
+target_id = &"phase_open_conflict"
+
+[sub_resource type="Resource" id="Resource_myi4q"]
+script = ExtResource("1_ejnow")
+id = &"availability_rescue_mining_village_phase"
+any_conditions = Array[ExtResource("2_hh4p7")]([SubResource("Resource_psbmo"), SubResource("Resource_4qsd1")])
+
+[sub_resource type="Resource" id="Resource_ynx06"]
+script = ExtResource("3_8dyvk")
+type = &"create_world_event"
+target_id = &"event_mining_village_rescued"
+reason_code = &"event_mining_village_rescued_exceptional"
+
+[sub_resource type="Resource" id="Resource_mog1c"]
+script = ExtResource("4_mw56b")
+reward_multiplier = 1.25
+fatigue_multiplier = 0.9
+injury_risk_modifier = -10
+sponsor_relation_delta = 8
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_ynx06")])
+outcome_tags = Array[StringName]([&"contract.exceptional"])
+
+[sub_resource type="Resource" id="Resource_kbfba"]
+script = ExtResource("4_mw56b")
+reward_multiplier = 0.25
+fatigue_multiplier = 1.25
+injury_risk_modifier = 10
+sponsor_relation_delta = -4
+outcome_tags = Array[StringName]([&"contract.failure"])
+
+[sub_resource type="Resource" id="Resource_5w5p0"]
+script = ExtResource("4_mw56b")
+reward_multiplier = 0.65
+fatigue_multiplier = 1.1
+sponsor_relation_delta = 1
+outcome_tags = Array[StringName]([&"contract.partial"])
+
+[sub_resource type="Resource" id="Resource_5ihcc"]
+script = ExtResource("4_mw56b")
+reward_multiplier = 0.0
+fatigue_multiplier = 1.4
+injury_risk_modifier = 20
+sponsor_relation_delta = -8
+outcome_tags = Array[StringName]([&"contract.severe_failure"])
+
+[sub_resource type="Resource" id="Resource_5bqyw"]
+script = ExtResource("3_8dyvk")
+type = &"create_world_event"
+target_id = &"event_mining_village_rescued"
+reason_code = &"event_mining_village_rescued_success"
+
+[sub_resource type="Resource" id="Resource_1enmv"]
+script = ExtResource("4_mw56b")
+injury_risk_modifier = -5
+sponsor_relation_delta = 5
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_5bqyw")])
+outcome_tags = Array[StringName]([&"contract.success"])
+
+[sub_resource type="Resource" id="Resource_rqnbp"]
+script = ExtResource("5_3kc66")
+exceptional = SubResource("Resource_mog1c")
+success = SubResource("Resource_1enmv")
+partial = SubResource("Resource_5w5p0")
+failure = SubResource("Resource_kbfba")
+severe = SubResource("Resource_5ihcc")
+
+[sub_resource type="Resource" id="Resource_7dkjx"]
+script = ExtResource("7_gmcuf")
+protect_life = 5
+pursue_profit = -1
+taboo_tolerance = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_f5j2h"]
+script = ExtResource("10_lvi1w")
+frontline = 0.05
+scouting = 0.55
+support = 0.15
+discipline = 0.25
+
+[sub_resource type="Resource" id="Resource_lk87v"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 2
+reason_code = &"mining_find_survivors_exceptional_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_8xmkm"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = -1
+reason_code = &"mining_find_survivors_exceptional_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_foe4q"]
+script = ExtResource("12_rk2od")
+key = &"route_safety"
+amount = 3
+source_id = &"mining_find_survivors"
+
+[sub_resource type="Resource" id="Resource_quj4d"]
+script = ExtResource("12_rk2od")
+key = &"intel"
+amount = 2
+source_id = &"mining_find_survivors"
+
+[sub_resource type="Resource" id="Resource_3hj2a"]
+script = ExtResource("12_rk2od")
+key = &"alert_level"
+amount = -1
+source_id = &"mining_find_survivors"
+
+[sub_resource type="Resource" id="Resource_k6rwn"]
+script = ExtResource("7_gmcuf")
+protect_life = 4
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_v78qw"]
+script = ExtResource("14_ane00")
+context_deltas = Array[ExtResource("12_rk2od")]([SubResource("Resource_foe4q"), SubResource("Resource_quj4d"), SubResource("Resource_3hj2a")])
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_lk87v"), SubResource("Resource_8xmkm")])
+ideology_impact = SubResource("Resource_k6rwn")
+outcome_tags = Array[StringName]([&"mining_find_survivors_exceptional"])
+
+[sub_resource type="Resource" id="Resource_6fen4"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 3
+reason_code = &"mining_find_survivors_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_1q2an"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 1
+reason_code = &"mining_find_survivors_failure_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_kueuf"]
+script = ExtResource("12_rk2od")
+key = &"alert_level"
+amount = 1
+source_id = &"mining_find_survivors"
+
+[sub_resource type="Resource" id="Resource_m8456"]
+script = ExtResource("12_rk2od")
+key = &"time_pressure"
+amount = 2
+source_id = &"mining_find_survivors"
+
+[sub_resource type="Resource" id="Resource_sieli"]
+script = ExtResource("7_gmcuf")
+protect_life = -3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_34mhi"]
+script = ExtResource("13_tce3f")
+type = &"injury_risk"
+amount = 8
+reason_code = &"mining_find_survivors_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_twgri"]
+script = ExtResource("14_ane00")
+context_deltas = Array[ExtResource("12_rk2od")]([SubResource("Resource_kueuf"), SubResource("Resource_m8456")])
+member_effects = Array[ExtResource("13_tce3f")]([SubResource("Resource_34mhi")])
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_6fen4"), SubResource("Resource_1q2an")])
+ideology_impact = SubResource("Resource_sieli")
+outcome_tags = Array[StringName]([&"mining_find_survivors_failure"])
+
+[sub_resource type="Resource" id="Resource_33uly"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 1
+reason_code = &"mining_find_survivors_partial_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_akka0"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 2
+reason_code = &"mining_find_survivors_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_mtuw4"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 1
+reason_code = &"mining_find_survivors_partial_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_024q4"]
+script = ExtResource("12_rk2od")
+key = &"route_safety"
+amount = 1
+source_id = &"mining_find_survivors"
+
+[sub_resource type="Resource" id="Resource_0dwcl"]
+script = ExtResource("12_rk2od")
+key = &"time_pressure"
+amount = 1
+source_id = &"mining_find_survivors"
+
+[sub_resource type="Resource" id="Resource_pffpm"]
+script = ExtResource("7_gmcuf")
+protect_life = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_8dl0w"]
+script = ExtResource("13_tce3f")
+type = &"injury_risk"
+amount = 3
+reason_code = &"mining_find_survivors_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_vweqt"]
+script = ExtResource("14_ane00")
+context_deltas = Array[ExtResource("12_rk2od")]([SubResource("Resource_024q4"), SubResource("Resource_0dwcl")])
+member_effects = Array[ExtResource("13_tce3f")]([SubResource("Resource_8dl0w")])
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_33uly"), SubResource("Resource_akka0"), SubResource("Resource_mtuw4")])
+ideology_impact = SubResource("Resource_pffpm")
+outcome_tags = Array[StringName]([&"mining_find_survivors_partial"])
+
+[sub_resource type="Resource" id="Resource_rho4t"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 4
+reason_code = &"mining_find_survivors_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_ye7dl"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 2
+reason_code = &"mining_find_survivors_severe_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_x2rpq"]
+script = ExtResource("12_rk2od")
+key = &"alert_level"
+amount = 2
+source_id = &"mining_find_survivors"
+
+[sub_resource type="Resource" id="Resource_rawug"]
+script = ExtResource("12_rk2od")
+key = &"enemy_pressure"
+amount = 2
+source_id = &"mining_find_survivors"
+
+[sub_resource type="Resource" id="Resource_yc32t"]
+script = ExtResource("7_gmcuf")
+protect_life = -5
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_3thx8"]
+script = ExtResource("13_tce3f")
+type = &"injury_risk"
+amount = 15
+reason_code = &"mining_find_survivors_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_ksrih"]
+script = ExtResource("14_ane00")
+context_deltas = Array[ExtResource("12_rk2od")]([SubResource("Resource_x2rpq"), SubResource("Resource_rawug")])
+member_effects = Array[ExtResource("13_tce3f")]([SubResource("Resource_3thx8")])
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_rho4t"), SubResource("Resource_ye7dl")])
+ideology_impact = SubResource("Resource_yc32t")
+outcome_tags = Array[StringName]([&"mining_find_survivors_severe"])
+
+[sub_resource type="Resource" id="Resource_gdffy"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 1
+reason_code = &"mining_find_survivors_success_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_dxn0q"]
+script = ExtResource("12_rk2od")
+key = &"route_safety"
+amount = 2
+source_id = &"mining_find_survivors"
+
+[sub_resource type="Resource" id="Resource_ukrkd"]
+script = ExtResource("12_rk2od")
+key = &"intel"
+amount = 1
+source_id = &"mining_find_survivors"
+
+[sub_resource type="Resource" id="Resource_hqtc8"]
+script = ExtResource("7_gmcuf")
+protect_life = 3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_hbxkg"]
+script = ExtResource("14_ane00")
+context_deltas = Array[ExtResource("12_rk2od")]([SubResource("Resource_dxn0q"), SubResource("Resource_ukrkd")])
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_gdffy")])
+ideology_impact = SubResource("Resource_hqtc8")
+outcome_tags = Array[StringName]([&"mining_find_survivors_success"])
+
+[sub_resource type="Resource" id="Resource_jod44"]
+script = ExtResource("15_3woh5")
+exceptional = SubResource("Resource_v78qw")
+success = SubResource("Resource_hbxkg")
+partial = SubResource("Resource_vweqt")
+failure = SubResource("Resource_twgri")
+severe = SubResource("Resource_ksrih")
+
+[sub_resource type="Resource" id="Resource_b8mck"]
+script = ExtResource("16_e7rme")
+id = &"mining_find_survivors"
+check_type = &"navigation"
+capability_weights = SubResource("Resource_f5j2h")
+difficulty = 24
+result_weight = 0.15
+failure_result_cap = &"partial"
+method_tags = Array[StringName]([&"scouting", &"rescue"])
+approach_profile = &"careful"
+outcome_table = SubResource("Resource_jod44")
+
+[sub_resource type="Resource" id="Resource_egfjs"]
+script = ExtResource("9_0a43a")
+id = &"rescue_mining_village_stage_approach"
+phase = &"approach"
+check = SubResource("Resource_b8mck")
+
+[sub_resource type="Resource" id="Resource_wmypr"]
+script = ExtResource("10_lvi1w")
+frontline = 0.2
+scouting = 0.15
+support = 0.4
+discipline = 0.25
+
+[sub_resource type="Resource" id="Resource_goslb"]
+script = ExtResource("11_yv85j")
+condition_type = &"context_gte"
+operand = &"intel"
+threshold = 1
+amount = 2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_uhv3s"]
+script = ExtResource("11_yv85j")
+condition_type = &"context_gte"
+operand = &"alert_level"
+threshold = 1
+amount = -2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_k85l1"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 7
+reason_code = &"mining_free_villagers_exceptional_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_kmmil"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = -2
+reason_code = &"mining_free_villagers_exceptional_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_ueatn"]
+script = ExtResource("12_rk2od")
+key = &"enemy_pressure"
+amount = -2
+source_id = &"mining_free_villagers"
+
+[sub_resource type="Resource" id="Resource_cjc1t"]
+script = ExtResource("7_gmcuf")
+protect_life = 4
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_y7clm"]
+script = ExtResource("14_ane00")
+context_deltas = Array[ExtResource("12_rk2od")]([SubResource("Resource_ueatn")])
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_k85l1"), SubResource("Resource_kmmil")])
+ideology_impact = SubResource("Resource_cjc1t")
+outcome_tags = Array[StringName]([&"mining_free_villagers_exceptional", &"all_survivors_recovered"])
+
+[sub_resource type="Resource" id="Resource_g3f76"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 2
+reason_code = &"mining_free_villagers_failure_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_s7q1c"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 7
+reason_code = &"mining_free_villagers_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_lg1jv"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 4
+reason_code = &"mining_free_villagers_failure_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_fuv6d"]
+script = ExtResource("12_rk2od")
+key = &"team_strain"
+amount = 2
+source_id = &"mining_free_villagers"
+
+[sub_resource type="Resource" id="Resource_8qum2"]
+script = ExtResource("12_rk2od")
+key = &"collateral_pressure"
+amount = 2
+source_id = &"mining_free_villagers"
+
+[sub_resource type="Resource" id="Resource_y11pm"]
+script = ExtResource("7_gmcuf")
+protect_life = -3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_ehf8s"]
+script = ExtResource("13_tce3f")
+type = &"injury_risk"
+amount = 15
+reason_code = &"mining_free_villagers_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_ycvnt"]
+script = ExtResource("14_ane00")
+context_deltas = Array[ExtResource("12_rk2od")]([SubResource("Resource_fuv6d"), SubResource("Resource_8qum2")])
+member_effects = Array[ExtResource("13_tce3f")]([SubResource("Resource_ehf8s")])
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_g3f76"), SubResource("Resource_s7q1c"), SubResource("Resource_lg1jv")])
+ideology_impact = SubResource("Resource_y11pm")
+outcome_tags = Array[StringName]([&"mining_free_villagers_failure"])
+
+[sub_resource type="Resource" id="Resource_kra7g"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 4
+reason_code = &"mining_free_villagers_partial_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_xyq56"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 4
+reason_code = &"mining_free_villagers_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_ynsjp"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 2
+reason_code = &"mining_free_villagers_partial_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_4f7ec"]
+script = ExtResource("12_rk2od")
+key = &"team_strain"
+amount = 1
+source_id = &"mining_free_villagers"
+
+[sub_resource type="Resource" id="Resource_imdn5"]
+script = ExtResource("12_rk2od")
+key = &"collateral_pressure"
+amount = 1
+source_id = &"mining_free_villagers"
+
+[sub_resource type="Resource" id="Resource_rey1s"]
+script = ExtResource("7_gmcuf")
+protect_life = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_q24ks"]
+script = ExtResource("13_tce3f")
+type = &"injury_risk"
+amount = 8
+reason_code = &"mining_free_villagers_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_6l7hl"]
+script = ExtResource("14_ane00")
+context_deltas = Array[ExtResource("12_rk2od")]([SubResource("Resource_4f7ec"), SubResource("Resource_imdn5")])
+member_effects = Array[ExtResource("13_tce3f")]([SubResource("Resource_q24ks")])
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_kra7g"), SubResource("Resource_xyq56"), SubResource("Resource_ynsjp")])
+ideology_impact = SubResource("Resource_rey1s")
+outcome_tags = Array[StringName]([&"mining_free_villagers_partial"])
+
+[sub_resource type="Resource" id="Resource_1m88u"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 1
+reason_code = &"mining_free_villagers_severe_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_6ng6t"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 9
+reason_code = &"mining_free_villagers_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_thgqa"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 5
+reason_code = &"mining_free_villagers_severe_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_2dls8"]
+script = ExtResource("12_rk2od")
+key = &"team_strain"
+amount = 3
+source_id = &"mining_free_villagers"
+
+[sub_resource type="Resource" id="Resource_e21tw"]
+script = ExtResource("12_rk2od")
+key = &"collateral_pressure"
+amount = 3
+source_id = &"mining_free_villagers"
+
+[sub_resource type="Resource" id="Resource_upl7o"]
+script = ExtResource("12_rk2od")
+key = &"extraction_pressure"
+amount = 1
+source_id = &"mining_free_villagers"
+
+[sub_resource type="Resource" id="Resource_lf16x"]
+script = ExtResource("7_gmcuf")
+protect_life = -5
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_aetuh"]
+script = ExtResource("13_tce3f")
+type = &"injury_risk"
+amount = 25
+reason_code = &"mining_free_villagers_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_pru4w"]
+script = ExtResource("14_ane00")
+context_deltas = Array[ExtResource("12_rk2od")]([SubResource("Resource_2dls8"), SubResource("Resource_e21tw"), SubResource("Resource_upl7o")])
+member_effects = Array[ExtResource("13_tce3f")]([SubResource("Resource_aetuh")])
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_1m88u"), SubResource("Resource_6ng6t"), SubResource("Resource_thgqa")])
+ideology_impact = SubResource("Resource_lf16x")
+outcome_tags = Array[StringName]([&"mining_free_villagers_severe"])
+
+[sub_resource type="Resource" id="Resource_pbscl"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 6
+reason_code = &"mining_free_villagers_success_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_g500s"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 1
+reason_code = &"mining_free_villagers_success_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_br6t3"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = -1
+reason_code = &"mining_free_villagers_success_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_apyvv"]
+script = ExtResource("12_rk2od")
+key = &"enemy_pressure"
+amount = -1
+source_id = &"mining_free_villagers"
+
+[sub_resource type="Resource" id="Resource_bl8cf"]
+script = ExtResource("7_gmcuf")
+protect_life = 3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_tbxwt"]
+script = ExtResource("13_tce3f")
+type = &"injury_risk"
+amount = 3
+reason_code = &"mining_free_villagers_success_injury_risk"
+
+[sub_resource type="Resource" id="Resource_jinjv"]
+script = ExtResource("14_ane00")
+context_deltas = Array[ExtResource("12_rk2od")]([SubResource("Resource_apyvv")])
+member_effects = Array[ExtResource("13_tce3f")]([SubResource("Resource_tbxwt")])
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_pbscl"), SubResource("Resource_g500s"), SubResource("Resource_br6t3")])
+ideology_impact = SubResource("Resource_bl8cf")
+outcome_tags = Array[StringName]([&"mining_free_villagers_success", &"all_survivors_recovered"])
+
+[sub_resource type="Resource" id="Resource_03qdw"]
+script = ExtResource("15_3woh5")
+exceptional = SubResource("Resource_y7clm")
+success = SubResource("Resource_jinjv")
+partial = SubResource("Resource_6l7hl")
+failure = SubResource("Resource_ycvnt")
+severe = SubResource("Resource_pru4w")
+
+[sub_resource type="Resource" id="Resource_5a8ay"]
+script = ExtResource("16_e7rme")
+id = &"mining_free_villagers"
+check_type = &"rescue"
+capability_weights = SubResource("Resource_wmypr")
+difficulty = 30
+result_weight = 0.35
+failure_result_cap = &"partial"
+method_tags = Array[StringName]([&"rescue", &"medical"])
+context_modifiers = Array[ExtResource("11_yv85j")]([SubResource("Resource_goslb"), SubResource("Resource_uhv3s")])
+approach_profile = &"careful"
+outcome_table = SubResource("Resource_03qdw")
+
+[sub_resource type="Resource" id="Resource_hrvel"]
+script = ExtResource("9_0a43a")
+id = &"rescue_mining_village_stage_main_action"
+phase = &"main_action"
+check = SubResource("Resource_5a8ay")
+
+[sub_resource type="Resource" id="Resource_vfm8n"]
+script = ExtResource("10_lvi1w")
+frontline = 0.05
+offense = 0.05
+scouting = 0.15
+support = 0.3
+arcana = 0.25
+discipline = 0.2
+
+[sub_resource type="Resource" id="Resource_qr1w4"]
+script = ExtResource("11_yv85j")
+condition_type = &"context_gte"
+operand = &"intel"
+threshold = 1
+amount = 1
+per_context_point = true
+maximum_absolute_amount = 4
+
+[sub_resource type="Resource" id="Resource_eflpi"]
+script = ExtResource("11_yv85j")
+condition_type = &"context_gte"
+operand = &"team_strain"
+threshold = 1
+amount = -2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_2pphx"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 4
+reason_code = &"mining_recover_supplies_exceptional_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_u5tx0"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = -2
+reason_code = &"mining_recover_supplies_exceptional_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_a5u3o"]
+script = ExtResource("12_rk2od")
+key = &"collected_resources"
+amount = 4
+source_id = &"mining_recover_supplies"
+
+[sub_resource type="Resource" id="Resource_tqcco"]
+script = ExtResource("7_gmcuf")
+protect_life = 4
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_57y6a"]
+script = ExtResource("14_ane00")
+context_deltas = Array[ExtResource("12_rk2od")]([SubResource("Resource_a5u3o")])
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_2pphx"), SubResource("Resource_u5tx0")])
+ideology_impact = SubResource("Resource_tqcco")
+outcome_tags = Array[StringName]([&"mining_recover_supplies_exceptional"])
+
+[sub_resource type="Resource" id="Resource_xyhtx"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 5
+reason_code = &"mining_recover_supplies_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_pv65b"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 4
+reason_code = &"mining_recover_supplies_failure_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_wctr2"]
+script = ExtResource("12_rk2od")
+key = &"collected_resources"
+amount = 1
+source_id = &"mining_recover_supplies"
+
+[sub_resource type="Resource" id="Resource_jm27p"]
+script = ExtResource("12_rk2od")
+key = &"alert_level"
+amount = 2
+source_id = &"mining_recover_supplies"
+
+[sub_resource type="Resource" id="Resource_6y7pn"]
+script = ExtResource("7_gmcuf")
+protect_life = -3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_usk61"]
+script = ExtResource("13_tce3f")
+type = &"injury_risk"
+amount = 15
+reason_code = &"mining_recover_supplies_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_2x11a"]
+script = ExtResource("14_ane00")
+context_deltas = Array[ExtResource("12_rk2od")]([SubResource("Resource_wctr2"), SubResource("Resource_jm27p")])
+member_effects = Array[ExtResource("13_tce3f")]([SubResource("Resource_usk61")])
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_xyhtx"), SubResource("Resource_pv65b")])
+ideology_impact = SubResource("Resource_6y7pn")
+outcome_tags = Array[StringName]([&"mining_recover_supplies_failure"])
+
+[sub_resource type="Resource" id="Resource_ooy4t"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 2
+reason_code = &"mining_recover_supplies_partial_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_b0ihd"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 3
+reason_code = &"mining_recover_supplies_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_3dreb"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 2
+reason_code = &"mining_recover_supplies_partial_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_djgvp"]
+script = ExtResource("12_rk2od")
+key = &"collected_resources"
+amount = 2
+source_id = &"mining_recover_supplies"
+
+[sub_resource type="Resource" id="Resource_gqx4q"]
+script = ExtResource("12_rk2od")
+key = &"time_pressure"
+amount = 1
+source_id = &"mining_recover_supplies"
+
+[sub_resource type="Resource" id="Resource_ujmcj"]
+script = ExtResource("7_gmcuf")
+protect_life = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_q8oc4"]
+script = ExtResource("13_tce3f")
+type = &"injury_risk"
+amount = 8
+reason_code = &"mining_recover_supplies_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_oli8q"]
+script = ExtResource("14_ane00")
+context_deltas = Array[ExtResource("12_rk2od")]([SubResource("Resource_djgvp"), SubResource("Resource_gqx4q")])
+member_effects = Array[ExtResource("13_tce3f")]([SubResource("Resource_q8oc4")])
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_ooy4t"), SubResource("Resource_b0ihd"), SubResource("Resource_3dreb")])
+ideology_impact = SubResource("Resource_ujmcj")
+outcome_tags = Array[StringName]([&"mining_recover_supplies_partial"])
+
+[sub_resource type="Resource" id="Resource_hxmol"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 6
+reason_code = &"mining_recover_supplies_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_xrjqq"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 5
+reason_code = &"mining_recover_supplies_severe_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_3wxpn"]
+script = ExtResource("12_rk2od")
+key = &"alert_level"
+amount = 3
+source_id = &"mining_recover_supplies"
+
+[sub_resource type="Resource" id="Resource_awy0a"]
+script = ExtResource("12_rk2od")
+key = &"extraction_pressure"
+amount = 2
+source_id = &"mining_recover_supplies"
+
+[sub_resource type="Resource" id="Resource_6uf4n"]
+script = ExtResource("7_gmcuf")
+protect_life = -5
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_lm5hv"]
+script = ExtResource("13_tce3f")
+type = &"injury_risk"
+amount = 25
+reason_code = &"mining_recover_supplies_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_hdvex"]
+script = ExtResource("14_ane00")
+context_deltas = Array[ExtResource("12_rk2od")]([SubResource("Resource_3wxpn"), SubResource("Resource_awy0a")])
+member_effects = Array[ExtResource("13_tce3f")]([SubResource("Resource_lm5hv")])
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_hxmol"), SubResource("Resource_xrjqq")])
+ideology_impact = SubResource("Resource_6uf4n")
+outcome_tags = Array[StringName]([&"mining_recover_supplies_severe"])
+
+[sub_resource type="Resource" id="Resource_xm8dv"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 3
+reason_code = &"mining_recover_supplies_success_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_4jkao"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 1
+reason_code = &"mining_recover_supplies_success_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_5x7di"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = -1
+reason_code = &"mining_recover_supplies_success_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_brbyx"]
+script = ExtResource("12_rk2od")
+key = &"collected_resources"
+amount = 3
+source_id = &"mining_recover_supplies"
+
+[sub_resource type="Resource" id="Resource_dev27"]
+script = ExtResource("7_gmcuf")
+protect_life = 3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_8r1ew"]
+script = ExtResource("13_tce3f")
+type = &"injury_risk"
+amount = 3
+reason_code = &"mining_recover_supplies_success_injury_risk"
+
+[sub_resource type="Resource" id="Resource_b23ca"]
+script = ExtResource("14_ane00")
+context_deltas = Array[ExtResource("12_rk2od")]([SubResource("Resource_brbyx")])
+member_effects = Array[ExtResource("13_tce3f")]([SubResource("Resource_8r1ew")])
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_xm8dv"), SubResource("Resource_4jkao"), SubResource("Resource_5x7di")])
+ideology_impact = SubResource("Resource_dev27")
+outcome_tags = Array[StringName]([&"mining_recover_supplies_success"])
+
+[sub_resource type="Resource" id="Resource_871u1"]
+script = ExtResource("15_3woh5")
+exceptional = SubResource("Resource_57y6a")
+success = SubResource("Resource_b23ca")
+partial = SubResource("Resource_oli8q")
+failure = SubResource("Resource_2x11a")
+severe = SubResource("Resource_hdvex")
+
+[sub_resource type="Resource" id="Resource_dao3a"]
+script = ExtResource("16_e7rme")
+id = &"mining_recover_supplies"
+check_type = &"salvage"
+capability_weights = SubResource("Resource_vfm8n")
+difficulty = 27
+result_weight = 0.2
+failure_result_cap = &"partial"
+method_tags = Array[StringName]([&"research", &"rescue"])
+context_modifiers = Array[ExtResource("11_yv85j")]([SubResource("Resource_qr1w4"), SubResource("Resource_eflpi")])
+outcome_table = SubResource("Resource_871u1")
+
+[sub_resource type="Resource" id="Resource_8s42u"]
+script = ExtResource("9_0a43a")
+id = &"rescue_mining_village_stage_special_objective"
+phase = &"special_objective"
+check = SubResource("Resource_dao3a")
+
+[sub_resource type="Resource" id="Resource_gj1pf"]
+script = ExtResource("10_lvi1w")
+frontline = 0.15
+scouting = 0.3
+support = 0.25
+arcana = 0.05
+discipline = 0.25
+
+[sub_resource type="Resource" id="Resource_jkvdm"]
+script = ExtResource("11_yv85j")
+condition_type = &"context_gte"
+operand = &"route_safety"
+threshold = 1
+amount = 2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_h0u0a"]
+script = ExtResource("11_yv85j")
+condition_type = &"context_gte"
+operand = &"alert_level"
+threshold = 1
+amount = -3
+per_context_point = true
+maximum_absolute_amount = 9
+
+[sub_resource type="Resource" id="Resource_6lh5o"]
+script = ExtResource("11_yv85j")
+condition_type = &"context_gte"
+operand = &"extraction_pressure"
+threshold = 1
+amount = -3
+per_context_point = true
+maximum_absolute_amount = 9
+
+[sub_resource type="Resource" id="Resource_126yg"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 5
+reason_code = &"mining_escape_collapse_exceptional_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_18gax"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 1
+reason_code = &"mining_escape_collapse_exceptional_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_wlovm"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = -1
+reason_code = &"mining_escape_collapse_exceptional_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_14bpo"]
+script = ExtResource("7_gmcuf")
+protect_life = 4
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_re1dw"]
+script = ExtResource("14_ane00")
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_126yg"), SubResource("Resource_18gax"), SubResource("Resource_wlovm")])
+ideology_impact = SubResource("Resource_14bpo")
+outcome_tags = Array[StringName]([&"mining_escape_collapse_exceptional", &"rescue_complete"])
+
+[sub_resource type="Resource" id="Resource_q2hfx"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 1
+reason_code = &"mining_escape_collapse_failure_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_3wipc"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 5
+reason_code = &"mining_escape_collapse_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_sjs0n"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 3
+reason_code = &"mining_escape_collapse_failure_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_tugvp"]
+script = ExtResource("7_gmcuf")
+protect_life = -3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_hd1o3"]
+script = ExtResource("13_tce3f")
+type = &"injury_risk"
+amount = 18
+reason_code = &"mining_escape_collapse_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_j2lhj"]
+script = ExtResource("14_ane00")
+member_effects = Array[ExtResource("13_tce3f")]([SubResource("Resource_hd1o3")])
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_q2hfx"), SubResource("Resource_3wipc"), SubResource("Resource_sjs0n")])
+ideology_impact = SubResource("Resource_tugvp")
+outcome_tags = Array[StringName]([&"mining_escape_collapse_failure"])
+
+[sub_resource type="Resource" id="Resource_12txh"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 3
+reason_code = &"mining_escape_collapse_partial_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_i1hy4"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 4
+reason_code = &"mining_escape_collapse_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_dlk8q"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 2
+reason_code = &"mining_escape_collapse_partial_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_8vnwr"]
+script = ExtResource("7_gmcuf")
+protect_life = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_k0q3c"]
+script = ExtResource("13_tce3f")
+type = &"injury_risk"
+amount = 8
+reason_code = &"mining_escape_collapse_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_wedp2"]
+script = ExtResource("14_ane00")
+member_effects = Array[ExtResource("13_tce3f")]([SubResource("Resource_k0q3c")])
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_12txh"), SubResource("Resource_i1hy4"), SubResource("Resource_dlk8q")])
+ideology_impact = SubResource("Resource_8vnwr")
+outcome_tags = Array[StringName]([&"mining_escape_collapse_partial", &"rescue_complete"])
+
+[sub_resource type="Resource" id="Resource_ineg4"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 6
+reason_code = &"mining_escape_collapse_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_b76er"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 4
+reason_code = &"mining_escape_collapse_severe_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_ncocu"]
+script = ExtResource("7_gmcuf")
+protect_life = -5
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_gw6we"]
+script = ExtResource("13_tce3f")
+type = &"injury_risk"
+amount = 30
+reason_code = &"mining_escape_collapse_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_fw1mc"]
+script = ExtResource("14_ane00")
+member_effects = Array[ExtResource("13_tce3f")]([SubResource("Resource_gw6we")])
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_ineg4"), SubResource("Resource_b76er")])
+ideology_impact = SubResource("Resource_ncocu")
+outcome_tags = Array[StringName]([&"mining_escape_collapse_severe"])
+
+[sub_resource type="Resource" id="Resource_fnko8"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 4
+reason_code = &"mining_escape_collapse_success_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_l23an"]
+script = ExtResource("3_8dyvk")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 2
+reason_code = &"mining_escape_collapse_success_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_6ufbh"]
+script = ExtResource("7_gmcuf")
+protect_life = 3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_4ce07"]
+script = ExtResource("13_tce3f")
+type = &"injury_risk"
+amount = 3
+reason_code = &"mining_escape_collapse_success_injury_risk"
+
+[sub_resource type="Resource" id="Resource_hiq6h"]
+script = ExtResource("14_ane00")
+member_effects = Array[ExtResource("13_tce3f")]([SubResource("Resource_4ce07")])
+campaign_effects = Array[ExtResource("3_8dyvk")]([SubResource("Resource_fnko8"), SubResource("Resource_l23an")])
+ideology_impact = SubResource("Resource_6ufbh")
+outcome_tags = Array[StringName]([&"mining_escape_collapse_success", &"rescue_complete"])
+
+[sub_resource type="Resource" id="Resource_68otn"]
+script = ExtResource("15_3woh5")
+exceptional = SubResource("Resource_re1dw")
+success = SubResource("Resource_hiq6h")
+partial = SubResource("Resource_wedp2")
+failure = SubResource("Resource_j2lhj")
+severe = SubResource("Resource_fw1mc")
+
+[sub_resource type="Resource" id="Resource_h10td"]
+script = ExtResource("16_e7rme")
+id = &"mining_escape_collapse"
+check_type = &"extraction"
+capability_weights = SubResource("Resource_gj1pf")
+difficulty = 29
+result_weight = 0.3
+failure_result_cap = &"failure"
+method_tags = Array[StringName]([&"extraction", &"protection"])
+context_modifiers = Array[ExtResource("11_yv85j")]([SubResource("Resource_jkvdm"), SubResource("Resource_h0u0a"), SubResource("Resource_6lh5o")])
+approach_profile = &"careful"
+outcome_table = SubResource("Resource_68otn")
+
+[sub_resource type="Resource" id="Resource_vmgtf"]
+script = ExtResource("9_0a43a")
+id = &"rescue_mining_village_stage_extraction"
+phase = &"extraction"
+check = SubResource("Resource_h10td")
+
+[resource]
+script = ExtResource("8_wgsjf")
+id = &"contract_rescue_mining_village"
+title_key = &"contract.contract_rescue_mining_village.title"
+description_key = &"contract.contract_rescue_mining_village.description"
+sponsor_faction_id = &"faction_free_adventurers"
+related_problem_id = &"problem_mining_village_isolated"
+target_lock_key = &"mining_village.rescue_survivors"
+target_problem_tags = Array[StringName]([&"isolated_settlement"])
+agenda_tags = Array[StringName]([&"rescue", &"protection"])
+starts_unlocked = false
+repeat_policy = &"once_per_campaign"
+proposal_base_priority = 17
+urgency_weight = 35
+base_reward = 250
+base_fatigue = 13
+risk_level = 3
+offer_duration_weeks = 2
+intent_ideology_vector = SubResource("Resource_7dkjx")
+expected_method_tags = Array[StringName]([&"scouting", &"rescue", &"medical", &"research", &"extraction", &"protection"])
+stages = Array[ExtResource("9_0a43a")]([SubResource("Resource_egfjs"), SubResource("Resource_hrvel"), SubResource("Resource_8s42u"), SubResource("Resource_vmgtf")])
+clause_ids = Array[StringName]([&"mine_no_survivor_abandoned", &"mine_complete_rescue", &"mine_recover_reserves"])
+allowed_supply_tags = Array[StringName]([&"scouting", &"protection", &"medical", &"rations"])
+final_outcome_table = SubResource("Resource_rqnbp")
+availability_rules = Array[ExtResource("1_ejnow")]([SubResource("Resource_myi4q")])
+unhandled_policy = &"escalate"

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="SituationPhaseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/situation_phase_definition_resource.gd" id="1_aghrh"]
+
+[resource]
+script = ExtResource("1_aghrh")
+id = &"phase_open_conflict"
+display_name_key = &"phase_open_conflict.name"
+description_key = &"phase_open_conflict.description"
+sort_order = 1

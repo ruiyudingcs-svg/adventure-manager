@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="MethodTagDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="1_n6w7q"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/method_tag_definition_resource.gd" id="2_qk1th"]
+
+[sub_resource type="Resource" id="Resource_ubymp"]
+script = ExtResource("1_n6w7q")
+task_accumulation = true
+
+[resource]
+script = ExtResource("2_qk1th")
+id = &"stealth"
+ideology_vector = SubResource("Resource_ubymp")

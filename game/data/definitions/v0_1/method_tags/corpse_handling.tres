@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="MethodTagDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="1_0sdjk"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/method_tag_definition_resource.gd" id="2_56iba"]
+
+[sub_resource type="Resource" id="Resource_2qtxg"]
+script = ExtResource("1_0sdjk")
+protect_life = -1
+pursue_profit = 1
+taboo_tolerance = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("2_56iba")
+id = &"corpse_handling"
+ideology_vector = SubResource("Resource_2qtxg")
+taboo_intensity = 1

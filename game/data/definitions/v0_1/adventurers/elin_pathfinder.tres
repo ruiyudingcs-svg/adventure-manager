@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="AdventurerDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/capability_block_resource.gd" id="1_2n06a"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/adventurer_definition_resource.gd" id="2_15a82"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/relationship_definition_resource.gd" id="3_nbynw"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="4_75tjk"]
+
+[sub_resource type="Resource" id="Resource_dq7x3"]
+script = ExtResource("1_2n06a")
+frontline = 38
+offense = 45
+scouting = 84
+support = 40
+arcana = 20
+discipline = 76
+
+[sub_resource type="Resource" id="Resource_7k4i8"]
+script = ExtResource("4_75tjk")
+protect_life = 4
+respect_authority = -2
+seek_knowledge = 1
+taboo_tolerance = -2
+
+[resource]
+script = ExtResource("2_15a82")
+id = &"elin_pathfinder"
+display_name = "Elin Pathfinder"
+class_id = &"ranger"
+base_capabilities = SubResource("Resource_dq7x3")
+traits = Array[StringName]([&"independent"])
+values = SubResource("Resource_7k4i8")
+wage = 11
+bio_key = &"adventurer.elin_pathfinder.bio"

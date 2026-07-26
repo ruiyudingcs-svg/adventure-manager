@@ -1,0 +1,352 @@
+[gd_resource type="Resource" script_class="SituationDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/clock_definition_resource.gd" id="1_8pw55"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/clocks/villagers_evacuated.tres" id="2_1nwb7"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/clocks/settlement_destruction.tres" id="3_rnj1a"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/clocks/dragon_exhaustion.tres" id="4_0qs5n"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/clocks/capture_preparation.tres" id="5_xdxms"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/clocks/necrotic_corruption.tres" id="6_nfmay"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/ending_definition_resource.gd" id="7_y128v"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/clock_delta_resource.gd" id="8_cn2sl"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/endings/ending_necrotic_catastrophe.tres" id="8_kk8dc"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/endings/ending_dragon_slain_at_cost.tres" id="9_cfg3r"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/situation_phase_definition_resource.gd" id="9_v48j6"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/phases/phase_early_crisis.tres" id="10_afvgt"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/endings/ending_arcane_capture.tres" id="10_j0ejw"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/endings/ending_mass_evacuation.tres" id="11_bly0l"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/phases/phase_open_conflict.tres" id="11_lewyl"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/phases/phase_final_window.tres" id="12_20qsr"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/phases/phase_ended.tres" id="13_kk8dc"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_problem_definition_resource.gd" id="14_cfg3r"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/problems/problem_evacuating_civilians.tres" id="15_j0ejw"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/problems/problem_dragon_capture_window.tres" id="16_bly0l"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/problems/problem_battlefield_corpses.tres" id="17_4pkno"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/situation_definition_resource.gd" id="18_my3ue"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/problems/problem_eastern_road_blocked.tres" id="19_4pkno"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_rule_resource.gd" id="19_b0b3x"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/problems/problem_field_medical_collapse.tres" id="21_my3ue"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/problems/problem_mining_village_isolated.tres" id="22_b0b3x"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/problems/problem_dragon_location_unknown.tres" id="23_hg8lc"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/problems/problem_necrotic_spread.tres" id="25_towx5"]
+[ext_resource type="Resource" path="res://game/data/definitions/v0_1/situations/problems/problem_dragon_assault_pressure.tres" id="27_e82pg"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="30_sexoc"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="31_nvio6"]
+
+[sub_resource type="Resource" id="Resource_mbfh2"]
+script = ExtResource("8_cn2sl")
+clock_id = &"settlement_destruction"
+amount = 4
+reason_code = &"clock_passive_dragon_raids"
+
+[sub_resource type="Resource" id="Resource_2wesh"]
+script = ExtResource("8_cn2sl")
+clock_id = &"dragon_exhaustion"
+amount = -2
+reason_code = &"clock_passive_dragon_recovery"
+
+[sub_resource type="Resource" id="Resource_twnv8"]
+script = ExtResource("8_cn2sl")
+clock_id = &"necrotic_corruption"
+amount = 2
+reason_code = &"clock_passive_necrotic_seepage"
+
+[sub_resource type="Resource" id="Resource_6pptu"]
+script = ExtResource("30_sexoc")
+type = &"phase_is"
+target_id = &"phase_early_crisis"
+
+[sub_resource type="Resource" id="Resource_idnwl"]
+script = ExtResource("30_sexoc")
+type = &"week_gte"
+int_value = 5
+
+[sub_resource type="Resource" id="Resource_b4av1"]
+script = ExtResource("31_nvio6")
+type = &"change_phase"
+target_id = &"phase_open_conflict"
+reason_code = &"phase_open_conflict_started"
+
+[sub_resource type="Resource" id="Resource_dx6u1"]
+script = ExtResource("19_b0b3x")
+id = &"trigger_phase_open_conflict"
+all_conditions = Array[ExtResource("30_sexoc")]([SubResource("Resource_6pptu"), SubResource("Resource_idnwl")])
+effects = Array[ExtResource("31_nvio6")]([SubResource("Resource_b4av1")])
+once = true
+priority = 100
+
+[sub_resource type="Resource" id="Resource_pgwxf"]
+script = ExtResource("30_sexoc")
+type = &"phase_is"
+target_id = &"phase_open_conflict"
+
+[sub_resource type="Resource" id="Resource_obd8q"]
+script = ExtResource("30_sexoc")
+type = &"week_gte"
+int_value = 9
+
+[sub_resource type="Resource" id="Resource_5eig5"]
+script = ExtResource("31_nvio6")
+type = &"change_phase"
+target_id = &"phase_final_window"
+reason_code = &"phase_final_window_started"
+
+[sub_resource type="Resource" id="Resource_pq06g"]
+script = ExtResource("19_b0b3x")
+id = &"trigger_phase_final_window"
+all_conditions = Array[ExtResource("30_sexoc")]([SubResource("Resource_pgwxf"), SubResource("Resource_obd8q")])
+effects = Array[ExtResource("31_nvio6")]([SubResource("Resource_5eig5")])
+once = true
+priority = 100
+
+[sub_resource type="Resource" id="Resource_1i2ty"]
+script = ExtResource("30_sexoc")
+type = &"week_gte"
+int_value = 15
+
+[sub_resource type="Resource" id="Resource_2nod7"]
+script = ExtResource("30_sexoc")
+type = &"world_event_not_occurred"
+target_id = &"event_dragon_killed"
+
+[sub_resource type="Resource" id="Resource_nludf"]
+script = ExtResource("30_sexoc")
+type = &"clock_lte"
+target_id = &"necrotic_corruption"
+int_value = 99
+
+[sub_resource type="Resource" id="Resource_gla2u"]
+script = ExtResource("30_sexoc")
+type = &"clock_lte"
+target_id = &"villagers_evacuated"
+int_value = 69
+
+[sub_resource type="Resource" id="Resource_pgf0a"]
+script = ExtResource("30_sexoc")
+type = &"clock_lte"
+target_id = &"capture_preparation"
+int_value = 79
+
+[sub_resource type="Resource" id="Resource_0gw3p"]
+script = ExtResource("30_sexoc")
+type = &"clock_lte"
+target_id = &"dragon_exhaustion"
+int_value = 59
+
+[sub_resource type="Resource" id="Resource_qfurw"]
+script = ExtResource("30_sexoc")
+type = &"clock_gte"
+target_id = &"necrotic_corruption"
+int_value = 60
+
+[sub_resource type="Resource" id="Resource_p6kfh"]
+script = ExtResource("31_nvio6")
+type = &"create_world_event"
+target_id = &"event_dragon_killed"
+reason_code = &"last_defense_dragon_killed"
+
+[sub_resource type="Resource" id="Resource_fqi1m"]
+script = ExtResource("31_nvio6")
+type = &"create_world_event"
+target_id = &"event_last_defense"
+reason_code = &"last_defense_formed"
+
+[sub_resource type="Resource" id="Resource_r710p"]
+script = ExtResource("31_nvio6")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 30
+reason_code = &"last_defense_destruction"
+
+[sub_resource type="Resource" id="Resource_tmsx4"]
+script = ExtResource("19_b0b3x")
+id = &"trigger_last_defense_kills_dragon"
+all_conditions = Array[ExtResource("30_sexoc")]([SubResource("Resource_1i2ty"), SubResource("Resource_2nod7"), SubResource("Resource_nludf"), SubResource("Resource_gla2u")])
+any_conditions = Array[ExtResource("30_sexoc")]([SubResource("Resource_pgf0a"), SubResource("Resource_0gw3p"), SubResource("Resource_qfurw")])
+effects = Array[ExtResource("31_nvio6")]([SubResource("Resource_p6kfh"), SubResource("Resource_fqi1m"), SubResource("Resource_r710p")])
+once = true
+priority = 1000
+
+[sub_resource type="Resource" id="Resource_fgtah"]
+script = ExtResource("30_sexoc")
+type = &"world_event_occurred"
+target_id = &"event_eastern_route_secured"
+
+[sub_resource type="Resource" id="Resource_ub3cg"]
+script = ExtResource("31_nvio6")
+type = &"unlock_contract"
+target_id = &"contract_north_road_evacuation"
+reason_code = &"unlock_north_road_evacuation_applied"
+
+[sub_resource type="Resource" id="Resource_tx4bo"]
+script = ExtResource("19_b0b3x")
+id = &"unlock_north_road_evacuation"
+all_conditions = Array[ExtResource("30_sexoc")]([SubResource("Resource_fgtah")])
+effects = Array[ExtResource("31_nvio6")]([SubResource("Resource_ub3cg")])
+once = true
+priority = 200
+
+[sub_resource type="Resource" id="Resource_lb2p8"]
+script = ExtResource("30_sexoc")
+type = &"problem_is_active"
+target_id = &"problem_evacuating_civilians"
+
+[sub_resource type="Resource" id="Resource_s0kvb"]
+script = ExtResource("31_nvio6")
+type = &"unlock_contract"
+target_id = &"contract_hold_stone_bridge"
+reason_code = &"unlock_hold_stone_bridge_applied"
+
+[sub_resource type="Resource" id="Resource_5y336"]
+script = ExtResource("19_b0b3x")
+id = &"unlock_hold_stone_bridge"
+all_conditions = Array[ExtResource("30_sexoc")]([SubResource("Resource_lb2p8")])
+effects = Array[ExtResource("31_nvio6")]([SubResource("Resource_s0kvb")])
+once = true
+priority = 200
+
+[sub_resource type="Resource" id="Resource_lpnjh"]
+script = ExtResource("30_sexoc")
+type = &"problem_is_active"
+target_id = &"problem_field_medical_collapse"
+
+[sub_resource type="Resource" id="Resource_p1nqs"]
+script = ExtResource("31_nvio6")
+type = &"unlock_contract"
+target_id = &"contract_escort_field_healers"
+reason_code = &"unlock_escort_field_healers_applied"
+
+[sub_resource type="Resource" id="Resource_sn0sc"]
+script = ExtResource("19_b0b3x")
+id = &"unlock_escort_field_healers"
+all_conditions = Array[ExtResource("30_sexoc")]([SubResource("Resource_lpnjh")])
+effects = Array[ExtResource("31_nvio6")]([SubResource("Resource_p1nqs")])
+once = true
+priority = 200
+
+[sub_resource type="Resource" id="Resource_0iggl"]
+script = ExtResource("30_sexoc")
+type = &"problem_is_active"
+target_id = &"problem_mining_village_isolated"
+
+[sub_resource type="Resource" id="Resource_2vmfp"]
+script = ExtResource("31_nvio6")
+type = &"unlock_contract"
+target_id = &"contract_rescue_mining_village"
+reason_code = &"unlock_rescue_mining_village_applied"
+
+[sub_resource type="Resource" id="Resource_l6b5f"]
+script = ExtResource("19_b0b3x")
+id = &"unlock_rescue_mining_village"
+all_conditions = Array[ExtResource("30_sexoc")]([SubResource("Resource_0iggl")])
+effects = Array[ExtResource("31_nvio6")]([SubResource("Resource_2vmfp")])
+once = true
+priority = 200
+
+[sub_resource type="Resource" id="Resource_42xib"]
+script = ExtResource("30_sexoc")
+type = &"clock_gte"
+target_id = &"necrotic_corruption"
+int_value = 25
+
+[sub_resource type="Resource" id="Resource_jtelk"]
+script = ExtResource("31_nvio6")
+type = &"unlock_contract"
+target_id = &"contract_investigate_necrotic_source"
+reason_code = &"unlock_investigate_necrotic_source_applied"
+
+[sub_resource type="Resource" id="Resource_8lot1"]
+script = ExtResource("19_b0b3x")
+id = &"unlock_investigate_necrotic_source"
+all_conditions = Array[ExtResource("30_sexoc")]([SubResource("Resource_42xib")])
+effects = Array[ExtResource("31_nvio6")]([SubResource("Resource_jtelk")])
+once = true
+priority = 200
+
+[sub_resource type="Resource" id="Resource_r8lrl"]
+script = ExtResource("30_sexoc")
+type = &"world_event_occurred"
+target_id = &"event_dragon_lair_located"
+
+[sub_resource type="Resource" id="Resource_4fky3"]
+script = ExtResource("31_nvio6")
+type = &"unlock_contract"
+target_id = &"contract_collect_dragon_scales"
+reason_code = &"unlock_collect_dragon_scales_applied"
+
+[sub_resource type="Resource" id="Resource_ibgxj"]
+script = ExtResource("19_b0b3x")
+id = &"unlock_collect_dragon_scales"
+all_conditions = Array[ExtResource("30_sexoc")]([SubResource("Resource_r8lrl")])
+effects = Array[ExtResource("31_nvio6")]([SubResource("Resource_4fky3")])
+once = true
+priority = 200
+
+[sub_resource type="Resource" id="Resource_eyxp8"]
+script = ExtResource("30_sexoc")
+type = &"clock_gte"
+target_id = &"capture_preparation"
+int_value = 60
+
+[sub_resource type="Resource" id="Resource_r28no"]
+script = ExtResource("31_nvio6")
+type = &"unlock_contract"
+target_id = &"contract_deploy_binding_towers"
+reason_code = &"unlock_deploy_binding_towers_applied"
+
+[sub_resource type="Resource" id="Resource_31o18"]
+script = ExtResource("19_b0b3x")
+id = &"unlock_deploy_binding_towers"
+all_conditions = Array[ExtResource("30_sexoc")]([SubResource("Resource_eyxp8")])
+effects = Array[ExtResource("31_nvio6")]([SubResource("Resource_r28no")])
+once = true
+priority = 200
+
+[sub_resource type="Resource" id="Resource_jrc4u"]
+script = ExtResource("30_sexoc")
+type = &"problem_is_active"
+target_id = &"problem_necrotic_spread"
+
+[sub_resource type="Resource" id="Resource_2x58p"]
+script = ExtResource("31_nvio6")
+type = &"unlock_contract"
+target_id = &"contract_disrupt_necrotic_ritual"
+reason_code = &"unlock_disrupt_necrotic_ritual_applied"
+
+[sub_resource type="Resource" id="Resource_vmspa"]
+script = ExtResource("19_b0b3x")
+id = &"unlock_disrupt_necrotic_ritual"
+all_conditions = Array[ExtResource("30_sexoc")]([SubResource("Resource_jrc4u")])
+effects = Array[ExtResource("31_nvio6")]([SubResource("Resource_2x58p")])
+once = true
+priority = 200
+
+[sub_resource type="Resource" id="Resource_b22nd"]
+script = ExtResource("30_sexoc")
+type = &"phase_is"
+target_id = &"phase_open_conflict"
+
+[sub_resource type="Resource" id="Resource_o2duv"]
+script = ExtResource("31_nvio6")
+type = &"unlock_contract"
+target_id = &"contract_prepare_dragon_bait"
+reason_code = &"unlock_prepare_dragon_bait_applied"
+
+[sub_resource type="Resource" id="Resource_um5sx"]
+script = ExtResource("19_b0b3x")
+id = &"unlock_prepare_dragon_bait"
+all_conditions = Array[ExtResource("30_sexoc")]([SubResource("Resource_b22nd")])
+effects = Array[ExtResource("31_nvio6")]([SubResource("Resource_o2duv")])
+once = true
+priority = 200
+
+[resource]
+script = ExtResource("18_my3ue")
+id = &"situation_dragon_invasion_v0_1"
+display_name_key = &"situation.dragon_invasion.name"
+initial_phase = &"phase_early_crisis"
+clock_definitions = Array[ExtResource("1_8pw55")]([ExtResource("2_1nwb7"), ExtResource("3_rnj1a"), ExtResource("4_0qs5n"), ExtResource("5_xdxms"), ExtResource("6_nfmay")])
+phase_definitions = Array[ExtResource("9_v48j6")]([ExtResource("10_afvgt"), ExtResource("11_lewyl"), ExtResource("12_20qsr"), ExtResource("13_kk8dc")])
+problem_definitions = Array[ExtResource("14_cfg3r")]([ExtResource("19_4pkno"), ExtResource("15_j0ejw"), ExtResource("21_my3ue"), ExtResource("22_b0b3x"), ExtResource("23_hg8lc"), ExtResource("16_bly0l"), ExtResource("25_towx5"), ExtResource("17_4pkno"), ExtResource("27_e82pg")])
+trigger_rules = Array[ExtResource("19_b0b3x")]([SubResource("Resource_dx6u1"), SubResource("Resource_pq06g"), SubResource("Resource_tmsx4"), SubResource("Resource_tx4bo"), SubResource("Resource_5y336"), SubResource("Resource_sn0sc"), SubResource("Resource_l6b5f"), SubResource("Resource_8lot1"), SubResource("Resource_ibgxj"), SubResource("Resource_31o18"), SubResource("Resource_vmspa"), SubResource("Resource_um5sx")])
+passive_weekly_effects = Array[ExtResource("8_cn2sl")]([SubResource("Resource_mbfh2"), SubResource("Resource_2wesh"), SubResource("Resource_twnv8")])
+ending_definitions = Array[ExtResource("7_y128v")]([ExtResource("8_kk8dc"), ExtResource("9_cfg3r"), ExtResource("10_j0ejw"), ExtResource("11_bly0l")])

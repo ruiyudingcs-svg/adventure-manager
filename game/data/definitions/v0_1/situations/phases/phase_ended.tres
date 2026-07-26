@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SituationPhaseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/situation_phase_definition_resource.gd" id="1_vbloa"]
+
+[resource]
+script = ExtResource("1_vbloa")
+id = &"phase_ended"
+display_name_key = &"phase_ended.name"
+description_key = &"phase_ended.description"
+sort_order = 3
+is_terminal = true

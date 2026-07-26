@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="FactionActionDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="1_eixn6"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="2_ik543"]
+[ext_resource type="Script" path="res://game/data/definitions/factions/faction_action_definition_resource.gd" id="3_awxfb"]
+
+[sub_resource type="Resource" id="Resource_yuiid"]
+script = ExtResource("1_eixn6")
+type = &"clock_gte"
+target_id = &"necrotic_corruption"
+int_value = 25
+
+[sub_resource type="Resource" id="Resource_nr6ao"]
+script = ExtResource("2_ik543")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 8
+reason_code = &"action_necrotic_collective_seed_resonance_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_as1yp"]
+script = ExtResource("2_ik543")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 3
+reason_code = &"action_necrotic_collective_seed_resonance_settlement_destruction"
+
+[resource]
+script = ExtResource("3_awxfb")
+id = &"action_necrotic_collective_seed_resonance"
+agenda_tags = Array[StringName]([&"corruption"])
+target_lock_key = &"necrotic_ritual.seed_conversion"
+base_intent_priority = 16
+urgency_weight = 35
+recent_repeat_cooldown = 1
+influence_cost = 5
+conditions = Array[ExtResource("1_eixn6")]([SubResource("Resource_yuiid")])
+target_problem_tags = Array[StringName]([&"forbidden_ritual"])
+effects = Array[ExtResource("2_ik543")]([SubResource("Resource_nr6ao"), SubResource("Resource_as1yp")])
+event_key = &"event_necrotic_resonance_seeded"

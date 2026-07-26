@@ -84,7 +84,10 @@ ending selected
 - `villagers_evacuated <= 69`。
 - 以下至少一项成立：`capture_preparation <= 79`、`dragon_exhaustion <= 59`、`necrotic_corruption >= 60`。
 
-这些条件等价于“前三种非杀龙结局均未成立”。该触发器还把 `settlement_destruction` 推进到高代价区间。随后正常结局选择会进入 `ending_dragon_slain_at_cost`，保证对局最迟在第 15 周结束。
+这些条件等价于“前三种非杀龙结局均未成立”。该触发器的 authoring
+`priority = 1000`，创建 `event_last_defense`，并使
+`settlement_destruction +30`。随后正常结局选择会进入
+`ending_dragon_slain_at_cost`，保证对局最迟在第 15 周结束。
 
 ### 4.4 可达路径摘要
 
@@ -98,6 +101,17 @@ ending selected
 这里固定内容路径与目标窗口。代表性每周增量和四条路径已经在 `docs/18_dragon_invasion_problem_and_action_catalog.md` 完成校准。
 
 ## 5. 阵营目标树
+
+Task 006 首批 `FactionDefinition.preferred_ideology` 固定如下，顺序为
+`L/A/K/P/T`。它表达阵营长期偏好的价值方向，不是阵营关系、声望或当前状态；
+Agenda tag 权重仍以 `docs/18_dragon_invasion_problem_and_action_catalog.md`
+第 5 节为准。
+
+| faction ID | preferred ideology L/A/K/P/T |
+|---|---|
+| `faction_free_adventurers` | +4/+1/0/0/-2 |
+| `faction_arcane_guild` | +1/+2/+5/+1/+2 |
+| `faction_necrotic_collective` | -3/-2/+2/+4/+5 |
 
 ### 5.1 自由冒险者联盟
 

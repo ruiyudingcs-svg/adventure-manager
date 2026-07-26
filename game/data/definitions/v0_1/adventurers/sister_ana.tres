@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="AdventurerDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/capability_block_resource.gd" id="1_o76m8"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/adventurer_definition_resource.gd" id="2_q8h8p"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/relationship_definition_resource.gd" id="3_jioi4"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="4_12p0p"]
+
+[sub_resource type="Resource" id="Resource_dr1cs"]
+script = ExtResource("1_o76m8")
+frontline = 30
+offense = 22
+scouting = 35
+support = 88
+arcana = 52
+discipline = 72
+
+[sub_resource type="Resource" id="Resource_uycg8"]
+script = ExtResource("4_12p0p")
+protect_life = 5
+respect_authority = 2
+seek_knowledge = 1
+pursue_profit = -2
+taboo_tolerance = -5
+
+[resource]
+script = ExtResource("2_q8h8p")
+id = &"sister_ana"
+display_name = "Sister Ana"
+class_id = &"adept"
+base_capabilities = SubResource("Resource_dr1cs")
+traits = Array[StringName]([&"compassionate", &"devout"])
+values = SubResource("Resource_uycg8")
+wage = 12
+bio_key = &"adventurer.sister_ana.bio"

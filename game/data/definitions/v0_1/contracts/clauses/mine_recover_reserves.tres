@@ -1,0 +1,47 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_2khbk"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_n678o"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_n8lgh"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_becx3"]
+
+[sub_resource type="Resource" id="Resource_kshjs"]
+script = ExtResource("1_2khbk")
+type = &"context_gte"
+key = &"collected_resources"
+int_value = 3
+
+[sub_resource type="Resource" id="Resource_xc1jv"]
+script = ExtResource("3_n8lgh")
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_5vt5u"]
+script = ExtResource("2_n678o")
+type = &"modify_reward_percent"
+amount = 10
+reason_code = &"mine_recover_reserves_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_by7ny"]
+script = ExtResource("2_n678o")
+type = &"modify_sponsor_relation"
+amount = 2
+reason_code = &"mine_recover_reserves_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_y2nh2"]
+script = ExtResource("3_n8lgh")
+pursue_profit = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_becx3")
+id = &"mine_recover_reserves"
+display_name_key = &"clause.mine_recover_reserves.name"
+description_key = &"clause.mine_recover_reserves.description"
+category = &"delivery"
+importance = &"bonus"
+all_conditions = Array[ExtResource("1_2khbk")]([SubResource("Resource_kshjs")])
+success_effects = Array[ExtResource("2_n678o")]([SubResource("Resource_5vt5u"), SubResource("Resource_by7ny")])
+success_ideology_impact = SubResource("Resource_y2nh2")
+failure_ideology_impact = SubResource("Resource_xc1jv")
+success_tags = Array[StringName]([&"clause.mine_recover_reserves.satisfied"])
+priority = 30

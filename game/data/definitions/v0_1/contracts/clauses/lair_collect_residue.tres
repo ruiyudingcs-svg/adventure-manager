@@ -1,0 +1,47 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_1il5u"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_e3vdt"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_jliix"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_f5qfg"]
+
+[sub_resource type="Resource" id="Resource_cm2px"]
+script = ExtResource("1_1il5u")
+type = &"context_gte"
+key = &"collected_resources"
+int_value = 3
+
+[sub_resource type="Resource" id="Resource_cawa8"]
+script = ExtResource("3_jliix")
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_y5gm7"]
+script = ExtResource("2_e3vdt")
+type = &"modify_reward_percent"
+amount = 15
+reason_code = &"lair_collect_residue_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_fogkk"]
+script = ExtResource("2_e3vdt")
+type = &"modify_sponsor_relation"
+amount = 3
+reason_code = &"lair_collect_residue_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_ckpda"]
+script = ExtResource("3_jliix")
+seek_knowledge = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_f5qfg")
+id = &"lair_collect_residue"
+display_name_key = &"clause.lair_collect_residue.name"
+description_key = &"clause.lair_collect_residue.description"
+category = &"delivery"
+importance = &"bonus"
+all_conditions = Array[ExtResource("1_1il5u")]([SubResource("Resource_cm2px")])
+success_effects = Array[ExtResource("2_e3vdt")]([SubResource("Resource_y5gm7"), SubResource("Resource_fogkk")])
+success_ideology_impact = SubResource("Resource_ckpda")
+failure_ideology_impact = SubResource("Resource_cawa8")
+success_tags = Array[StringName]([&"clause.lair_collect_residue.satisfied"])
+priority = 30

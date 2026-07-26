@@ -1,7 +1,7 @@
 # 合同条款规范 V0.1
 
-状态：Accepted（简化修订）  
-日期：2026-07-20
+状态：Accepted（简化修订；Gate B 顺序同步）
+日期：2026-07-23
 
 ## 1. 目的
 
@@ -105,21 +105,32 @@ V0.1 不提供：
 
 英雄不为条款单独投骰。保护目标、控制附带损失、使用规定手段和携带补给都必须通过已有 check、MissionContext 或标签体现。
 
+任务前价值预览只读取每条公开条款的 `success_ideology_impact`；
+`failure_ideology_impact` 是未来违约结果，不进入预览。合同意图与全部条款成功影响
+在每个价值维度分别取最强正信号和最强负信号后相加，避免同方向重复计分。
+规划阶段的预期 method tags 还包括所有公开条款
+`method_tag_used` 条件引用的 tag，并按首次出现顺序去重。
+精确公式见 `docs/15_staged_contract_resolution_rules.md` 第 5.1 节。
+
 ## 8. 求值顺序
 
 ```text
-1. 锁定 ContractPlan，并生成条款预览
-2. 依序完成四个阶段 check
-3. 计算未封顶 contract_score、初始 result_tier 和 check failure caps
-4. 按 priority、稳定 clause ID 求值所有条款一次
-5. 汇总 mandatory breach caps，使用最严格等级
-6. 读取最终 ContractOutcomeTable
-7. 计算报酬并汇总 outcome tags 与 ideology impacts
-8. 运行成员事后评价和提出方关系结算
-9. 将待应用效果交给周末原子事务
+1. 锁定 ContractPlan、预期认可度和输入快照
+2. 应用一次合同级 Approach context，依序完成四个阶段 check
+3. 计算 contract_score 与 initial tier
+4. 应用 check failure caps，得到 operational tier
+5. 只读取 operational ContractOutcome 的 injury_risk_modifier
+6. 为四名成员生成一次确定性伤病结果
+7. 按 priority、稳定 clause ID 求值所有条款一次
+8. 汇总 mandatory breach caps，与 operational tier 取最严格者，得到 final tier
+9. 读取 final ContractOutcomeTable
+10. 计算报酬、疲劳、outcome tags、ideology impacts、成员事后评价和提出方关系
+11. 将完整待应用效果交给周末原子事务
 ```
 
 同一行为可以影响多个条款，效果全部叠加，每个来源保留独立 ReasonEntry。同一条款实例不得重复求值。
+人员安全条款只读取第 6 步已经投出的 heavy 数量。条款封顶不得改变
+operational tier、伤病概率或触发重投；最终疲劳倍率只读取 final tier。
 
 ## 9. 数值边界
 
@@ -156,7 +167,9 @@ V0.1 不计算其他阵营对合同的关系反应。
 
 ## 10. 价值观
 
-- 所有公开条款进入任务前预期认可度。
+- 所有公开条款进入任务前预期认可度，但只读取 success ideology impact。
+- 每个价值维度只保留合同意图和条款中的最强正、负公开信号，同方向不重复叠加。
+- 条款 `method_tag_used` 条件引用的 tag 进入规划预期 method tags。
 - 满足时累计 success ideology impact；违反时累计 failure ideology impact。
 - 实际 method tags 独立参与任务后评价，同一 tag 每份合同只计算一次。
 - CheckOutcome 与条款 ideology impact 按维度累加后裁剪到 -10 至 +10。
@@ -180,7 +193,9 @@ V0.1 不计算其他阵营对合同的关系反应。
 - 所有条款公开，不存在 visibility、情报或隐藏条款字段。
 - Bonus 没有 failure effects 或 breach cap。
 - planning 预览只读取 ContractPlan；正式求值只读取锁定计划和 ResolutionTrace。
+- planning 只读取 success ideology impact，不读取 failure impact；公开价值信号按维度去重。
 - 条款不引用职业 ID、世界钟 delta 或 UI。
 - 多个封顶取最严格等级。
+- 人员安全条款在确定性伤病投掷后求值，条款 cap 不会重投伤病。
 - 同一 Trace 产生相同 ClauseResult、报酬、提出方关系和原因顺序。
 - 条款消息由结果投影，后续合同由标签与局势规则解锁。

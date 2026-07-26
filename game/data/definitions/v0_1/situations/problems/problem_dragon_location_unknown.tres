@@ -1,0 +1,78 @@
+[gd_resource type="Resource" script_class="WorldProblemDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_rule_resource.gd" id="1_x10qi"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="2_82xpo"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="3_7v1ac"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_problem_definition_resource.gd" id="4_klls8"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/problem_urgency_rule_resource.gd" id="5_75ubu"]
+
+[sub_resource type="Resource" id="Resource_5p7u6"]
+script = ExtResource("2_82xpo")
+type = &"create_world_event"
+target_id = &"event_dragon_relocated"
+reason_code = &"problem_dragon_location_unknown_escalated"
+
+[sub_resource type="Resource" id="Resource_ad3wv"]
+script = ExtResource("2_82xpo")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 8
+reason_code = &"problem_dragon_location_unknown_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_tovx4"]
+script = ExtResource("2_82xpo")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = -4
+reason_code = &"problem_dragon_location_unknown_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_v54n3"]
+script = ExtResource("3_7v1ac")
+type = &"world_event_occurred"
+target_id = &"event_dragon_lair_located"
+
+[sub_resource type="Resource" id="Resource_0qwri"]
+script = ExtResource("1_x10qi")
+id = &"resolve_dragon_location_unknown_1"
+all_conditions = Array[ExtResource("3_7v1ac")]([SubResource("Resource_v54n3")])
+
+[sub_resource type="Resource" id="Resource_1ibgh"]
+script = ExtResource("3_7v1ac")
+type = &"clock_gte"
+target_id = &"settlement_destruction"
+int_value = 30
+
+[sub_resource type="Resource" id="Resource_kdyyq"]
+script = ExtResource("5_75ubu")
+id = &"urgency_dragon_tracks_lost_in_ruins"
+all_conditions = Array[ExtResource("3_7v1ac")]([SubResource("Resource_1ibgh")])
+urgency_delta = 10
+reason_code = &"urgency_dragon_tracks_lost_in_ruins"
+
+[sub_resource type="Resource" id="Resource_8wreb"]
+script = ExtResource("3_7v1ac")
+type = &"phase_is"
+target_id = &"phase_open_conflict"
+
+[sub_resource type="Resource" id="Resource_wfqja"]
+script = ExtResource("5_75ubu")
+id = &"urgency_capture_research_delayed"
+all_conditions = Array[ExtResource("3_7v1ac")]([SubResource("Resource_8wreb")])
+urgency_delta = 15
+reason_code = &"urgency_capture_research_delayed"
+
+[resource]
+script = ExtResource("4_klls8")
+id = &"problem_dragon_location_unknown"
+title_key = &"problem.problem_dragon_location_unknown.title"
+description_key = &"problem.problem_dragon_location_unknown.description"
+problem_tags = Array[StringName]([&"dragon_tracking", &"capture_research"])
+base_urgency = 35
+age_urgency_per_week = 5
+age_urgency_cap = 15
+response_window_weeks = 4
+urgency_rules = Array[ExtResource("5_75ubu")]([SubResource("Resource_kdyyq"), SubResource("Resource_wfqja")])
+resolution_rules = Array[ExtResource("1_x10qi")]([SubResource("Resource_0qwri")])
+related_clock_ids = Array[StringName]([&"settlement_destruction", &"dragon_exhaustion", &"capture_preparation"])
+contract_definition_ids = Array[StringName]([&"contract_locate_dragon_lair"])
+escalation_effects = Array[ExtResource("2_82xpo")]([SubResource("Resource_5p7u6"), SubResource("Resource_ad3wv"), SubResource("Resource_tovx4")])

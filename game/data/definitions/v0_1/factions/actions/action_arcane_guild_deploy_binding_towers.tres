@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="FactionActionDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="1_k1jxe"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="2_5ghtt"]
+[ext_resource type="Script" path="res://game/data/definitions/factions/faction_action_definition_resource.gd" id="3_6tsit"]
+
+[sub_resource type="Resource" id="Resource_mr31s"]
+script = ExtResource("1_k1jxe")
+type = &"clock_gte"
+target_id = &"capture_preparation"
+int_value = 60
+
+[sub_resource type="Resource" id="Resource_k0fmm"]
+script = ExtResource("2_5ghtt")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = 8
+reason_code = &"action_arcane_guild_deploy_binding_towers_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_5lkf4"]
+script = ExtResource("2_5ghtt")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 4
+reason_code = &"action_arcane_guild_deploy_binding_towers_settlement_destruction"
+
+[resource]
+script = ExtResource("3_6tsit")
+id = &"action_arcane_guild_deploy_binding_towers"
+agenda_tags = Array[StringName]([&"capture", &"target_alive"])
+target_lock_key = &"dragon_capture.deploy_binding_towers"
+base_intent_priority = 18
+urgency_weight = 35
+recent_repeat_cooldown = 2
+influence_cost = 10
+conditions = Array[ExtResource("1_k1jxe")]([SubResource("Resource_mr31s")])
+target_problem_tags = Array[StringName]([&"dragon_capture"])
+effects = Array[ExtResource("2_5ghtt")]([SubResource("Resource_k0fmm"), SubResource("Resource_5lkf4")])
+event_key = &"event_binding_towers_partially_operational"

@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_okjr6"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_hv5pa"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_oqcji"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_1fpok"]
+
+[sub_resource type="Resource" id="Resource_u736i"]
+script = ExtResource("1_okjr6")
+type = &"member_heavy_injury_count_lte"
+
+[sub_resource type="Resource" id="Resource_dxwbh"]
+script = ExtResource("3_oqcji")
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_vgj3v"]
+script = ExtResource("2_hv5pa")
+type = &"modify_reward_percent"
+amount = 10
+reason_code = &"clause_evac_safe_reward"
+
+[sub_resource type="Resource" id="Resource_tsniy"]
+script = ExtResource("2_hv5pa")
+type = &"modify_sponsor_relation"
+amount = 2
+reason_code = &"clause_evac_safe_relation"
+
+[sub_resource type="Resource" id="Resource_hvcqy"]
+script = ExtResource("3_oqcji")
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_1fpok")
+id = &"evac_no_heavy_injury"
+display_name_key = &"clause.evac_no_heavy_injury.name"
+description_key = &"clause.evac_no_heavy_injury.description"
+category = &"personnel_safety"
+importance = &"bonus"
+all_conditions = Array[ExtResource("1_okjr6")]([SubResource("Resource_u736i")])
+success_effects = Array[ExtResource("2_hv5pa")]([SubResource("Resource_vgj3v"), SubResource("Resource_tsniy")])
+success_ideology_impact = SubResource("Resource_hvcqy")
+failure_ideology_impact = SubResource("Resource_dxwbh")
+priority = 30

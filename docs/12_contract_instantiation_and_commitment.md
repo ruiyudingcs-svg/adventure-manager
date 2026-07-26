@@ -72,6 +72,9 @@ ContractInstantiationSnapshot
 Offer 历史已经保存来源、问题、周数和生成原因，足以解释为何出现。无需为了未来审计复制一份局势事实图。
 
 相同模板和相同规划快照必须产生相同 `ContractInstantiationSnapshot` 及原因顺序。
+Offer 还必须锁定 `sponsor_relation_snapshot` 精确值（-100 至 100）及关系档位
+`standard`、`favorable` 或 `trusted`。前者供认可度预测和正式结算使用，后者
+只解释期限与报酬修正；二者均不得在 Offer 创建后重读或重算。
 
 ## 4. Effective Contract 与预测
 
@@ -81,6 +84,7 @@ Offer 历史已经保存来源、问题、周数和生成原因，足以解释�
 ContractDefinition
 + ContractInstantiationSnapshot
 + ContractPlanState
++ detached ContractClauseDefinition / MethodTagDefinition
 → effective contract
 ```
 

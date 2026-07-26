@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="CampaignSetupDefinitionResource" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/campaign/campaign_setup_definition_resource.gd" id="1_setup"]
+[ext_resource type="Script" path="res://game/data/definitions/campaign/faction_setup_definition_resource.gd" id="2_faction"]
+
+[sub_resource type="Resource" id="FactionSetup_free"]
+script = ExtResource("2_faction")
+faction_id = &"faction_free_adventurers"
+initial_relation = 0
+initial_influence = 60
+
+[sub_resource type="Resource" id="FactionSetup_arcane"]
+script = ExtResource("2_faction")
+faction_id = &"faction_arcane_guild"
+initial_relation = 0
+initial_influence = 60
+
+[sub_resource type="Resource" id="FactionSetup_necrotic"]
+script = ExtResource("2_faction")
+faction_id = &"faction_necrotic_collective"
+initial_relation = 0
+initial_influence = 60
+
+[resource]
+script = ExtResource("1_setup")
+id = &"campaign_setup_dragon_invasion_v0_1"
+situation_definition_id = &"situation_dragon_invasion_v0_1"
+adventurer_ids = Array[StringName]([&"mara_shield", &"toren_hammer", &"elin_pathfinder", &"veska_hunter", &"sister_ana", &"orrin_arcanist", &"pell_quartermaster", &"nera_hedgewitch"])
+faction_setups = Array[ExtResource("2_faction")]([SubResource("FactionSetup_free"), SubResource("FactionSetup_arcane"), SubResource("FactionSetup_necrotic")])
+initial_active_problem_ids = Array[StringName]([&"problem_eastern_road_blocked", &"problem_dragon_location_unknown", &"problem_dragon_assault_pressure"])
+initial_gold = 250
+initial_reputation = 20
+initial_base_cohesion = 50
+weekly_maintenance = 25

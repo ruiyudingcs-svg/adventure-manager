@@ -1,0 +1,45 @@
+[gd_resource type="Resource" script_class="FactionActionDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="1_kyjg2"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="2_aouxa"]
+[ext_resource type="Script" path="res://game/data/definitions/factions/faction_action_definition_resource.gd" id="3_at30v"]
+
+[sub_resource type="Resource" id="Resource_s1t64"]
+script = ExtResource("1_kyjg2")
+type = &"problem_is_active"
+target_id = &"problem_eastern_road_blocked"
+
+[sub_resource type="Resource" id="Resource_5plur"]
+script = ExtResource("2_aouxa")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 3
+reason_code = &"action_free_alliance_patrol_refugee_route_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_7jt4g"]
+script = ExtResource("2_aouxa")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 2
+reason_code = &"action_free_alliance_patrol_refugee_route_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_dlhem"]
+script = ExtResource("2_aouxa")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 2
+reason_code = &"action_free_alliance_patrol_refugee_route_settlement_destruction"
+
+[resource]
+script = ExtResource("3_at30v")
+id = &"action_free_alliance_patrol_refugee_route"
+agenda_tags = Array[StringName]([&"evacuation", &"protection"])
+target_lock_key = &"refugee_route.patrol"
+base_intent_priority = 8
+urgency_weight = 20
+recent_repeat_cooldown = 1
+influence_cost = 4
+conditions = Array[ExtResource("1_kyjg2")]([SubResource("Resource_s1t64")])
+target_problem_tags = Array[StringName]([&"road_route"])
+effects = Array[ExtResource("2_aouxa")]([SubResource("Resource_5plur"), SubResource("Resource_7jt4g"), SubResource("Resource_dlhem")])
+event_key = &"event_eastern_route_secured"

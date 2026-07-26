@@ -1,6 +1,6 @@
 # Task 002 — Deterministic Domain Foundations
 
-状态：Ready after Task 001  
+状态：Completed
 里程碑：Milestone 1（基础部分）  
 依赖：Task 001
 
@@ -164,4 +164,3 @@ godot --headless --path . --script res://tests/run_all.gd
 - focused/full 测试命令与结果
 - Definition/State 不变性检查
 - 假设和剩余风险
-

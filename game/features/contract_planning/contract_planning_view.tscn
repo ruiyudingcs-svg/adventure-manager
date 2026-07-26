@@ -1,0 +1,106 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://game/features/contract_planning/contract_planning_view.gd" id="1_view"]
+[ext_resource type="Script" path="res://game/features/contract_planning/contract_planning_controller.gd" id="2_controller"]
+
+[node name="ContractPlanningView" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_view")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 22.0
+offset_top = 18.0
+offset_right = -22.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Layout" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Tabs" type="HBoxContainer" parent="Margin/Layout"]
+layout_mode = 2
+
+[node name="OffersTab" type="Button" parent="Margin/Layout/Tabs"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "合同栏"
+
+[node name="DetailsTab" type="Button" parent="Margin/Layout/Tabs"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "合同详情"
+
+[node name="SquadTab" type="Button" parent="Margin/Layout/Tabs"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "队伍与准备"
+
+[node name="ReviewTab" type="Button" parent="Margin/Layout/Tabs"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "确认"
+
+[node name="Body" type="HSplitContainer" parent="Margin/Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+split_offset = 330
+
+[node name="OffersPanel" type="PanelContainer" parent="Margin/Layout/Body"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+
+[node name="OffersScroll" type="ScrollContainer" parent="Margin/Layout/Body/OffersPanel"]
+layout_mode = 2
+
+[node name="OfferList" type="VBoxContainer" parent="Margin/Layout/Body/OffersPanel/OffersScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="ContentPanel" type="PanelContainer" parent="Margin/Layout/Body"]
+layout_mode = 2
+
+[node name="ContentScroll" type="ScrollContainer" parent="Margin/Layout/Body/ContentPanel"]
+layout_mode = 2
+
+[node name="Content" type="VBoxContainer" parent="Margin/Layout/Body/ContentPanel/ContentScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 9
+
+[node name="Footer" type="HBoxContainer" parent="Margin/Layout"]
+layout_mode = 2
+
+[node name="IssueLabel" type="Label" parent="Margin/Layout/Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.55, 0.38, 1)
+autowrap_mode = 2
+
+[node name="DeclineButton" type="Button" parent="Margin/Layout/Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "拒绝合同"
+
+[node name="AcceptButton" type="Button" parent="Margin/Layout/Footer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+text = "确认派遣"
+
+[node name="ContractPlanningController" type="Node" parent="."]
+script = ExtResource("2_controller")

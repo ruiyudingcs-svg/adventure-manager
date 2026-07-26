@@ -1,11 +1,15 @@
 # 三份基准合同完整定义 V0.1
 
-状态：Accepted balance baseline  
-日期：2026-07-19
+状态：Accepted balance baseline（Gate B golden 修订）
+日期：2026-07-23
 
 ## 1. 目的
 
 本文件完整定义三份机制差异最大的基准合同，用于验证阶段判定、MissionContext、条款、价值观、阵营和世界钟能否共享同一数据模型。数值是首轮可测试基准，不是最终平衡值；修改时必须人工审查原因日志和预期差异。
+
+本文只保存三份人工 golden 基准，不作为全部十二份合同的合集。其余九份合同由
+Gate E 专项文档 `docs/21_remaining_contract_numerical_rules.md` 定义，避免新增内容
+与回归基准混在同一权威文件中。
 
 三份合同：
 
@@ -21,6 +25,20 @@
 判定等级点数：Exceptional 100、Success 75、Partial 50、Failure 25、Severe 0。每份合同固定执行四个正权重判定，权重总和为 1.0；最终合同分数直接求加权和，不再归一化。
 
 所有手算样例默认选择 Balanced，因此 Approach 评分与合同级 MissionContext 修正均为 0。各 check 的 profile 已显式列出，Cautious 与 Aggressive 按 `docs/15_staged_contract_resolution_rules.md` 的全局表结算。
+
+所有 V0.1 合同共用同一 ContractOutcome 伤病修正：
+
+| operational tier | injury risk modifier |
+|---|---:|
+| Exceptional | -10 |
+| Success | -5 |
+| Partial | 0 |
+| Failure | +10 |
+| Severe | +20 |
+
+伤病只读取 check caps 形成的 operational tier；条款 cap 之后的 final tier
+用于报酬、疲劳、提出方关系和最终标签。两者的固定顺序见
+`docs/15_staged_contract_resolution_rules.md` 第 5.4—5.5 节。
 
 表格缩写：
 
@@ -136,13 +154,13 @@ allowed_supplies: medical, scouting, protection, rations
 
 ### 3.5 合同最终结果表
 
-| tier | reward multiplier | fatigue multiplier | base sponsor relation | tags |
-|---|---:|---:|---:|---|
-| Exceptional | 1.25 | 0.90 | +8 | contract.exceptional, evacuation.heroic |
-| Success | 1.00 | 1.00 | +5 | contract.success |
-| Partial | 0.65 | 1.10 | +1 | contract.partial |
-| Failure | 0.25 | 1.25 | -4 | contract.failure |
-| Severe | 0.00 | 1.40 | -8 | contract.severe_failure |
+| tier | reward multiplier | fatigue multiplier | injury risk modifier | base sponsor relation | tags |
+|---|---:|---:|---:|---:|---|
+| Exceptional | 1.25 | 0.90 | -10 | +8 | contract.exceptional, evacuation.heroic |
+| Success | 1.00 | 1.00 | -5 | +5 | contract.success |
+| Partial | 0.65 | 1.10 | 0 | +1 | contract.partial |
+| Failure | 0.25 | 1.25 | +10 | -4 | contract.failure |
+| Severe | 0.00 | 1.40 | +20 | -8 | contract.severe_failure |
 
 ### 3.6 未处理配置
 
@@ -158,22 +176,28 @@ allowed_supplies: medical, scouting, protection, rations
 ```text
 evac_find_safe_route       48 → Partial     ×0.15
 evac_secure_column         66 → Success     ×0.30
-evac_recover_stragglers    55 → Partial     ×0.25
-evac_move_column_out       63 → Success     ×0.30
+evac_recover_stragglers    55 → Success     ×0.25
+evac_move_column_out       65 → Success     ×0.30
 
-contract_score = 50×.15 + 75×.30 + 50×.25 + 75×.30 = 65
+contract_score = 50×.15 + 75×.30 + 75×.25 + 75×.30 = 71.25
 initial tier = Success
+operational tier = Success
 ```
 
-由于 `all_stragglers_recovered` 缺失，第一条 Mandatory 失败，最终等级封顶为 Partial。该路径最终 `collateral_pressure = 0` 且无人重伤：
+`all_stragglers_recovered`、附带损害限制和无人重伤三项条件全部满足：
 
 ```text
-reward percent = 100 -20 +10 = 90
-final reward = round(220 × 0.65 × 0.90) = 129
-sponsor relation = +1 -6 +2 +2 = -1
+final tier = Success
+reward percent = 100 +10 = 110
+final reward = round(220 × 1.00 × 1.10) = 242
+sponsor relation = +5 +2 +2 = +9
+fatigue gain = round(12 × 1.00) = 12
 ```
 
-该样例证明较高加权分数不能掩盖关键人道条款失败。
+本次伤病投掷在条款前完成，使用 operational Success 的 `-5` 修正；
+Bonus 人员安全条款只读取已经生成的重伤数量。
+
+该样例证明准备充分的队伍能够把人道目标、附带损害和人员安全同时转化为完整成功。
 
 ## 4. 部署奥术束缚塔
 
@@ -274,13 +298,13 @@ availability: phase_final_window AND capture_preparation >= 60
 
 ### 4.5 合同最终结果表
 
-| tier | reward multiplier | fatigue multiplier | base sponsor relation | tags |
-|---|---:|---:|---:|---|
-| Exceptional | 1.30 | 0.90 | +10 | contract.exceptional, capture.breakthrough |
-| Success | 1.00 | 1.00 | +6 | contract.success, capture.progress |
-| Partial | 0.60 | 1.15 | +1 | contract.partial |
-| Failure | 0.20 | 1.30 | -5 | contract.failure |
-| Severe | 0.00 | 1.50 | -10 | contract.severe_failure |
+| tier | reward multiplier | fatigue multiplier | injury risk modifier | base sponsor relation | tags |
+|---|---:|---:|---:|---:|---|
+| Exceptional | 1.30 | 0.90 | -10 | +10 | contract.exceptional, capture.breakthrough |
+| Success | 1.00 | 1.00 | -5 | +6 | contract.success, capture.progress |
+| Partial | 0.60 | 1.15 | 0 | +1 | contract.partial |
+| Failure | 0.20 | 1.30 | +10 | -5 | contract.failure |
+| Severe | 0.00 | 1.50 | +20 | -10 | contract.severe_failure |
 
 ### 4.6 未处理配置
 
@@ -292,21 +316,23 @@ availability: phase_final_window AND capture_preparation >= 60
 ### 4.7 手算样例
 
 ```text
-binding_survey_leyline   68 → Success  ×0.15
-binding_secure_sites     54 → Partial  ×0.25
-binding_raise_towers     72 → Success  ×0.40
-binding_withdraw_team    57 → Partial  ×0.20
+binding_survey_leyline   68 → Success      ×0.15
+binding_secure_sites     54 → Success      ×0.25
+binding_raise_towers     74 → Exceptional  ×0.40
+binding_withdraw_team    57 → Success      ×0.20
 
-contract_score = 75×.15 + 50×.25 + 75×.40 + 50×.20 = 63.75
-initial tier = Success
+contract_score = 75×.15 + 75×.25 + 100×.40 + 75×.20 = 85
+initial tier = Exceptional
+operational tier = Exceptional
 ```
 
 队伍携带束缚器、没有使用死灵术、目标存活，但行动未保持隐蔽。Mandatory 全部满足，Bonus 失败：
 
 ```text
-final tier = Success
-final reward = round(300 × 1.00) = 300
-sponsor relation = +6 +3 = +9
+final tier = Exceptional
+final reward = round(300 × 1.30) = 390
+sponsor relation = +10 +3 = +13
+fatigue gain = round(15 × 0.90) = 14
 ```
 
 ## 5. 回收战场完整尸体
@@ -407,13 +433,13 @@ allowed_supplies: scouting, protection, arcane_binding, rations
 
 ### 5.5 合同最终结果表
 
-| tier | reward multiplier | fatigue multiplier | base sponsor relation | tags |
-|---|---:|---:|---:|---|
-| Exceptional | 1.35 | 0.95 | +10 | contract.exceptional, necrotic.delivery_prime |
-| Success | 1.00 | 1.00 | +6 | contract.success, necrotic.delivery |
-| Partial | 0.65 | 1.15 | +1 | contract.partial |
-| Failure | 0.25 | 1.30 | -4 | contract.failure |
-| Severe | 0.00 | 1.50 | -8 | contract.severe_failure |
+| tier | reward multiplier | fatigue multiplier | injury risk modifier | base sponsor relation | tags |
+|---|---:|---:|---:|---:|---|
+| Exceptional | 1.35 | 0.95 | -10 | +10 | contract.exceptional, necrotic.delivery_prime |
+| Success | 1.00 | 1.00 | -5 | +6 | contract.success, necrotic.delivery |
+| Partial | 0.65 | 1.15 | 0 | +1 | contract.partial |
+| Failure | 0.25 | 1.30 | +10 | -4 | contract.failure |
+| Severe | 0.00 | 1.50 | +20 | -8 | contract.severe_failure |
 
 ### 5.6 未处理配置
 
@@ -426,24 +452,32 @@ allowed_supplies: scouting, protection, arcane_binding, rations
 ### 5.7 手算样例
 
 ```text
-corpse_avoid_patrols        67 → Success  ×0.15
-corpse_secure_battlefield   51 → Partial  ×0.25
-corpse_preserve_remains     69 → Success  ×0.40
-corpse_smuggle_cargo        34 → Failure  ×0.20
+corpse_avoid_patrols        67 → Success      ×0.15
+corpse_secure_battlefield   51 → Success      ×0.25
+corpse_preserve_remains     71 → Exceptional  ×0.40
+corpse_smuggle_cargo        32 → Partial      ×0.20
 
-contract_score = 75×.15 + 50×.25 + 75×.40 + 25×.20 = 58.75
-initial tier = Partial
+contract_score = 75×.15 + 75×.25 + 100×.40 + 50×.20 = 80
+initial tier = Exceptional
+operational tier = Exceptional
 ```
 
-保存判定取得3具完整尸体，但撤离失败只形成 partial_delivery，交付条款失败；行动也没有保持隐蔽：
+保存判定取得 4 具完整尸体，Partial 撤离仍形成 `cargo_delivered`，因此交付条款
+满足；但行动没有保持隐蔽，保密 Mandatory 的 `Partial` cap 将最终等级封顶。
+奥术残留 Bonus 同时满足，正负报酬百分比互相抵消：
 
 ```text
-reward percent = 100 -40 -20 = 40
-final reward = round(360 × 0.65 × 0.40) = 94
-sponsor relation = +1 -10 -6 = -15
+final tier = Partial
+reward percent = 100 -20 +20 = 100
+final reward = round(360 × 0.65) = 234
+sponsor relation = +1 +5 -6 +2 = +2
+fatigue gain = round(14 × 1.15) = 16
 ```
 
-如果撤离达到 Success，则两条 Mandatory 都满足，合同维持 Partial，报酬为 `round(360×0.65)=234`，但仍至少产生 7 点 corruption 和明确的成员价值观反应。
+伤病在条款前使用 operational Exceptional 的 `-10` 修正；条款求值不会重投。
+
+如果撤离达到 Success，则两条 Mandatory 都满足，合同可保留 Exceptional；但
+腐化代价和明确的成员价值观反应仍然存在。
 
 ## 6. 基准合同共同验证结论
 

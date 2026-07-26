@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SupplyDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/conditional_modifier_resource.gd" id="1_3wsl6"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/supply_definition_resource.gd" id="2_f7p2g"]
+
+[resource]
+script = ExtResource("2_f7p2g")
+id = &"supply_arcane_binding"
+display_name_key = &"supply.arcane_binding.name"
+cost = 20
+tags = Array[StringName]([&"arcane_binding"])

@@ -1,0 +1,683 @@
+{
+  "generated_by": "Task017 read-only balance audit",
+  "issues": [],
+  "runs": [
+    {
+      "contracts": {
+        "declined": 0,
+        "escalated": 0,
+        "expired": 2,
+        "npc_completed": 7,
+        "resolved": 9,
+        "skipped": 0
+      },
+      "ending_id": "ending_necrotic_catastrophe",
+      "ending_week": 10,
+      "faction_relations": {
+        "faction_arcane_guild": 0,
+        "faction_free_adventurers": -67,
+        "faction_necrotic_collective": 0
+      },
+      "final_gold": 0,
+      "five_clock_values": {
+        "capture_preparation": 36,
+        "dragon_exhaustion": 15,
+        "necrotic_corruption": 100,
+        "settlement_destruction": 100,
+        "villagers_evacuated": 54
+      },
+      "heavy_injury_count": 1,
+      "light_injury_count": 0,
+      "member_final_fatigue_morale": {
+        "elin_pathfinder": {
+          "fatigue": 11,
+          "morale": 25
+        },
+        "mara_shield": {
+          "fatigue": 11,
+          "morale": 25
+        },
+        "nera_hedgewitch": {
+          "fatigue": 11,
+          "morale": 25
+        },
+        "orrin_arcanist": {
+          "fatigue": 0,
+          "morale": 26
+        },
+        "pell_quartermaster": {
+          "fatigue": 14,
+          "morale": 25
+        },
+        "sister_ana": {
+          "fatigue": 0,
+          "morale": 25
+        },
+        "toren_hammer": {
+          "fatigue": 0,
+          "morale": 25
+        },
+        "veska_hunter": {
+          "fatigue": 0,
+          "morale": 25
+        }
+      },
+      "policy": "evacuation",
+      "result_tier_counts": {
+        "failure": 7,
+        "partial": 1,
+        "success": 1
+      },
+      "save_load_checkpoints": 1,
+      "seed": 170101
+    },
+    {
+      "contracts": {
+        "declined": 0,
+        "escalated": 0,
+        "expired": 7,
+        "npc_completed": 3,
+        "resolved": 9,
+        "skipped": 0
+      },
+      "ending_id": "ending_necrotic_catastrophe",
+      "ending_week": 10,
+      "faction_relations": {
+        "faction_arcane_guild": -76,
+        "faction_free_adventurers": -16,
+        "faction_necrotic_collective": -16
+      },
+      "final_gold": 0,
+      "five_clock_values": {
+        "capture_preparation": 19,
+        "dragon_exhaustion": 8,
+        "necrotic_corruption": 100,
+        "settlement_destruction": 100,
+        "villagers_evacuated": 34
+      },
+      "heavy_injury_count": 1,
+      "light_injury_count": 0,
+      "member_final_fatigue_morale": {
+        "elin_pathfinder": {
+          "fatigue": 3,
+          "morale": 19
+        },
+        "mara_shield": {
+          "fatigue": 20,
+          "morale": 18
+        },
+        "nera_hedgewitch": {
+          "fatigue": 0,
+          "morale": 23
+        },
+        "orrin_arcanist": {
+          "fatigue": 42,
+          "morale": 22
+        },
+        "pell_quartermaster": {
+          "fatigue": 25,
+          "morale": 20
+        },
+        "sister_ana": {
+          "fatigue": 42,
+          "morale": 18
+        },
+        "toren_hammer": {
+          "fatigue": 21,
+          "morale": 22
+        },
+        "veska_hunter": {
+          "fatigue": 21,
+          "morale": 21
+        }
+      },
+      "policy": "arcane",
+      "result_tier_counts": {
+        "failure": 7,
+        "partial": 2
+      },
+      "save_load_checkpoints": 1,
+      "seed": 170102
+    },
+    {
+      "contracts": {
+        "declined": 0,
+        "escalated": 0,
+        "expired": 5,
+        "npc_completed": 3,
+        "resolved": 8,
+        "skipped": 0
+      },
+      "ending_id": "ending_necrotic_catastrophe",
+      "ending_week": 10,
+      "faction_relations": {
+        "faction_arcane_guild": 0,
+        "faction_free_adventurers": 0,
+        "faction_necrotic_collective": -100
+      },
+      "final_gold": 0,
+      "five_clock_values": {
+        "capture_preparation": 32,
+        "dragon_exhaustion": 32,
+        "necrotic_corruption": 100,
+        "settlement_destruction": 100,
+        "villagers_evacuated": 21
+      },
+      "heavy_injury_count": 3,
+      "light_injury_count": 0,
+      "member_final_fatigue_morale": {
+        "elin_pathfinder": {
+          "fatigue": 51,
+          "morale": 5
+        },
+        "mara_shield": {
+          "fatigue": 26,
+          "morale": 2
+        },
+        "nera_hedgewitch": {
+          "fatigue": 26,
+          "morale": 18
+        },
+        "orrin_arcanist": {
+          "fatigue": 8,
+          "morale": 12
+        },
+        "pell_quartermaster": {
+          "fatigue": 28,
+          "morale": 11
+        },
+        "sister_ana": {
+          "fatigue": 28,
+          "morale": 0
+        },
+        "toren_hammer": {
+          "fatigue": 46,
+          "morale": 14
+        },
+        "veska_hunter": {
+          "fatigue": 3,
+          "morale": 12
+        }
+      },
+      "policy": "necrotic",
+      "result_tier_counts": {
+        "failure": 8
+      },
+      "save_load_checkpoints": 1,
+      "seed": 170103
+    },
+    {
+      "contracts": {
+        "declined": 0,
+        "escalated": 0,
+        "expired": 12,
+        "npc_completed": 9,
+        "resolved": 0,
+        "skipped": 0
+      },
+      "ending_id": "ending_dragon_slain_at_cost",
+      "ending_week": 15,
+      "faction_relations": {
+        "faction_arcane_guild": 0,
+        "faction_free_adventurers": 0,
+        "faction_necrotic_collective": 0
+      },
+      "final_gold": 0,
+      "five_clock_values": {
+        "capture_preparation": 66,
+        "dragon_exhaustion": 21,
+        "necrotic_corruption": 82,
+        "settlement_destruction": 100,
+        "villagers_evacuated": 28
+      },
+      "heavy_injury_count": 0,
+      "light_injury_count": 0,
+      "member_final_fatigue_morale": {
+        "elin_pathfinder": {
+          "fatigue": 0,
+          "morale": 0
+        },
+        "mara_shield": {
+          "fatigue": 0,
+          "morale": 0
+        },
+        "nera_hedgewitch": {
+          "fatigue": 0,
+          "morale": 0
+        },
+        "orrin_arcanist": {
+          "fatigue": 0,
+          "morale": 0
+        },
+        "pell_quartermaster": {
+          "fatigue": 0,
+          "morale": 0
+        },
+        "sister_ana": {
+          "fatigue": 0,
+          "morale": 0
+        },
+        "toren_hammer": {
+          "fatigue": 0,
+          "morale": 0
+        },
+        "veska_hunter": {
+          "fatigue": 0,
+          "morale": 0
+        }
+      },
+      "policy": "skip_all",
+      "result_tier_counts": {},
+      "save_load_checkpoints": 1,
+      "seed": 170104
+    },
+    {
+      "contracts": {
+        "declined": 0,
+        "escalated": 0,
+        "expired": 4,
+        "npc_completed": 3,
+        "resolved": 8,
+        "skipped": 0
+      },
+      "ending_id": "ending_necrotic_catastrophe",
+      "ending_week": 10,
+      "faction_relations": {
+        "faction_arcane_guild": 0,
+        "faction_free_adventurers": 0,
+        "faction_necrotic_collective": -100
+      },
+      "final_gold": 0,
+      "five_clock_values": {
+        "capture_preparation": 32,
+        "dragon_exhaustion": 23,
+        "necrotic_corruption": 100,
+        "settlement_destruction": 100,
+        "villagers_evacuated": 24
+      },
+      "heavy_injury_count": 4,
+      "light_injury_count": 0,
+      "member_final_fatigue_morale": {
+        "elin_pathfinder": {
+          "fatigue": 0,
+          "morale": 12
+        },
+        "mara_shield": {
+          "fatigue": 72,
+          "morale": 5
+        },
+        "nera_hedgewitch": {
+          "fatigue": 0,
+          "morale": 20
+        },
+        "orrin_arcanist": {
+          "fatigue": 30,
+          "morale": 17
+        },
+        "pell_quartermaster": {
+          "fatigue": 26,
+          "morale": 15
+        },
+        "sister_ana": {
+          "fatigue": 28,
+          "morale": 5
+        },
+        "toren_hammer": {
+          "fatigue": 9,
+          "morale": 19
+        },
+        "veska_hunter": {
+          "fatigue": 0,
+          "morale": 17
+        }
+      },
+      "policy": "high_reward",
+      "result_tier_counts": {
+        "failure": 7,
+        "partial": 1
+      },
+      "save_load_checkpoints": 1,
+      "seed": 170105
+    },
+    {
+      "contracts": {
+        "declined": 0,
+        "escalated": 0,
+        "expired": 3,
+        "npc_completed": 5,
+        "resolved": 9,
+        "skipped": 0
+      },
+      "ending_id": "ending_necrotic_catastrophe",
+      "ending_week": 10,
+      "faction_relations": {
+        "faction_arcane_guild": 11,
+        "faction_free_adventurers": -60,
+        "faction_necrotic_collective": -15
+      },
+      "final_gold": 0,
+      "five_clock_values": {
+        "capture_preparation": 37,
+        "dragon_exhaustion": 13,
+        "necrotic_corruption": 100,
+        "settlement_destruction": 100,
+        "villagers_evacuated": 52
+      },
+      "heavy_injury_count": 1,
+      "light_injury_count": 0,
+      "member_final_fatigue_morale": {
+        "elin_pathfinder": {
+          "fatigue": 12,
+          "morale": 35
+        },
+        "mara_shield": {
+          "fatigue": 0,
+          "morale": 35
+        },
+        "nera_hedgewitch": {
+          "fatigue": 11,
+          "morale": 35
+        },
+        "orrin_arcanist": {
+          "fatigue": 11,
+          "morale": 37
+        },
+        "pell_quartermaster": {
+          "fatigue": 25,
+          "morale": 35
+        },
+        "sister_ana": {
+          "fatigue": 11,
+          "morale": 33
+        },
+        "toren_hammer": {
+          "fatigue": 0,
+          "morale": 36
+        },
+        "veska_hunter": {
+          "fatigue": 0,
+          "morale": 35
+        }
+      },
+      "policy": "low_risk",
+      "result_tier_counts": {
+        "failure": 6,
+        "partial": 1,
+        "success": 2
+      },
+      "save_load_checkpoints": 1,
+      "seed": 170106
+    },
+    {
+      "contracts": {
+        "declined": 0,
+        "escalated": 0,
+        "expired": 2,
+        "npc_completed": 7,
+        "resolved": 9,
+        "skipped": 0
+      },
+      "ending_id": "ending_necrotic_catastrophe",
+      "ending_week": 10,
+      "faction_relations": {
+        "faction_arcane_guild": 0,
+        "faction_free_adventurers": -90,
+        "faction_necrotic_collective": 0
+      },
+      "final_gold": 0,
+      "five_clock_values": {
+        "capture_preparation": 36,
+        "dragon_exhaustion": 15,
+        "necrotic_corruption": 100,
+        "settlement_destruction": 100,
+        "villagers_evacuated": 54
+      },
+      "heavy_injury_count": 1,
+      "light_injury_count": 0,
+      "member_final_fatigue_morale": {
+        "elin_pathfinder": {
+          "fatigue": 0,
+          "morale": 15
+        },
+        "mara_shield": {
+          "fatigue": 23,
+          "morale": 15
+        },
+        "nera_hedgewitch": {
+          "fatigue": 13,
+          "morale": 15
+        },
+        "orrin_arcanist": {
+          "fatigue": 13,
+          "morale": 16
+        },
+        "pell_quartermaster": {
+          "fatigue": 23,
+          "morale": 15
+        },
+        "sister_ana": {
+          "fatigue": 0,
+          "morale": 16
+        },
+        "toren_hammer": {
+          "fatigue": 0,
+          "morale": 15
+        },
+        "veska_hunter": {
+          "fatigue": 0,
+          "morale": 15
+        }
+      },
+      "policy": "free_faction",
+      "result_tier_counts": {
+        "failure": 8,
+        "success": 1
+      },
+      "save_load_checkpoints": 1,
+      "seed": 170107
+    },
+    {
+      "contracts": {
+        "declined": 0,
+        "escalated": 0,
+        "expired": 7,
+        "npc_completed": 3,
+        "resolved": 9,
+        "skipped": 0
+      },
+      "ending_id": "ending_necrotic_catastrophe",
+      "ending_week": 10,
+      "faction_relations": {
+        "faction_arcane_guild": -93,
+        "faction_free_adventurers": 0,
+        "faction_necrotic_collective": 0
+      },
+      "final_gold": 0,
+      "five_clock_values": {
+        "capture_preparation": 26,
+        "dragon_exhaustion": 5,
+        "necrotic_corruption": 100,
+        "settlement_destruction": 100,
+        "villagers_evacuated": 28
+      },
+      "heavy_injury_count": 0,
+      "light_injury_count": 0,
+      "member_final_fatigue_morale": {
+        "elin_pathfinder": {
+          "fatigue": 6,
+          "morale": 24
+        },
+        "mara_shield": {
+          "fatigue": 23,
+          "morale": 24
+        },
+        "nera_hedgewitch": {
+          "fatigue": 42,
+          "morale": 27
+        },
+        "orrin_arcanist": {
+          "fatigue": 23,
+          "morale": 29
+        },
+        "pell_quartermaster": {
+          "fatigue": 22,
+          "morale": 25
+        },
+        "sister_ana": {
+          "fatigue": 43,
+          "morale": 22
+        },
+        "toren_hammer": {
+          "fatigue": 2,
+          "morale": 26
+        },
+        "veska_hunter": {
+          "fatigue": 0,
+          "morale": 25
+        }
+      },
+      "policy": "arcane_faction",
+      "result_tier_counts": {
+        "failure": 5,
+        "partial": 4
+      },
+      "save_load_checkpoints": 1,
+      "seed": 170108
+    },
+    {
+      "contracts": {
+        "declined": 0,
+        "escalated": 0,
+        "expired": 5,
+        "npc_completed": 3,
+        "resolved": 8,
+        "skipped": 0
+      },
+      "ending_id": "ending_necrotic_catastrophe",
+      "ending_week": 10,
+      "faction_relations": {
+        "faction_arcane_guild": 0,
+        "faction_free_adventurers": 0,
+        "faction_necrotic_collective": -100
+      },
+      "final_gold": 0,
+      "five_clock_values": {
+        "capture_preparation": 32,
+        "dragon_exhaustion": 34,
+        "necrotic_corruption": 100,
+        "settlement_destruction": 100,
+        "villagers_evacuated": 21
+      },
+      "heavy_injury_count": 2,
+      "light_injury_count": 0,
+      "member_final_fatigue_morale": {
+        "elin_pathfinder": {
+          "fatigue": 0,
+          "morale": 6
+        },
+        "mara_shield": {
+          "fatigue": 40,
+          "morale": 0
+        },
+        "nera_hedgewitch": {
+          "fatigue": 20,
+          "morale": 18
+        },
+        "orrin_arcanist": {
+          "fatigue": 20,
+          "morale": 12
+        },
+        "pell_quartermaster": {
+          "fatigue": 18,
+          "morale": 10
+        },
+        "sister_ana": {
+          "fatigue": 20,
+          "morale": 0
+        },
+        "toren_hammer": {
+          "fatigue": 0,
+          "morale": 13
+        },
+        "veska_hunter": {
+          "fatigue": 20,
+          "morale": 13
+        }
+      },
+      "policy": "high_supply",
+      "result_tier_counts": {
+        "failure": 7,
+        "partial": 1
+      },
+      "save_load_checkpoints": 1,
+      "seed": 170109
+    },
+    {
+      "contracts": {
+        "declined": 0,
+        "escalated": 0,
+        "expired": 4,
+        "npc_completed": 3,
+        "resolved": 9,
+        "skipped": 0
+      },
+      "ending_id": "ending_necrotic_catastrophe",
+      "ending_week": 10,
+      "faction_relations": {
+        "faction_arcane_guild": 0,
+        "faction_free_adventurers": 0,
+        "faction_necrotic_collective": -100
+      },
+      "final_gold": 0,
+      "five_clock_values": {
+        "capture_preparation": 32,
+        "dragon_exhaustion": 28,
+        "necrotic_corruption": 100,
+        "settlement_destruction": 100,
+        "villagers_evacuated": 21
+      },
+      "heavy_injury_count": 1,
+      "light_injury_count": 0,
+      "member_final_fatigue_morale": {
+        "elin_pathfinder": {
+          "fatigue": 2,
+          "morale": 6
+        },
+        "mara_shield": {
+          "fatigue": 42,
+          "morale": 1
+        },
+        "nera_hedgewitch": {
+          "fatigue": 42,
+          "morale": 21
+        },
+        "orrin_arcanist": {
+          "fatigue": 42,
+          "morale": 13
+        },
+        "pell_quartermaster": {
+          "fatigue": 42,
+          "morale": 10
+        },
+        "sister_ana": {
+          "fatigue": 2,
+          "morale": 2
+        },
+        "toren_hammer": {
+          "fatigue": 21,
+          "morale": 14
+        },
+        "veska_hunter": {
+          "fatigue": 2,
+          "morale": 13
+        }
+      },
+      "policy": "fatigue_rotation",
+      "result_tier_counts": {
+        "failure": 9
+      },
+      "save_load_checkpoints": 1,
+      "seed": 170110
+    }
+  ]
+}

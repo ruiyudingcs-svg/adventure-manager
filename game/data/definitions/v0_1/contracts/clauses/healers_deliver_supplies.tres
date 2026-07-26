@@ -1,0 +1,62 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_6ho2x"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_xxhnk"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_ljk7j"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_844jq"]
+
+[sub_resource type="Resource" id="Resource_qqkkw"]
+script = ExtResource("1_6ho2x")
+type = &"context_gte"
+key = &"collected_resources"
+int_value = 3
+
+[sub_resource type="Resource" id="Resource_usjw7"]
+script = ExtResource("1_6ho2x")
+type = &"outcome_tag_present"
+tag_value = &"medical_supplies_delivered"
+
+[sub_resource type="Resource" id="Resource_k6784"]
+script = ExtResource("2_xxhnk")
+type = &"modify_reward_percent"
+amount = -20
+reason_code = &"healers_deliver_supplies_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_xwfb2"]
+script = ExtResource("2_xxhnk")
+type = &"modify_sponsor_relation"
+amount = -5
+reason_code = &"healers_deliver_supplies_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_xxlo1"]
+script = ExtResource("3_ljk7j")
+protect_life = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_kdn4d"]
+script = ExtResource("2_xxhnk")
+type = &"modify_sponsor_relation"
+amount = 2
+reason_code = &"healers_deliver_supplies_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_vwxq5"]
+script = ExtResource("3_ljk7j")
+protect_life = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_844jq")
+id = &"healers_deliver_supplies"
+display_name_key = &"clause.healers_deliver_supplies.name"
+description_key = &"clause.healers_deliver_supplies.description"
+category = &"delivery"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_6ho2x")]([SubResource("Resource_qqkkw"), SubResource("Resource_usjw7")])
+success_effects = Array[ExtResource("2_xxhnk")]([SubResource("Resource_kdn4d")])
+failure_effects = Array[ExtResource("2_xxhnk")]([SubResource("Resource_k6784"), SubResource("Resource_xwfb2")])
+breach_result_cap = &"partial"
+success_ideology_impact = SubResource("Resource_vwxq5")
+failure_ideology_impact = SubResource("Resource_xxlo1")
+success_tags = Array[StringName]([&"clause.healers_deliver_supplies.satisfied"])
+failure_tags = Array[StringName]([&"clause.healers_deliver_supplies.breached"])
+priority = 20

@@ -1,7 +1,7 @@
 # 周流程、阵营行动承诺与消息规范 V0.1
 
 状态：Accepted（简化修订）  
-日期：2026-07-20
+日期：2026-07-24
 
 ## 1. 核心决定
 
@@ -30,6 +30,12 @@ V0.1 不模拟 NPC 行动之间的谈判、抢先或战斗。所有 Offer 与行
 9. evaluate_problem_urgency
 10. freeze_week_planning_snapshot
 ```
+
+步骤 2 前，`WeekFlowCoordinator` 通过只读 `CampaignHistoryQuery` 从已提交历史
+生成第 `N - 1` 周的 `WeeklyParticipationSnapshot`，并显式传给
+`WeeklyUpkeepResolver`。Upkeep 不读取 `ContractHistoryEntry`；合同历史保持参与
+记录的唯一权威来源。工资、治疗、恢复和资金不足的数值见
+`docs/20_weekly_upkeep_and_history_rules.md`。
 
 问题期限先于旧 Offer 到期。问题已关闭时，关联 Offer 只自然过期，不重复应用问题后果。任一步进入结局后停止创建新 Offer 与行动承诺。
 
@@ -83,6 +89,26 @@ FactionActionCommitmentState
 创建承诺时立即从 FactionState 预留并扣除 influence。承诺没有竞争、退出或退款分支；只要周末事务验证成功，行动就应用预制世界效果和事件，并进入 resolved，先前预留的 influence 不重复扣除。
 
 行动创建后不重新检查 Agenda 或优先级。它和玩家合同视为同期发生，均不能读取对方尚未提交的结果重新计算成功率或资格。
+
+承诺与事件身份固定为：
+
+```text
+commitment_instance_id = "faction_action_" + lower_hex8(
+    StableSeed.derive(
+        0,
+        ["faction_action_commitment", committed_week, faction_id,
+         action_definition_id, target_problem_id, target_lock_key]
+    )
+)
+
+action_event_instance_id = commitment_instance_id + "_" + event_key
+```
+
+`FactionTurnPlanner.resolve_commitments(base_state, current_week,
+action_definitions)` 只投影
+`status == committed && resolves_at_week == current_week + 1` 的条目，返回供
+Task011 与玩家合同效果合并的 operations。调用方先把周索引推进到
+`resolves_at_week`，再原子应用整批；结算不再次扣除或退还 influence。
 
 ## 5. Target lock
 
@@ -192,7 +218,8 @@ category 白名单：`upkeep`、`world_event`、`contract_offer`、`contract_lif
 | 变化 | 负责人 |
 |---|---|
 | 周流程与事务边界 | `WeekFlowCoordinator` |
-| 工资、恢复和自然衰减 | `WeeklyUpkeepResolver` |
+| 已提交合同历史到上一周参与快照 | `CampaignHistoryQuery` |
+| 工资、治疗、恢复和近期计数 | `WeeklyUpkeepResolver` |
 | 问题、世界钟、触发器和结局 | `SituationResolver` |
 | 阵营本周模式、合同和直接行动选择 | `FactionTurnPlanner` |
 | Offer 创建、命令、预测与生命周期 | `ContractOfferService` |

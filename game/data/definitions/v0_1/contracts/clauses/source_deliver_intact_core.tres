@@ -1,0 +1,63 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_l71kk"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_regv8"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_n8qex"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_77l2q"]
+
+[sub_resource type="Resource" id="Resource_5h15d"]
+script = ExtResource("1_l71kk")
+type = &"outcome_tag_present"
+tag_value = &"source_core_intact"
+
+[sub_resource type="Resource" id="Resource_yqeri"]
+script = ExtResource("1_l71kk")
+type = &"outcome_tag_present"
+tag_value = &"core_delivered"
+
+[sub_resource type="Resource" id="Resource_w3v1y"]
+script = ExtResource("2_regv8")
+type = &"modify_reward_percent"
+amount = -35
+reason_code = &"source_deliver_intact_core_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_0to0b"]
+script = ExtResource("2_regv8")
+type = &"modify_sponsor_relation"
+amount = -10
+reason_code = &"source_deliver_intact_core_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_1ui3e"]
+script = ExtResource("3_n8qex")
+protect_life = -2
+taboo_tolerance = 3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_26vgh"]
+script = ExtResource("2_regv8")
+type = &"modify_sponsor_relation"
+amount = 3
+reason_code = &"source_deliver_intact_core_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_563mw"]
+script = ExtResource("3_n8qex")
+pursue_profit = 1
+taboo_tolerance = 2
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_77l2q")
+id = &"source_deliver_intact_core"
+display_name_key = &"clause.source_deliver_intact_core.name"
+description_key = &"clause.source_deliver_intact_core.description"
+category = &"delivery"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_l71kk")]([SubResource("Resource_5h15d"), SubResource("Resource_yqeri")])
+success_effects = Array[ExtResource("2_regv8")]([SubResource("Resource_26vgh")])
+failure_effects = Array[ExtResource("2_regv8")]([SubResource("Resource_w3v1y"), SubResource("Resource_0to0b")])
+breach_result_cap = &"failure"
+success_ideology_impact = SubResource("Resource_563mw")
+failure_ideology_impact = SubResource("Resource_1ui3e")
+success_tags = Array[StringName]([&"clause.source_deliver_intact_core.satisfied"])
+failure_tags = Array[StringName]([&"clause.source_deliver_intact_core.breached"])
+priority = 10

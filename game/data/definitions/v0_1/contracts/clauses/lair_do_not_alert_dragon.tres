@@ -1,0 +1,56 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_ptdge"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_ri74m"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_38dxs"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_ehoq2"]
+
+[sub_resource type="Resource" id="Resource_dlaai"]
+script = ExtResource("1_ptdge")
+type = &"outcome_tag_absent"
+tag_value = &"dragon_alerted"
+
+[sub_resource type="Resource" id="Resource_43i7w"]
+script = ExtResource("2_ri74m")
+type = &"modify_reward_percent"
+amount = -30
+reason_code = &"lair_do_not_alert_dragon_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_arg7n"]
+script = ExtResource("2_ri74m")
+type = &"modify_sponsor_relation"
+amount = -8
+reason_code = &"lair_do_not_alert_dragon_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_un3c1"]
+script = ExtResource("3_38dxs")
+protect_life = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_5abgc"]
+script = ExtResource("2_ri74m")
+type = &"modify_sponsor_relation"
+amount = 3
+reason_code = &"lair_do_not_alert_dragon_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_5dg00"]
+script = ExtResource("3_38dxs")
+protect_life = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_ehoq2")
+id = &"lair_do_not_alert_dragon"
+display_name_key = &"clause.lair_do_not_alert_dragon.name"
+description_key = &"clause.lair_do_not_alert_dragon.description"
+category = &"secrecy"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_ptdge")]([SubResource("Resource_dlaai")])
+success_effects = Array[ExtResource("2_ri74m")]([SubResource("Resource_5abgc")])
+failure_effects = Array[ExtResource("2_ri74m")]([SubResource("Resource_43i7w"), SubResource("Resource_arg7n")])
+breach_result_cap = &"failure"
+success_ideology_impact = SubResource("Resource_5dg00")
+failure_ideology_impact = SubResource("Resource_un3c1")
+success_tags = Array[StringName]([&"clause.lair_do_not_alert_dragon.satisfied"])
+failure_tags = Array[StringName]([&"clause.lair_do_not_alert_dragon.breached"])
+priority = 10

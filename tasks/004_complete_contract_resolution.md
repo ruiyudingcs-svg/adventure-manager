@@ -1,26 +1,29 @@
 # Task 004 — Complete Contract Planning and Resolution Policy
 
-状态：Blocked until Task 003 and Gate B  
+状态：Completed
 里程碑：Milestone 1（完整合同结算）  
-依赖：Task 003、`tasks/000_v0.1_execution_map.md` Gate B
+依赖：Task 003；Gate B Accepted 规则见
+`docs/15_staged_contract_resolution_rules.md` 第 5.1—5.5 节
 
 ## Goal
 
 在 Task 003 的稳定四阶段内核上补齐 V0.1 玩家合同政策：计划验证、三种 Approach、补给修正、任务前认可度、任务后成员评价、公开条款、最终报酬、疲劳、伤病与提出方关系。三份基准合同必须共享同一结构化模型，不得出现合同专用脚本或按合同 ID 分支。
 
-## Blocking design check
+## Gate B rule basis
 
-开始编码前确认 Accepted 文档已经提供：
+Gate B 已于 2026-07-23 定案，Task 004 必须原样实现：
 
-1. `method_fit` 的性格/禁忌与 method tag 白名单规则。
-2. `personal_fit` 的报酬、成长、提出方关系、近期冷落、伤病和风险数值规则。
-3. 公开条款进入任务前认可度的明确算法。
-4. 合同 `risk_level`、CheckOutcome 风险百分点、ContractOutcome 风险修正、当前疲劳、保护和补给的汇总公式。
-5. 每名成员无伤/轻伤/重伤的确定性投掷、阈值和恢复结果。
-6. `fatigue_multiplier` 的应用与舍入顺序。
-7. 人员安全条款、条款封顶、最终 tier 和 `injury_risk_modifier` 之间不存在循环的唯一结算顺序。
+1. 公开条款 success 价值影响按维度与合同意图做最强正/负覆盖；failure 影响不进入任务前预测。
+2. 八种 trait 的 preferred/opposed method tag 固定为 `+3/-4`，禁忌强度固定为 0/1/2。
+3. `personal_fit` 使用报酬、成长、提出方关系、近期冷落、风险、伤势六项固定分档。
+4. 补给只有 scouting、medical、protection、arcane_binding、rations 五类固定效果。
+5. 疲劳先求未缩放值，final tier 确定后乘 `fatigue_multiplier`，只舍入一次。
+6. 伤病使用 operational tier、当前疲劳、队伍保护和补给计算 any/heavy 概率；每名成员一个派生 seed 和一次 `1—100` 投掷。
+7. 伤病先于条款；人员安全条款读取已生成的 heavy 数量；条款 cap 得到 final tier 后不得重投伤病。
 
-若任一项仍未定义，停止并报告 Gate B 未满足。特别禁止根据基准样例“无人重伤”倒推概率表。
+精确公式、全部数值表、边界和唯一结算顺序以
+`docs/15_staged_contract_resolution_rules.md` 第 5.1—5.5 节为准。
+禁止根据基准样例的伤病结果反推或改写概率表。
 
 ## Required reading
 
@@ -74,11 +77,11 @@
 attitude = ideology_fit + method_fit + personal_fit
 ```
 
-- `ideology_fit = dot(member_values, expected_contract_vector) / 5`，裁剪到 -40—+40。
-- `method_fit` 与 `personal_fit` 严格使用 Gate B 定案白名单和边界。
+- `ideology_fit` 对公开预期向量点积后除以 5、`round_away`，裁剪到 -40—+40；预期向量按维度使用最强正/负信号。
+- `method_fit` 严格使用固定 trait 表、禁忌强度和 `-30—+20` 裁剪；`personal_fit` 严格使用六项分档和 `-20—+20` 裁剪。
 - 公开合同意图、全部公开条款、预期 method tags 和成员个人状态参与预览；不得读取实际未来骰点。
 - 状态阈值：Enthusiastic `>= 40`，Supportive `10—39`，Neutral `-9—9`，Reluctant `-39—-10`，Opposed `<= -40`。
-- 每个 check 再按其实际 method tags 计算成员状态；四人判定修正取平均：Enthusiastic `+2`、Supportive/Neutral `0`、Reluctant `-3`、被强制 Opposed `-6`。
+- 每个 check 锁定 planning ideology/personal、按实际 method tags 重算 method fit；四人修正之和除以 `4.0`，不舍入：Enthusiastic `+2`、Supportive/Neutral `0`、Reluctant `-3`、被强制 Opposed `-6`。
 - 每个非零来源生成独立原因，不把多个来源压成无法解释的总数。
 
 ### 3. Approach
@@ -98,10 +101,11 @@ check profile 为 `careful`、`forceful`、`neutral`：
 
 ### 4. Supplies and preparation
 
-- SupplyDefinition 只通过结构化 tag 与白名单 ConditionalModifier 影响相关 check、疲劳或伤病风险。
+- SupplyDefinition 只通过结构化 tag 与白名单 ConditionalModifier 实现固定效果：scouting navigation `+5`；medical rescue `+5`、any/heavy injury `-5/-2`；protection protection `+5`、any/heavy injury `-3/-4`；arcane_binding 只触发合同声明修正；rations 未乘倍率疲劳 `-4`。
 - 同一修正的匹配条件、数值和来源必须进入原因记录。
 - 最多两个补给，不实现装备栏、affix、制作或库存堆叠框架。
-- Resolver 只返回待消耗 supply ID；实际扣库存和金币由后续原子事务处理。
+- Resolver 返回待消费 supply ID；Gate C 后由 Task 007 补充锁定总成本，并在成功
+  原子事务中只扣一次金币。V0.1 不保存补给库存。
 
 ### 5. Clause evaluation
 
@@ -155,15 +159,29 @@ sponsor_relation_delta = clamp(
 ### 7. Fatigue and injury
 
 ```text
-fatigue_gain = contract_base_fatigue
-             + approach_fatigue
-             + failure_fatigue
-             - supply_reduction
+unscaled_fatigue = max(
+    0,
+    contract_base_fatigue
+  + approach_fatigue
+  + sum(applicable CheckOutcome fatigue effects)
+  - supply_reduction
+)
+
+fatigue_gain = round_away(
+    unscaled_fatigue
+    * final ContractOutcome.fatigue_multiplier
+)
 ```
 
-- 最终等级的 fatigue multiplier 在 Gate B 定案的步骤应用，并按定案规则舍入。
+- 最终等级确定后才应用 fatigue multiplier，乘完只舍入一次；实际 delta 不能使成员 fatigue 超过 100。
+- 本次新增疲劳不参与本次伤病；伤病读取任务开始时快照疲劳。
 - 每名成员的风险来源、合并、乘数、裁剪、派生 seed、投掷和结果都产生可追踪原因。
-- 伤病只有无伤、轻伤、重伤；重伤必须有明确风险来源与 roll 记录。
+- 伤病使用 `risk_level*5 + check risk + operational outcome modifier + current fatigue risk - team protection`，
+  再分别应用 any/heavy 补给修正；heavy base 为 common 的 40% 舍入值，再乘 Approach 重伤倍率。
+- 每人使用 `stable_hash(contract_seed, "injury", member_id)`，恰好一次
+  `randi_range(1, 100)`；先判 heavy，再判 any/light。
+- 轻伤 severity 为 `min(79, max(30, current+20))`、恢复至少 1 周且保持 available；
+  重伤为 `min(100, max(80, current+40))`、恢复至少 3 周并 unavailable。
 - 伤病随机流必须从 contract seed 与稳定 member ID 派生，且不能改变四个 check 的随机结果。
 - 所有成员结果保持 deferred；Resolver 不修改 AdventurerState。
 
@@ -194,17 +212,21 @@ post_mission_evaluation = clamp(
 
 ### 9. Resolution order and purity
 
-Gate B 必须先给出无循环的固定顺序。实现时至少保持以下不变部分，伤病、条款 cap 和最终结果表三者的相对顺序严格采用 Gate B 定案版本：
+严格使用以下无循环顺序：
 
 ```text
-1. 验证并锁定 ContractPlan
+1. 验证并锁定 ContractPlan、预期认可度和输入快照
 2. 应用一次合同级 Approach context
 3. 顺序完成四个 check
-4. 计算未封顶 contract score、初始 tier 和 check caps
-5. 按 Gate B 的无循环顺序解析伤病、条款 cap 与最终 ContractOutcomeTable
-6. 计算报酬、疲劳、outcome tags 和 ideology impacts
-7. 计算任务后成员评价与提出方关系
-8. 返回完整、待应用的 ContractResolution
+4. 计算 initial tier
+5. 应用 check failure caps，得到 operational tier
+6. 只读取 operational ContractOutcome.injury_risk_modifier
+7. 为四名成员生成伤病结果
+8. 按 priority、稳定 clause ID 求值全部条款一次
+9. 汇总 mandatory caps，与 operational tier 取最严格者，得到 final tier
+10. 读取 final ContractOutcome 的 reward/fatigue/relation/campaign/tags
+11. 计算报酬、疲劳、事后评价和全部待应用结果
+12. 返回完整、待应用的 ContractResolution
 ```
 
 任一步失败不得修改输入或正式状态，也不得返回部分可提交结果。
@@ -215,7 +237,7 @@ Gate B 必须先给出无循环的固定顺序。实现时至少保持以下不�
 
 1. `contract_north_road_evacuation`
 2. `contract_deploy_binding_towers`
-3. `contract_recover_dragon_corpses`
+3. `contract_recover_intact_corpses`
 
 三者必须通过同一 Definition、Plan、Resolver 和 ClauseEvaluator 结算。禁止：
 
@@ -240,21 +262,25 @@ Gate B 必须先给出无循环的固定顺序。实现时至少保持以下不�
 至少覆盖：
 
 1. 四名不同可用英雄、严重伤病、低士气 Opposed、补给数量/tag 和 Approach 白名单。
-2. ideology/method/personal fit 的边界、原因和状态阈值。
-3. 四人 attitude check modifier 的平均值。
-4. 三种 Approach 对三类 profile 的数值和合同级效果只应用一次。
-5. 补给只修正匹配 check，且不修改 SupplyDefinition。
-6. 所有 TraceCondition 与 ContractEffect 白名单。
-7. Mandatory/Bonus 约束、稳定求值顺序、多 cap 取最严格。
-8. reward percent `-100/+100` 裁剪、最终报酬四舍五入和非负。
-9. sponsor relation 裁剪到 `-20—+20`，且没有其他阵营结果。
-10. 同一 method tag 跨多个 check 只参与一次任务后评价。
-11. 事后向量和士气边界值。
-12. 每名成员伤病 seed 隔离；改变成员 ID 不改变四个 check seed。
-13. cautious/aggressive 重伤乘数在汇总后应用并裁剪。
-14. 三份基准合同的手算结果、条款 cap、报酬和关系。
-15. 同输入/seed 重复 100 次完整 Resolution 相等。
-16. 输入 Definition、Plan、英雄和补给 fixture 全部保持不变。
+2. 公开条款逐维正负覆盖、failure impact 排除、method 条件并入预期 tag。
+3. trait/method、taboo intensity、personal fit 六项的边界、原因和状态阈值。
+4. 四人 attitude check modifier 除以 `4.0` 后保留 `.25`。
+5. 三种 Approach 对三类 profile 的数值和合同级效果只应用一次。
+6. 五类补给只修改匹配 check/疲劳/伤病，且不修改 SupplyDefinition。
+7. 所有 TraceCondition 与 ContractEffect 白名单。
+8. Mandatory/Bonus 约束、稳定求值顺序、多 cap 取最严格。
+9. reward percent `-100/+100` 裁剪、最终报酬四舍五入和非负。
+10. sponsor relation 裁剪到 `-20—+20`，且没有其他阵营结果。
+11. 同一 method tag 跨多个 check 只参与一次任务后评价。
+12. 事后向量和士气边界值。
+13. 疲劳 multiplier 的 final tier 时机、单次舍入、上限和不参与本次伤病。
+14. 疲劳风险档、保护档、any/heavy 概率、每名成员 seed 隔离和一次投掷。
+15. cautious/aggressive 重伤乘数在 heavy base 汇总后应用并裁剪。
+16. operational tier 伤病先于条款，人员安全条款读取 heavy 数量且 final cap 不重投。
+17. 三份基准合同的手算结果、条款 cap、报酬、关系和疲劳；Task 017 调平后的
+    golden 以文档 10 为准。
+18. 同输入/seed 重复 100 次完整 Resolution 相等。
+19. 输入 Definition、Plan、英雄和补给 fixture 全部保持不变。
 
 ## Acceptance tests
 
@@ -274,13 +300,14 @@ godot --headless --path . --script res://tests/run_all.gd
 
 ## Completion checklist
 
-- [ ] Gate B 的每项规则都有 Accepted 文档章节。
-- [ ] 三份基准合同共享同一代码路径。
-- [ ] 无隐藏条款、专用投骰、合同 ID 分支或 executable string。
-- [ ] 所有随机流显式且彼此隔离。
-- [ ] 所有效果均 deferred，输入无修改。
-- [ ] focused/full suite 实际运行。
-- [ ] golden 差异未被自动接受。
+- [x] Gate B 的每项规则都有 Accepted 文档章节。
+- [x] 三份基准合同共享同一代码路径。
+- [x] 无隐藏条款、专用投骰、合同 ID 分支或 executable string。
+- [x] 所有随机流显式且彼此隔离。
+- [x] 所有效果均 deferred，输入无修改。
+- [x] focused/full suite 实际运行。
+- [x] Task 017 调平后的三份 golden 已人工审查并同步到文档 10。
+- [x] 调平范围外的 golden 差异未被自动接受。
 
 ## Expected report
 

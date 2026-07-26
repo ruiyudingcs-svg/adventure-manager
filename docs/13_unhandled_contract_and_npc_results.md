@@ -1,7 +1,7 @@
 # 未处理合同与 NPC 结果规范 V0.1
 
 状态：Accepted（简化修订）  
-日期：2026-07-20
+日期：2026-07-24
 
 ## 1. 目的与边界
 
@@ -35,7 +35,7 @@ npc_completion_action_id: StringName
 
 配置约束：
 
-- `npc_or_expire`、`npc_or_escalate` 必须引用提出方 `weekly_action_table` 中已有的 `FactionActionDefinition`。
+- `npc_or_expire`、`npc_or_escalate` 必须引用提出方 `weekly_action_ids` 中已有的 `FactionActionDefinition`。
 - `expire`、`escalate` 的 `npc_completion_action_id` 必须为空。
 - `npc_or_escalate`、`escalate` 的 ContractDefinition 必须有模板问题锚点。
 - Followup 与 Agenda 来源 Offer 的运行时问题 ID 为空；NPC 路径仍可执行，但任何 `escalated` 后备结果都降为 `expired`。
@@ -156,6 +156,25 @@ NPC 完成不占用本周一次直接行动承诺容量；它是周开始时上�
 - 合同历史、消息和原因顺序。
 
 未处理结算不读取或消耗随机数，因此 seed 不影响结果。
+
+领域入口固定为：
+
+```text
+resolve_unhandled_offers(
+    base_state,
+    current_week,
+    contract_definitions,
+    faction_definitions,
+    action_definitions,
+    problem_definitions
+) -> UnhandledLifecycleResult
+```
+
+Result 返回完整 operations、终止 Offer、历史、世界事件、原因、StateChange 和
+成功后的 detached CampaignState。NPC 行动事件 ID 使用
+`offer_instance_id + "_" + event_key`；问题恶化中的每个既有
+`create_world_event` 也使用同一 Offer ID 作为来源前缀。任一引用或事务失败时，
+Result 不返回部分 operations 或新状态。
 
 ## 9. 基准配置
 

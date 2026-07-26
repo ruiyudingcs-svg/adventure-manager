@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ClockDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/clock_definition_resource.gd" id="1_hd7ol"]
+
+[resource]
+script = ExtResource("1_hd7ol")
+id = &"dragon_exhaustion"
+display_name_key = &"clock.dragon_exhaustion.name"
+initial_value = 15

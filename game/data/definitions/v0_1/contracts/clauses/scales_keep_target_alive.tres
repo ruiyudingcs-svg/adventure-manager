@@ -1,0 +1,56 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_0fosl"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_48mv6"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_j8jed"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_6yyiw"]
+
+[sub_resource type="Resource" id="Resource_aadhi"]
+script = ExtResource("1_0fosl")
+type = &"outcome_tag_present"
+tag_value = &"target_alive"
+
+[sub_resource type="Resource" id="Resource_0nbr4"]
+script = ExtResource("2_48mv6")
+type = &"modify_reward_percent"
+amount = -35
+reason_code = &"scales_keep_target_alive_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_tjkcm"]
+script = ExtResource("2_48mv6")
+type = &"modify_sponsor_relation"
+amount = -10
+reason_code = &"scales_keep_target_alive_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_tu04b"]
+script = ExtResource("3_j8jed")
+protect_life = -4
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_7vc7m"]
+script = ExtResource("2_48mv6")
+type = &"modify_sponsor_relation"
+amount = 3
+reason_code = &"scales_keep_target_alive_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_jo3ch"]
+script = ExtResource("3_j8jed")
+protect_life = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_6yyiw")
+id = &"scales_keep_target_alive"
+display_name_key = &"clause.scales_keep_target_alive.name"
+description_key = &"clause.scales_keep_target_alive.description"
+category = &"target_state"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_0fosl")]([SubResource("Resource_aadhi")])
+success_effects = Array[ExtResource("2_48mv6")]([SubResource("Resource_7vc7m")])
+failure_effects = Array[ExtResource("2_48mv6")]([SubResource("Resource_0nbr4"), SubResource("Resource_tjkcm")])
+breach_result_cap = &"failure"
+success_ideology_impact = SubResource("Resource_jo3ch")
+failure_ideology_impact = SubResource("Resource_tu04b")
+success_tags = Array[StringName]([&"clause.scales_keep_target_alive.satisfied"])
+failure_tags = Array[StringName]([&"clause.scales_keep_target_alive.breached"])
+priority = 10

@@ -54,6 +54,20 @@ list unless the task explicitly authorizes it.
 - Use signals for notification, not hidden multi-step control flow.
 - Do not edit generated `.godot/` content.
 
+## Code comments
+
+- Add concise comments for public APIs, non-obvious domain formulas,
+  deterministic random streams, resolution ordering, rounding or clamping
+  boundaries, and data ownership or mutation constraints.
+- Comments should explain why a rule or invariant exists and what must remain
+  unchanged. When practical, cite the relevant Accepted document and section.
+- Use GDScript `##` documentation comments for public named classes, public
+  properties whose contract is not obvious, and public methods.
+- Do not add comments that merely restate the next line of code. Comments do not
+  replace clear names, typed APIs, structured reason entries, or tests.
+- Update or remove affected comments whenever behavior changes; stale rule
+  comments are defects.
+
 ## Scope discipline
 
 Do not implement features listed as out of scope in the product spec.

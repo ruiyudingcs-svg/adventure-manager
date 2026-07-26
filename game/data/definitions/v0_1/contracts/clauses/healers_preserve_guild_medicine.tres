@@ -1,0 +1,45 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_to0d5"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_v3qbe"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_gw8hw"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_kqxjd"]
+
+[sub_resource type="Resource" id="Resource_dgbjo"]
+script = ExtResource("1_to0d5")
+type = &"selected_supply_tag_absent"
+tag_value = &"medical"
+
+[sub_resource type="Resource" id="Resource_7hsy3"]
+script = ExtResource("3_gw8hw")
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_sr5jh"]
+script = ExtResource("2_v3qbe")
+type = &"modify_reward_percent"
+amount = 10
+reason_code = &"healers_preserve_guild_medicine_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_5oo5l"]
+script = ExtResource("2_v3qbe")
+type = &"modify_sponsor_relation"
+amount = 2
+reason_code = &"healers_preserve_guild_medicine_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_k25yg"]
+script = ExtResource("3_gw8hw")
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_kqxjd")
+id = &"healers_preserve_guild_medicine"
+display_name_key = &"clause.healers_preserve_guild_medicine.name"
+description_key = &"clause.healers_preserve_guild_medicine.description"
+category = &"efficiency"
+importance = &"bonus"
+all_conditions = Array[ExtResource("1_to0d5")]([SubResource("Resource_dgbjo")])
+success_effects = Array[ExtResource("2_v3qbe")]([SubResource("Resource_sr5jh"), SubResource("Resource_5oo5l")])
+success_ideology_impact = SubResource("Resource_k25yg")
+failure_ideology_impact = SubResource("Resource_7hsy3")
+success_tags = Array[StringName]([&"clause.healers_preserve_guild_medicine.satisfied"])
+priority = 30

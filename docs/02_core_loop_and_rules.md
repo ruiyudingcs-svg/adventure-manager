@@ -45,7 +45,20 @@ V0.1 不模拟逐次攻击。任务产生疲劳、伤病、士气、关系、阵
 20. increment_week
 ```
 
+进入第 N 周且 `N >= 2` 时，`WeekFlowCoordinator` 在工资与恢复计算前，通过只读
+`CampaignHistoryQuery` 从已提交 `ContractHistoryEntry` 生成第 `N - 1` 周的
+`WeeklyParticipationSnapshot`。历史是成员参与记录的唯一权威来源；
+`WeeklyUpkeepResolver` 只消费参与快照，不解析合同历史。详细规则见
+`docs/20_weekly_upkeep_and_history_rules.md`。
+
 合同提案和常规阵营行动读取步骤9的同一快照。每个阵营没有 pending Offer 时只提出合同，已有 pending 时只选择不同 target lock 的直接行动。合同与行动效果都在玩家结束本周时提交，并于下一周规划界面体现。触发器在每个周边界只检查一批，不递归运行。完整规则见 `docs/14_week_flow_faction_commitments_and_messages.md`。
+
+新战役先按唯一 CampaignSetupDefinition 创建内部 week 0 状态，再调用真实
+WeekFlowCoordinator 打开第 1 周。开局使用 Gold 250、Reputation 20、
+base Cohesion 50、weekly maintenance 25；八名成员为 fatigue 0、morale 50、
+无伤可用，三个阵营 relation 0、influence 60。第 1 周不执行维护、恢复、被动钟变化
+或旧合同生命周期。完整构造与失败原子性见
+`docs/22_campaign_bootstrap_forecast_and_ui_shell.md` 第 2—4 节。
 
 ## 3. 成员模型
 
@@ -115,36 +128,78 @@ attitude = ideology_fit + method_fit + personal_fit
 ### 4.1 价值匹配
 
 ```text
-ideology_fit = sum(member_value[i] * contract_vector[i]) / 5
+positive_signal[i] = max(
+    0,
+    contract_intent[i],
+    every_public_clause_success_impact[i]
+)
+
+negative_signal[i] = min(
+    0,
+    contract_intent[i],
+    every_public_clause_success_impact[i]
+)
+
+expected_vector[i] = clamp(
+    positive_signal[i] + negative_signal[i],
+    -10,
+    10
+)
+
+ideology_fit = clamp(
+    round_away(sum(member_value[i] * expected_vector[i]) / 5),
+    -40,
+    40
+)
 ```
 
-结果裁剪到 -40 至 +40。
+所有公开条款都进入稳定遍历，但任务前只读取其 success ideology impact；failure impact 描述未来违约后果。每个维度只保留最强正、负信号，使同方向条款不会和合同意图重复叠加。
 
 ### 4.2 手段匹配
 
-合同有方法标签，例如：
+规划阶段使用合同 `expected_method_tags` 和公开条款要求使用的 method tags；实际 check 改用该 check 的实际 method tags。所有 tag 稳定去重。
 
-- rescue
-- coercion
-- sacrifice
-- necromancy
-- research
-- deception
-- direct_assault
+每个 trait 命中 preferred method tag 时 +3，命中 opposed tag 时 -4。禁忌 tag 额外产生：
 
-成员性格和禁忌对方法产生 -30 至 +20 修正。
+```text
+taboo_modifier =
+    member.taboo_tolerance * method_tag.taboo_intensity
+
+method_fit = clamp(
+    sum(trait method modifiers)
+  + sum(taboo modifiers),
+    -30,
+    20
+)
+```
+
+necromancy、sacrifice 的 taboo intensity 为 2；coercion、corpse_handling、preservation、smuggling 为 1；其他 tag 为 0。八个 trait 的完整 preferred/opposed 白名单见 `docs/15_staged_contract_resolution_rules.md` 第 5.1 节。未知 tag 或 trait 是内容错误。
 
 ### 4.3 个人匹配
 
-包括：
+```text
+personal_fit = clamp(
+    reward_fit
+  + growth_fit
+  + sponsor_fit
+  + neglect_fit
+  + risk_fit
+  + injury_fit,
+    -20,
+    20
+)
+```
 
-- 报酬吸引力
-- 个人成长机会
-- 与委托方关系
-- 近期是否连续被冷落
-- 伤病和风险承受意愿
+固定数值：
 
-V0.1 控制在 -20 至 +20。
+- `reward_fit`：锁定报酬四人均分与成员工资之比 `<1 / 1—1.99 / 2—2.99 / >=3` 分别为 `-3 / 0 / +2 / +4`。
+- `growth_fit`：最高有效 check difficulty `<=24 / 25—29 / 30—34 / >=35` 分别为 `0 / +1 / +2 / +3`。
+- `sponsor_fit`：提出方关系 `-100—-50 / -49—-10 / -9—24 / 25—59 / 60—100` 分别为 `-4 / -2 / 0 / +2 / +4`。
+- `neglect_fit`：近期冷落次数 `0 / 1 / 2 / >=3` 分别为 `0 / +1 / +3 / +5`。
+- `risk_fit`：基础为 `-(risk_level - 1)`；risk level 至少为 3 时 cautious 额外 -2，ambitious 或 ruthless 额外 +2，trait 修正裁剪到 -2 至 +2。
+- `injury_fit`：伤势 `0 / 1—20 / 21—40 / 41—60 / 61—79` 分别为 `0 / -1 / -2 / -4 / -6`；80 以上禁止派遣。
+
+完整输入锁定和原因规则见 `docs/15_staged_contract_resolution_rules.md` 第 5.1 节。
 
 ### 4.4 认可度效果
 
@@ -171,7 +226,30 @@ cohesion_score = guild_base_cohesion
 
 裁剪到 0 至 100。
 
-关系只维护少量有意义的有向或无向记录，不生成全员完整社交图。V0.1 最多预制 8 至 12 条显著关系。
+关系只维护少量有意义的有向记录，不生成全员完整社交图。V0.1 最多预制 8 至 12 条显著关系。结算读取四名成员快照中已合并的 `relationship_values`，按稳定成员 ID 组成六个无序成员对：双方都有记录时取两方向平均，只有一方时取该值，双方都没有时取 0。显式关系值合法范围为 -100 至 +100。
+
+```text
+average_pair_relationship = round_away(
+    average(six_pair_relationships) / 5
+)
+
+discipline_support = round_away(
+    (average(four_member_discipline) - 50) / 10
+)
+
+active_conflict_count = count(
+    pair where any explicit direction <= -50
+)
+active_conflicts = active_conflict_count * 5
+
+cohesion_modifier = clamp(
+    round_away((cohesion_score - 50) / 5),
+    -10,
+    10
+)
+```
+
+`average_pair_relationship` 为 -20 至 +20，`discipline_support` 为 -5 至 +5，每个活跃冲突扣 5，`cohesion_modifier` 为 -10 至 +10。单向敌意足以形成冲突。完整求值与舍入规则见 `docs/15_staged_contract_resolution_rules.md` 第 4 节。
 
 ## 6. 合同阶段与能力判定
 
@@ -255,7 +333,7 @@ capability_match = sum(team_capability[i] * requirement_weight[i])
 ### 7.2 单次判定评分
 
 ```text
-check_score = capability_match
+raw_score = capability_match
             + cohesion_modifier
             + preparation_modifier
             + approach_modifier
@@ -265,9 +343,13 @@ check_score = capability_match
             - injury_penalty
             - check_difficulty
             + seeded_variance
+
+check_score = round_away(raw_score)
 ```
 
-所有非零修正都必须产生 `ReasonEntry`。`context_modifier` 必须列出来自哪个先前判定和哪个任务内指标，不允许只记录一个无法解释的合计值。
+成员疲劳按每人 `0—29 → 0`、`30—59 → 1`、`60—79 → 3`、`80—100 → 5` 转换后相加。成员伤势为 0 时不惩罚，否则每人使用 `ceil(injury_severity / 20)`，再将四人相加。两项全队惩罚范围均为 0 至 20。
+
+评分使用 64 位 `float` 计算 raw score，只在等级判断前用 `round_away` 舍入一次；`.5` 远离 0，最终整数不裁剪。所有非零修正都必须产生 `ReasonEntry`。发生舍入时增加仅 debug 可见的 `score_rounding` 原因。`context_modifier` 必须列出来自哪个先前判定和哪个任务内指标，不允许只记录一个无法解释的合计值。完整协同、惩罚、原因顺序和精度规则见 `docs/15_staged_contract_resolution_rules.md` 第 4 节。
 
 每个判定使用稳定派生种子：
 
@@ -279,15 +361,21 @@ check_seed = hash(contract_seed, stage_id, check_id)
 
 ### 7.3 随机范围
 
-V0.1 使用窄随机：建议 `seeded_variance` 为 -10 至 +10。随机不能覆盖明显的准备差异。
+V0.1 使用离散均匀整数窄随机：每个 check 的独立 RNG 恰好调用一次 `randi_range(-10, 10)`，即闭区间 -10 至 +10 的 21 个整数各以 `1/21` 概率出现。不得改用浮点分布、额外抽取或共享 RNG。随机不能覆盖明显的准备差异。
 
 ### 7.4 判定结果等级
 
-- 80 以上：Exceptional
-- 60–79：Success
-- 40–59：Partial
-- 20–39：Failure
-- 19 以下：Severe
+- 70 以上：Exceptional
+- 50–69：Success
+- 30–49：Partial
+- 10–29：Failure
+- 9 以下：Severe
+
+2026-07-25 的 Task 017 实际整局审计确认：旧 `80/60/40/20` check 边界使 75 次
+玩家合同出现 0 次 Success，且首周三合同的全部 210 个无补给合法方案均没有
+Partial 或更好的预测下界。因此单次 check 边界整体下移 10 点；check difficulty、
+成员能力、补给、条款和随机范围保持不变。合同最终等级仍使用下文独立的
+`80/60/40/20` 加权分数边界，不随本次调整改变。
 
 每个判定为五档结果分别定义结果包，而不是使用统一伤害公式。
 
@@ -321,7 +409,8 @@ search_burned_town 成功
 
 ### 7.6 成员态度在判定中的作用
 
-规划阶段仍根据合同意图向量和预期手段计算成员认可度。实际判定再根据该判定的 `method_tags` 计算手段匹配。每名成员对当前判定提供以下可解释修正：
+规划阶段先锁定每名成员的 `ideology_fit` 与 `personal_fit`。实际判定只用该判定去重后的
+`method_tags` 重算 `method_fit`，三项之和重新映射为当前判定态度。每名成员对当前判定提供以下可解释修正：
 
 | 状态 | 判定修正 |
 |---|---:|
@@ -331,7 +420,8 @@ search_burned_town 成功
 | Reluctant | -3 |
 | Opposed 且被强制派遣 | -6 |
 
-`attitude_modifier` 为四名成员修正的平均值。合同完成后，成员根据实际累计的 `ideology_impact`、去重手段和条款结果更新士气；每个任务向量维度裁剪到 -10 至 +10，事后评价裁剪到 -40 至 +40。所有参与者评价整份任务，不按贡献阶段加权。评价 20 以上士气 +3，5 至 19 士气 +1，-4 至 4 不变，-19 至 -5 士气 -1，-20 以下士气 -3。
+`attitude_modifier` 为四名成员修正之和除以 `4.0`，不舍入，保留 `.25` 精度进入 raw score；
+任务途中不再触发拒绝派遣。合同完成后，成员根据实际累计的 `ideology_impact`、去重手段和条款结果更新士气；每个任务向量维度裁剪到 -10 至 +10，事后评价裁剪到 -40 至 +40。所有参与者评价整份任务，不按贡献阶段加权。评价 20 以上士气 +3，5 至 19 士气 +1，-4 至 4 不变，-19 至 -5 士气 -1，-20 以下士气 -3。
 
 V0.1 不保存离队计数，也不永久移除成员。规划时预测态度为 Opposed 且 morale 不高于 20 的成员拒绝该派遣；其他 Opposed 成员仍可被强制派遣。意识形态不自动修改成员两两关系，也不替代能力判定。
 
@@ -369,6 +459,10 @@ V0.1 条款类别固定为目标状态、执行手段、附带损失、隐蔽警
 
 实际 CheckOutcome 负责改变世界；条款只改变报酬、提出方关系、最终等级、价值影响和结果标签。完整白名单和报酬顺序见 `docs/08_contract_clause_spec.md`。
 
+伤病在 check caps 得到 operational tier 后、条款求值前生成；人员安全条款读取这次
+投掷的 heavy 数量。随后 mandatory caps 与 operational tier 取最严格者得到 final tier。
+条款封顶不回改伤病，最终结果表的疲劳倍率只读取 final tier。
+
 V0.1 只结算提出方关系：最终结果表的基础关系与条款关系求和后裁剪到 -20 至 +20。其他阵营不自动响应合同 outcome tags；更广泛的政治后果通过世界钟、问题、事件和后续合同体现。进度钟变化来自 CheckOutcome 和合同最终结果，每项变化必须有独立原因。
 
 ## 8. 行动倾向
@@ -390,24 +484,64 @@ Approach 疲劳加入每名参与成员。严重伤病风险在其他加减风�
 ### 9.1 疲劳增加
 
 ```text
-fatigue_gain = contract_base_fatigue
-             + approach_fatigue
-             + failure_fatigue
-             - supply_reduction
+unscaled_fatigue = max(
+    0,
+    contract_base_fatigue
+  + approach_fatigue
+  + sum(applicable CheckOutcome fatigue effects)
+  - supply_reduction
+)
+
+fatigue_gain = round_away(
+    unscaled_fatigue
+    * final ContractOutcome.fatigue_multiplier
+)
 ```
+
+Approach 疲劳为 cautious +1、balanced 0、aggressive +3；rations 对每名成员减少 4。只在最终 tier 确定后应用 multiplier，乘完后舍入一次；实际增加量不能使 fatigue 超过 100。
 
 ### 9.2 伤病检定
 
-伤病风险来自：
+伤病在 check caps 形成 `operational tier` 后、条款求值前生成。ContractOutcome 的风险修正固定为 Exceptional -10、Success -5、Partial 0、Failure +10、Severe +20。
 
-- 合同风险
-- 结果等级
-- 当前疲劳
-- 行动倾向
-- 前卫或支援保护
-- 补给
+每名成员：
 
-伤病结果只需要：无伤、轻伤、重伤。重伤必须产生明确原因。
+```text
+common_risk =
+    risk_level * 5
+  + sum(applicable check injury risk)
+  + operational_tier injury_risk_modifier
+  + current_fatigue_risk
+  - team_frontline_support_reduction
+
+any_injury_chance = clamp(
+    common_risk + supply_any_injury_modifiers,
+    0,
+    100
+)
+
+heavy_base = clamp(
+    round_away(common_risk * 0.40)
+    + supply_heavy_injury_modifiers,
+    0,
+    100
+)
+
+heavy_injury_chance = min(
+    any_injury_chance,
+    clamp(
+        round_away(heavy_base * approach_heavy_multiplier),
+        0,
+        100
+    )
+)
+```
+
+当前 fatigue 的风险档为 `0—29 → 0`、`30—59 → +3`、`60—79 → +7`、`80—100 → +12`。全队最高 frontline 与 support 各按 `0—39 / 40—59 / 60—79 / 80—100 → 0 / 1 / 2 / 3` 降低风险，合计最多 6。medical 对 any/heavy 为 -5/-2，protection 为 -3/-4。
+
+每人使用 `stable_hash(contract_seed, "injury", member_id)` 派生独立 RNG，并恰好投一次 `1—100`：先命中 heavy 阈值则重伤，否则命中 any 阈值则轻伤，否则无伤。轻伤把 severity 提高到 `min(79, max(30, current + 20))`、恢复至少 1 周；重伤提高到 `min(100, max(80, current + 40))`、恢复至少 3 周并变为 unavailable。
+
+人员安全条款读取已经投出的重伤人数；条款 cap 不得回头改变伤病概率或重投。完整风险、结果与无循环顺序见 `docs/15_staged_contract_resolution_rules.md` 第 5.4—5.5 节。
 
 ## 10. 世界局势、问题与事件
 
@@ -421,6 +555,10 @@ fatigue_gain = contract_base_fatigue
 - 已发生的世界事件
 - 阵营 Agenda
 - 跨钟触发规则
+
+SituationResolver 不读取成员、队伍、金币、补给或阵营关系。V0.1 世界条件不包含
+`faction_relation_gte`，世界效果不包含 `modify_faction_relation`；提出方关系由
+合同结果和状态事务处理。
 
 概念边界：
 
@@ -668,7 +806,11 @@ THEN ending candidate = ending_necrotic_catastrophe
 | Failure | +3 | +16 | 0 | 0 | +5 |
 | Severe | 0 | +24 | -2 | 0 | +10 |
 
-玩家在准备阶段只能看到预测区间，而不是精确表格。
+玩家在准备阶段只能看到预测区间，而不是精确表格。预测使用与正式结算相同的
+EffectiveContract、ContractPlan 和 ContractResolver，但使用 64 个独立稳定样本，
+明确排除 Offer 的 locked resolution seed；显示排序后第 6 与第 57 项对应的较可能
+tier 区间。预测不写存档、不改变状态，也不显示真实结果或精确 AI 权重。完整规则见
+`docs/22_campaign_bootstrap_forecast_and_ui_shell.md` 第 5 节。
 
 ## 12. 候选合同生命周期
 
@@ -709,12 +851,15 @@ remaining_turns = expires_week - week_index + 1
 关系修正在生成时应用，档位不叠加：
 
 ```text
-relation < 25:  duration +0, reward x1.00
-relation 25..59: duration +1, reward x1.10
-relation >= 60: duration +2, reward x1.20
+relation < 25:  standard, duration +0, reward x1.00
+relation 25..59: favorable, duration +1, reward x1.10
+relation >= 60: trusted, duration +2, reward x1.20
 ```
 
-报酬取整规则为四舍五入到整数金币。已生成合同不会因关系变化重新计算。V0.1 的阵营关系不参与阵营行动选择；提出方不存在撤回判断。
+报酬使用 `round_away` 四舍五入到整数金币，且只舍入一次。Offer 同时锁定
+`sponsor_relation_snapshot` 精确值，供认可度预测和正式结算使用。已生成合同
+不会因关系变化重新计算。V0.1 的阵营关系不参与阵营行动选择；提出方不存在
+撤回判断。
 
 ### 12.2 玩家拒绝
 
@@ -769,6 +914,14 @@ NPC 行动可执行的条件固定为：`npc_completion_action_id` 引用提出�
 - 治疗费用
 
 V0.1 不模拟税务、物价和库存市场。阵营关系对报酬的修正只使用第 12 节的固定档位，不进行合同谈判。
+补给采用计划时选择、周末原子购买并立即消费：不保存库存或数量。合同结算锁定
+所选补给总成本和 ID；完整事务成功时只扣一次金币，任何失败都不扣费。
+
+从第 2 周开始，工资、基础维护和自动治疗组成强制周维护。当前八人工资合计 98，
+基础维护为 25；轻伤和重伤每人每周治疗费分别为 10 和 20。余额不足不产生负债或
+阻塞周流程，而是 Gold 归零、全员 morale -5、reputation -5。未出勤成员恢复 20
+fatigue；伤势由恢复周数驱动；morale 与成员关系没有自然漂移。完整边界、原因码和
+历史参与查询见 `docs/20_weekly_upkeep_and_history_rules.md`。
 
 ## 14. 因果日志
 

@@ -1,0 +1,56 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_q6vhe"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_wwx5d"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_8wa60"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_trh68"]
+
+[sub_resource type="Resource" id="Resource_a5pov"]
+script = ExtResource("1_q6vhe")
+type = &"outcome_tag_present"
+tag_value = &"all_survivors_recovered"
+
+[sub_resource type="Resource" id="Resource_h0vrs"]
+script = ExtResource("2_wwx5d")
+type = &"modify_reward_percent"
+amount = -30
+reason_code = &"mine_no_survivor_abandoned_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_pkv2f"]
+script = ExtResource("2_wwx5d")
+type = &"modify_sponsor_relation"
+amount = -8
+reason_code = &"mine_no_survivor_abandoned_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_f602b"]
+script = ExtResource("3_8wa60")
+protect_life = -3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_kxggk"]
+script = ExtResource("2_wwx5d")
+type = &"modify_sponsor_relation"
+amount = 3
+reason_code = &"mine_no_survivor_abandoned_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_tidms"]
+script = ExtResource("3_8wa60")
+protect_life = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_trh68")
+id = &"mine_no_survivor_abandoned"
+display_name_key = &"clause.mine_no_survivor_abandoned.name"
+description_key = &"clause.mine_no_survivor_abandoned.description"
+category = &"target_state"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_q6vhe")]([SubResource("Resource_a5pov")])
+success_effects = Array[ExtResource("2_wwx5d")]([SubResource("Resource_kxggk")])
+failure_effects = Array[ExtResource("2_wwx5d")]([SubResource("Resource_h0vrs"), SubResource("Resource_pkv2f")])
+breach_result_cap = &"failure"
+success_ideology_impact = SubResource("Resource_tidms")
+failure_ideology_impact = SubResource("Resource_f602b")
+success_tags = Array[StringName]([&"clause.mine_no_survivor_abandoned.satisfied"])
+failure_tags = Array[StringName]([&"clause.mine_no_survivor_abandoned.breached"])
+priority = 10

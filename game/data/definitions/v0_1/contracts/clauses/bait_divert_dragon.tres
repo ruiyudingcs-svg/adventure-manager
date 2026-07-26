@@ -1,0 +1,56 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_23njh"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_8aq8a"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_ptyy6"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_t7cbn"]
+
+[sub_resource type="Resource" id="Resource_ctvso"]
+script = ExtResource("1_23njh")
+type = &"outcome_tag_present"
+tag_value = &"dragon_diverted"
+
+[sub_resource type="Resource" id="Resource_ycowt"]
+script = ExtResource("2_8aq8a")
+type = &"modify_reward_percent"
+amount = -30
+reason_code = &"bait_divert_dragon_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_e7d1x"]
+script = ExtResource("2_8aq8a")
+type = &"modify_sponsor_relation"
+amount = -8
+reason_code = &"bait_divert_dragon_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_qr85n"]
+script = ExtResource("3_ptyy6")
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_b0ydh"]
+script = ExtResource("2_8aq8a")
+type = &"modify_sponsor_relation"
+amount = 3
+reason_code = &"bait_divert_dragon_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_dgfsa"]
+script = ExtResource("3_ptyy6")
+pursue_profit = 1
+taboo_tolerance = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_t7cbn")
+id = &"bait_divert_dragon"
+display_name_key = &"clause.bait_divert_dragon.name"
+description_key = &"clause.bait_divert_dragon.description"
+category = &"target_state"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_23njh")]([SubResource("Resource_ctvso")])
+success_effects = Array[ExtResource("2_8aq8a")]([SubResource("Resource_b0ydh")])
+failure_effects = Array[ExtResource("2_8aq8a")]([SubResource("Resource_ycowt"), SubResource("Resource_e7d1x")])
+breach_result_cap = &"failure"
+success_ideology_impact = SubResource("Resource_dgfsa")
+failure_ideology_impact = SubResource("Resource_qr85n")
+success_tags = Array[StringName]([&"clause.bait_divert_dragon.satisfied"])
+failure_tags = Array[StringName]([&"clause.bait_divert_dragon.breached"])
+priority = 10

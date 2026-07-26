@@ -1,0 +1,45 @@
+[gd_resource type="Resource" script_class="FactionActionDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="1_87666"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="2_e5or3"]
+[ext_resource type="Script" path="res://game/data/definitions/factions/faction_action_definition_resource.gd" id="3_x3lhk"]
+
+[sub_resource type="Resource" id="Resource_mw2ky"]
+script = ExtResource("1_87666")
+type = &"problem_is_active"
+target_id = &"problem_field_medical_collapse"
+
+[sub_resource type="Resource" id="Resource_6lvek"]
+script = ExtResource("2_e5or3")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 4
+reason_code = &"action_free_alliance_stabilize_field_camp_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_x282t"]
+script = ExtResource("2_e5or3")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = -3
+reason_code = &"action_free_alliance_stabilize_field_camp_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_a5xd5"]
+script = ExtResource("2_e5or3")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 2
+reason_code = &"action_free_alliance_stabilize_field_camp_settlement_destruction"
+
+[resource]
+script = ExtResource("3_x3lhk")
+id = &"action_free_alliance_stabilize_field_camp"
+agenda_tags = Array[StringName]([&"rescue", &"protection"])
+target_lock_key = &"field_hospital.escort_healers"
+base_intent_priority = 14
+urgency_weight = 30
+recent_repeat_cooldown = 2
+influence_cost = 5
+conditions = Array[ExtResource("1_87666")]([SubResource("Resource_mw2ky")])
+target_problem_tags = Array[StringName]([&"field_medical"])
+effects = Array[ExtResource("2_e5or3")]([SubResource("Resource_6lvek"), SubResource("Resource_x282t"), SubResource("Resource_a5xd5")])
+event_key = &"event_field_camp_stabilized"

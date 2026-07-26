@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="EndingDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="1_32ynj"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/ending_definition_resource.gd" id="2_4wb12"]
+
+[sub_resource type="Resource" id="Resource_e6nrf"]
+script = ExtResource("1_32ynj")
+type = &"week_gte"
+int_value = 10
+
+[sub_resource type="Resource" id="Resource_lwws0"]
+script = ExtResource("1_32ynj")
+type = &"clock_gte"
+target_id = &"capture_preparation"
+int_value = 80
+
+[sub_resource type="Resource" id="Resource_fvajw"]
+script = ExtResource("1_32ynj")
+type = &"clock_gte"
+target_id = &"dragon_exhaustion"
+int_value = 60
+
+[sub_resource type="Resource" id="Resource_lrpy0"]
+script = ExtResource("1_32ynj")
+type = &"clock_lte"
+target_id = &"necrotic_corruption"
+int_value = 59
+
+[resource]
+script = ExtResource("2_4wb12")
+id = &"ending_arcane_capture"
+display_name_key = &"ending.ending_arcane_capture.name"
+description_key = &"ending.ending_arcane_capture.description"
+priority = 200
+all_conditions = Array[ExtResource("1_32ynj")]([SubResource("Resource_e6nrf"), SubResource("Resource_lwws0"), SubResource("Resource_fvajw"), SubResource("Resource_lrpy0")])

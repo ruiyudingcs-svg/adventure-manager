@@ -1,0 +1,59 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_ys1h8"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_q7v8p"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_1jbj6"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_6ith4"]
+
+[sub_resource type="Resource" id="Resource_ef4iv"]
+script = ExtResource("1_ys1h8")
+type = &"outcome_tag_present"
+tag_value = &"target_alive"
+
+[sub_resource type="Resource" id="Resource_6kbyc"]
+script = ExtResource("1_ys1h8")
+type = &"outcome_tag_absent"
+tag_value = &"target_killed"
+
+[sub_resource type="Resource" id="Resource_0b2ri"]
+script = ExtResource("2_q7v8p")
+type = &"modify_reward_percent"
+amount = -30
+reason_code = &"clause_binding_dead_reward"
+
+[sub_resource type="Resource" id="Resource_ap5ju"]
+script = ExtResource("2_q7v8p")
+type = &"modify_sponsor_relation"
+amount = -10
+reason_code = &"clause_binding_dead_relation"
+
+[sub_resource type="Resource" id="Resource_af2wo"]
+script = ExtResource("3_1jbj6")
+protect_life = -4
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_1ng8u"]
+script = ExtResource("2_q7v8p")
+type = &"modify_sponsor_relation"
+amount = 3
+reason_code = &"clause_binding_alive_relation"
+
+[sub_resource type="Resource" id="Resource_bm3h4"]
+script = ExtResource("3_1jbj6")
+protect_life = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_6ith4")
+id = &"binding_target_alive"
+display_name_key = &"clause.binding_target_alive.name"
+description_key = &"clause.binding_target_alive.description"
+category = &"target_state"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_ys1h8")]([SubResource("Resource_ef4iv"), SubResource("Resource_6kbyc")])
+success_effects = Array[ExtResource("2_q7v8p")]([SubResource("Resource_1ng8u")])
+failure_effects = Array[ExtResource("2_q7v8p")]([SubResource("Resource_0b2ri"), SubResource("Resource_ap5ju")])
+breach_result_cap = &"failure"
+success_ideology_impact = SubResource("Resource_bm3h4")
+failure_ideology_impact = SubResource("Resource_af2wo")
+priority = 10

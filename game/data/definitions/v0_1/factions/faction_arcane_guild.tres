@@ -1,0 +1,52 @@
+[gd_resource type="Resource" script_class="FactionDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/factions/faction_agenda_weight_resource.gd" id="1_dqar4"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="2_2rdkc"]
+[ext_resource type="Script" path="res://game/data/definitions/factions/faction_definition_resource.gd" id="3_a4fxk"]
+
+[sub_resource type="Resource" id="Resource_fsv2e"]
+script = ExtResource("1_dqar4")
+tag = &"capture"
+weight = 10
+
+[sub_resource type="Resource" id="Resource_mbl8a"]
+script = ExtResource("1_dqar4")
+tag = &"research"
+weight = 8
+
+[sub_resource type="Resource" id="Resource_bqbh0"]
+script = ExtResource("1_dqar4")
+tag = &"target_alive"
+weight = 8
+
+[sub_resource type="Resource" id="Resource_iw0uh"]
+script = ExtResource("1_dqar4")
+tag = &"contain_necrotic"
+weight = 6
+
+[sub_resource type="Resource" id="Resource_f25eu"]
+script = ExtResource("1_dqar4")
+tag = &"lethal_force"
+weight = -10
+
+[sub_resource type="Resource" id="Resource_n3y1y"]
+script = ExtResource("1_dqar4")
+tag = &"destroy_samples"
+weight = -6
+
+[sub_resource type="Resource" id="Resource_8u5ks"]
+script = ExtResource("2_2rdkc")
+protect_life = 1
+respect_authority = 2
+seek_knowledge = 5
+pursue_profit = 1
+taboo_tolerance = 2
+
+[resource]
+script = ExtResource("3_a4fxk")
+id = &"faction_arcane_guild"
+display_name_key = &"faction.faction_arcane_guild.name"
+description_key = &"faction.faction_arcane_guild.description"
+agenda_weights = Array[ExtResource("1_dqar4")]([SubResource("Resource_fsv2e"), SubResource("Resource_mbl8a"), SubResource("Resource_bqbh0"), SubResource("Resource_iw0uh"), SubResource("Resource_f25eu"), SubResource("Resource_n3y1y")])
+preferred_ideology = SubResource("Resource_8u5ks")
+weekly_action_ids = Array[StringName]([&"action_arcane_guild_locate_dragon_lair", &"action_arcane_guild_collect_dragon_scales", &"action_arcane_guild_deploy_binding_towers", &"action_arcane_guild_ward_necrotic_spread", &"action_arcane_guild_analyze_flight_pattern"])

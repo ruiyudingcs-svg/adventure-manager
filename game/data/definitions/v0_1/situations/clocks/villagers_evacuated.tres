@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ClockDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/clock_definition_resource.gd" id="1_s3vv8"]
+
+[resource]
+script = ExtResource("1_s3vv8")
+id = &"villagers_evacuated"
+display_name_key = &"clock.villagers_evacuated.name"
+initial_value = 5

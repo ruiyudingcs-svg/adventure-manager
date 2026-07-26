@@ -111,6 +111,7 @@ followup 若需要优先展示，直接在手工 ContractDefinition 中设置更
 
 ```text
 offer_instance_id = stable_id(
+    "contract_offer",
     offered_week,
     faction_id,
     contract_definition_id,
@@ -121,6 +122,13 @@ offer_instance_id = stable_id(
 
 resolution_seed = hash(campaign_seed, offer_instance_id, "contract_resolution")
 ```
+
+`stable_id` 在 V0.1 中固定复用 `StableSeed.derive(0, ordered_fragments)`：
+命名空间 `contract_offer` 与六个片段按上列顺序输入，输出
+`contract_offer_` 加八位小写十六进制摘要。空问题 ID 作为长度 0 片段参与。
+`resolution_seed` 的实际实现固定为
+`StableSeed.derive(campaign_seed, [offer_instance_id, "contract_resolution"])`。
+任何摘要碰撞都返回内容错误，不得覆盖既有 Offer。
 
 Offer 创建后不因世界钟、问题状态或阵营关系变化重新排序、取消或重算。完整实例化规则见 `docs/12_contract_instantiation_and_commitment.md`。
 

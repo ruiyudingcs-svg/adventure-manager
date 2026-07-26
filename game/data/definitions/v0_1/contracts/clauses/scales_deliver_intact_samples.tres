@@ -1,0 +1,61 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_db4eo"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_jk6yc"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_8nxqq"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_s2inq"]
+
+[sub_resource type="Resource" id="Resource_g1wwu"]
+script = ExtResource("1_db4eo")
+type = &"outcome_tag_present"
+tag_value = &"sample_intact"
+
+[sub_resource type="Resource" id="Resource_fn0gi"]
+script = ExtResource("1_db4eo")
+type = &"outcome_tag_present"
+tag_value = &"sample_delivered"
+
+[sub_resource type="Resource" id="Resource_jg4aq"]
+script = ExtResource("2_jk6yc")
+type = &"modify_reward_percent"
+amount = -25
+reason_code = &"scales_deliver_intact_samples_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_3ptwe"]
+script = ExtResource("2_jk6yc")
+type = &"modify_sponsor_relation"
+amount = -8
+reason_code = &"scales_deliver_intact_samples_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_gidbw"]
+script = ExtResource("3_8nxqq")
+seek_knowledge = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_fd5rp"]
+script = ExtResource("2_jk6yc")
+type = &"modify_sponsor_relation"
+amount = 2
+reason_code = &"scales_deliver_intact_samples_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_61qhi"]
+script = ExtResource("3_8nxqq")
+seek_knowledge = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_s2inq")
+id = &"scales_deliver_intact_samples"
+display_name_key = &"clause.scales_deliver_intact_samples.name"
+description_key = &"clause.scales_deliver_intact_samples.description"
+category = &"delivery"
+importance = &"mandatory"
+all_conditions = Array[ExtResource("1_db4eo")]([SubResource("Resource_g1wwu"), SubResource("Resource_fn0gi")])
+success_effects = Array[ExtResource("2_jk6yc")]([SubResource("Resource_fd5rp")])
+failure_effects = Array[ExtResource("2_jk6yc")]([SubResource("Resource_jg4aq"), SubResource("Resource_3ptwe")])
+breach_result_cap = &"partial"
+success_ideology_impact = SubResource("Resource_61qhi")
+failure_ideology_impact = SubResource("Resource_gidbw")
+success_tags = Array[StringName]([&"clause.scales_deliver_intact_samples.satisfied"])
+failure_tags = Array[StringName]([&"clause.scales_deliver_intact_samples.breached"])
+priority = 20

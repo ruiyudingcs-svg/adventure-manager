@@ -1,0 +1,46 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_dn0cb"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_a2qth"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_kshcv"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_tkul7"]
+
+[sub_resource type="Resource" id="Resource_gahac"]
+script = ExtResource("1_dn0cb")
+type = &"outcome_tag_present"
+tag_value = &"bridge_intact"
+
+[sub_resource type="Resource" id="Resource_hc844"]
+script = ExtResource("3_kshcv")
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_6pgps"]
+script = ExtResource("2_a2qth")
+type = &"modify_reward_percent"
+amount = 10
+reason_code = &"bridge_intact_bonus_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_1tbg0"]
+script = ExtResource("2_a2qth")
+type = &"modify_sponsor_relation"
+amount = 2
+reason_code = &"bridge_intact_bonus_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_des6t"]
+script = ExtResource("3_kshcv")
+protect_life = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_tkul7")
+id = &"bridge_intact_bonus"
+display_name_key = &"clause.bridge_intact_bonus.name"
+description_key = &"clause.bridge_intact_bonus.description"
+category = &"efficiency"
+importance = &"bonus"
+all_conditions = Array[ExtResource("1_dn0cb")]([SubResource("Resource_gahac")])
+success_effects = Array[ExtResource("2_a2qth")]([SubResource("Resource_6pgps"), SubResource("Resource_1tbg0")])
+success_ideology_impact = SubResource("Resource_des6t")
+failure_ideology_impact = SubResource("Resource_hc844")
+success_tags = Array[StringName]([&"clause.bridge_intact_bonus.satisfied"])
+priority = 30

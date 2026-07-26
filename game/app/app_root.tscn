@@ -1,0 +1,211 @@
+[gd_scene format=3 uid="uid://bblhidl2p0q5f"]
+
+[ext_resource type="Script" uid="uid://gryqx4kb7a60" path="res://game/app/app_root.gd" id="1_root"]
+[ext_resource type="Theme" path="res://game/ui/theme/app_theme.tres" id="2_theme"]
+
+[node name="AppRoot" type="Control" unique_id=780295708]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_root")
+
+[node name="Background" type="ColorRect" parent="." unique_id=482290558]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.035, 0.047, 0.067, 1)
+
+[node name="AppShell" type="Control" parent="." unique_id=1652924299]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Sidebar" type="PanelContainer" parent="AppShell" unique_id=1284504141]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 220.0
+grow_vertical = 2
+
+[node name="Margin" type="MarginContainer" parent="AppShell/Sidebar" unique_id=2131206360]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 22
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 22
+
+[node name="Layout" type="VBoxContainer" parent="AppShell/Sidebar/Margin" unique_id=1572166634]
+layout_mode = 2
+theme_override_constants/separation = 9
+
+[node name="Brand" type="Label" parent="AppShell/Sidebar/Margin/Layout" unique_id=1913205168]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.93, 0.79, 0.43, 1)
+theme_override_font_sizes/font_size = 22
+text = "北境冒险者公会"
+autowrap_mode = 2
+
+[node name="BrandRule" type="HSeparator" parent="AppShell/Sidebar/Margin/Layout" unique_id=1381257528]
+layout_mode = 2
+
+[node name="DashboardButton" type="Button" parent="AppShell/Sidebar/Margin/Layout" unique_id=279346003]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+toggle_mode = true
+text = "总览"
+alignment = 0
+
+[node name="ContractsButton" type="Button" parent="AppShell/Sidebar/Margin/Layout" unique_id=483071692]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+toggle_mode = true
+text = "合同"
+alignment = 0
+
+[node name="RosterButton" type="Button" parent="AppShell/Sidebar/Margin/Layout" unique_id=303600958]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+toggle_mode = true
+text = "成员"
+alignment = 0
+
+[node name="ResolutionButton" type="Button" parent="AppShell/Sidebar/Margin/Layout" unique_id=1732181429]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+disabled = true
+toggle_mode = true
+text = "结算"
+alignment = 0
+
+[node name="Spacer" type="Control" parent="AppShell/Sidebar/Margin/Layout" unique_id=1599589848]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Version" type="Label" parent="AppShell/Sidebar/Margin/Layout" unique_id=596794219]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.43, 0.48, 0.56, 1)
+text = "V0.1 · Godot 4.7"
+
+[node name="TopToolbar" type="PanelContainer" parent="AppShell" unique_id=452220170]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 220.0
+offset_bottom = 72.0
+grow_horizontal = 2
+
+[node name="Margin" type="MarginContainer" parent="AppShell/TopToolbar" unique_id=63828090]
+layout_mode = 2
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 14
+
+[node name="Layout" type="HBoxContainer" parent="AppShell/TopToolbar/Margin" unique_id=1086880544]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="PageTitle" type="Label" parent="AppShell/TopToolbar/Margin/Layout" unique_id=1136576818]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 25
+text = "总览"
+
+[node name="WeekLabel" type="Label" parent="AppShell/TopToolbar/Margin/Layout" unique_id=1278827973]
+unique_name_in_owner = true
+layout_mode = 2
+text = "第 1 周"
+
+[node name="GoldLabel" type="Label" parent="AppShell/TopToolbar/Margin/Layout" unique_id=1002057022]
+unique_name_in_owner = true
+layout_mode = 2
+text = "金币 250"
+
+[node name="ReputationLabel" type="Label" parent="AppShell/TopToolbar/Margin/Layout" unique_id=1699813134]
+unique_name_in_owner = true
+layout_mode = 2
+text = "声望 20"
+
+[node name="InboxLabel" type="Label" parent="AppShell/TopToolbar/Margin/Layout" unique_id=1165211024]
+unique_name_in_owner = true
+layout_mode = 2
+text = "未读 4"
+
+[node name="SaveButton" type="Button" parent="AppShell/TopToolbar/Margin/Layout" unique_id=1984051549]
+unique_name_in_owner = true
+layout_mode = 2
+disabled = true
+text = "保存"
+
+[node name="PrimaryAction" type="Button" parent="AppShell/TopToolbar/Margin/Layout" unique_id=1746270609]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+disabled = true
+text = "结束本周"
+
+[node name="ScreenContainer" type="Control" parent="AppShell" unique_id=1961687411]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 220.0
+offset_top = 72.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ModalLayer" type="Control" parent="." unique_id=1406361000]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ErrorPanel" type="PanelContainer" parent="ModalLayer" unique_id=943510141]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -280.0
+offset_top = -92.0
+offset_right = 280.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Margin" type="MarginContainer" parent="ModalLayer/ErrorPanel" unique_id=1650053873]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+
+[node name="ErrorLabel" type="Label" parent="ModalLayer/ErrorPanel/Margin" unique_id=1118805581]
+unique_name_in_owner = true
+layout_mode = 2
+text = "发生错误"
+horizontal_alignment = 1
+autowrap_mode = 2

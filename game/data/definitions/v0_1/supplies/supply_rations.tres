@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="SupplyDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/conditional_modifier_resource.gd" id="1_hemji"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/supply_definition_resource.gd" id="2_5oh6h"]
+
+[sub_resource type="Resource" id="Resource_854cj"]
+script = ExtResource("1_hemji")
+target_type = &"fatigue"
+amount = -4
+reason_code = &"supply_rations_fatigue"
+
+[resource]
+script = ExtResource("2_5oh6h")
+id = &"supply_rations"
+display_name_key = &"supply.rations.name"
+cost = 6
+tags = Array[StringName]([&"rations"])
+modifiers = Array[ExtResource("1_hemji")]([SubResource("Resource_854cj")])

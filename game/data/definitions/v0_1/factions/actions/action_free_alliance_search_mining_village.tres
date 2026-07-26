@@ -1,0 +1,38 @@
+[gd_resource type="Resource" script_class="FactionActionDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="1_155bs"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="2_valsu"]
+[ext_resource type="Script" path="res://game/data/definitions/factions/faction_action_definition_resource.gd" id="3_bp2cd"]
+
+[sub_resource type="Resource" id="Resource_eykjw"]
+script = ExtResource("1_155bs")
+type = &"problem_is_active"
+target_id = &"problem_mining_village_isolated"
+
+[sub_resource type="Resource" id="Resource_j7o7s"]
+script = ExtResource("2_valsu")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 6
+reason_code = &"action_free_alliance_search_mining_village_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_hogdg"]
+script = ExtResource("2_valsu")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 5
+reason_code = &"action_free_alliance_search_mining_village_settlement_destruction"
+
+[resource]
+script = ExtResource("3_bp2cd")
+id = &"action_free_alliance_search_mining_village"
+agenda_tags = Array[StringName]([&"rescue"])
+target_lock_key = &"mining_village.rescue_survivors"
+base_intent_priority = 15
+urgency_weight = 35
+recent_repeat_cooldown = 2
+influence_cost = 7
+conditions = Array[ExtResource("1_155bs")]([SubResource("Resource_eykjw")])
+target_problem_tags = Array[StringName]([&"isolated_settlement"])
+effects = Array[ExtResource("2_valsu")]([SubResource("Resource_j7o7s"), SubResource("Resource_hogdg")])
+event_key = &"event_mining_survivors_recovered"

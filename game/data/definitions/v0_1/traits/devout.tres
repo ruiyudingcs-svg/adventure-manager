@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="TraitDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/conditional_modifier_resource.gd" id="1_so8ww"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/trait_definition_resource.gd" id="2_k728h"]
+
+[resource]
+script = ExtResource("2_k728h")
+id = &"devout"
+display_name_key = &"trait.devout.name"
+description_key = &"trait.devout.description"

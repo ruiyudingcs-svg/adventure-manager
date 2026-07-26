@@ -1,0 +1,50 @@
+[gd_resource type="Resource" script_class="FactionDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/factions/faction_agenda_weight_resource.gd" id="1_x70f3"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="2_s5mhw"]
+[ext_resource type="Script" path="res://game/data/definitions/factions/faction_definition_resource.gd" id="3_qnw07"]
+
+[sub_resource type="Resource" id="Resource_4487d"]
+script = ExtResource("1_x70f3")
+tag = &"evacuation"
+weight = 10
+
+[sub_resource type="Resource" id="Resource_ef8lv"]
+script = ExtResource("1_x70f3")
+tag = &"rescue"
+weight = 8
+
+[sub_resource type="Resource" id="Resource_1q86v"]
+script = ExtResource("1_x70f3")
+tag = &"protection"
+weight = 7
+
+[sub_resource type="Resource" id="Resource_ksx4i"]
+script = ExtResource("1_x70f3")
+tag = &"reduce_collateral"
+weight = 5
+
+[sub_resource type="Resource" id="Resource_xbqsb"]
+script = ExtResource("1_x70f3")
+tag = &"necrotic_exploitation"
+weight = -10
+
+[sub_resource type="Resource" id="Resource_53n08"]
+script = ExtResource("1_x70f3")
+tag = &"sacrifice_civilians"
+weight = -8
+
+[sub_resource type="Resource" id="Resource_3i3il"]
+script = ExtResource("2_s5mhw")
+protect_life = 4
+respect_authority = 1
+taboo_tolerance = -2
+
+[resource]
+script = ExtResource("3_qnw07")
+id = &"faction_free_adventurers"
+display_name_key = &"faction.faction_free_adventurers.name"
+description_key = &"faction.faction_free_adventurers.description"
+agenda_weights = Array[ExtResource("1_x70f3")]([SubResource("Resource_4487d"), SubResource("Resource_ef8lv"), SubResource("Resource_1q86v"), SubResource("Resource_ksx4i"), SubResource("Resource_xbqsb"), SubResource("Resource_53n08")])
+preferred_ideology = SubResource("Resource_3i3il")
+weekly_action_ids = Array[StringName]([&"action_free_alliance_evacuate_north_road", &"action_free_alliance_reinforce_stone_bridge", &"action_free_alliance_stabilize_field_camp", &"action_free_alliance_search_mining_village", &"action_free_alliance_patrol_refugee_route"])

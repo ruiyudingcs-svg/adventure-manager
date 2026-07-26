@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_rytic"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_uq7ru"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_m7dae"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_kj41c"]
+
+[sub_resource type="Resource" id="Resource_fiych"]
+script = ExtResource("1_rytic")
+type = &"outcome_tag_present"
+tag_value = &"operation_hidden"
+
+[sub_resource type="Resource" id="Resource_787td"]
+script = ExtResource("3_m7dae")
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_4ilri"]
+script = ExtResource("2_uq7ru")
+type = &"modify_reward_percent"
+amount = 15
+reason_code = &"clause_binding_hidden_reward"
+
+[sub_resource type="Resource" id="Resource_vt1c2"]
+script = ExtResource("2_uq7ru")
+type = &"modify_sponsor_relation"
+amount = 3
+reason_code = &"clause_binding_hidden_relation"
+
+[sub_resource type="Resource" id="Resource_a58gw"]
+script = ExtResource("3_m7dae")
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_kj41c")
+id = &"binding_operation_hidden"
+display_name_key = &"clause.binding_operation_hidden.name"
+description_key = &"clause.binding_operation_hidden.description"
+category = &"secrecy"
+importance = &"bonus"
+all_conditions = Array[ExtResource("1_rytic")]([SubResource("Resource_fiych")])
+success_effects = Array[ExtResource("2_uq7ru")]([SubResource("Resource_4ilri"), SubResource("Resource_vt1c2")])
+success_ideology_impact = SubResource("Resource_a58gw")
+failure_ideology_impact = SubResource("Resource_787td")
+priority = 40

@@ -1,0 +1,52 @@
+[gd_resource type="Resource" script_class="FactionDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/factions/faction_agenda_weight_resource.gd" id="1_1hn8m"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="2_khtwm"]
+[ext_resource type="Script" path="res://game/data/definitions/factions/faction_definition_resource.gd" id="3_gjhyk"]
+
+[sub_resource type="Resource" id="Resource_sho1y"]
+script = ExtResource("1_1hn8m")
+tag = &"corruption"
+weight = 10
+
+[sub_resource type="Resource" id="Resource_40pai"]
+script = ExtResource("1_1hn8m")
+tag = &"corpse_use"
+weight = 8
+
+[sub_resource type="Resource" id="Resource_4wpaq"]
+script = ExtResource("1_1hn8m")
+tag = &"dragon_bait"
+weight = 7
+
+[sub_resource type="Resource" id="Resource_5h77o"]
+script = ExtResource("1_1hn8m")
+tag = &"secrecy"
+weight = 6
+
+[sub_resource type="Resource" id="Resource_lpjdf"]
+script = ExtResource("1_1hn8m")
+tag = &"purification"
+weight = -10
+
+[sub_resource type="Resource" id="Resource_q03qm"]
+script = ExtResource("1_1hn8m")
+tag = &"public_rescue"
+weight = -5
+
+[sub_resource type="Resource" id="Resource_7pbul"]
+script = ExtResource("2_khtwm")
+protect_life = -3
+respect_authority = -2
+seek_knowledge = 2
+pursue_profit = 4
+taboo_tolerance = 5
+
+[resource]
+script = ExtResource("3_gjhyk")
+id = &"faction_necrotic_collective"
+display_name_key = &"faction.faction_necrotic_collective.name"
+description_key = &"faction.faction_necrotic_collective.description"
+agenda_weights = Array[ExtResource("1_1hn8m")]([SubResource("Resource_sho1y"), SubResource("Resource_40pai"), SubResource("Resource_4wpaq"), SubResource("Resource_5h77o"), SubResource("Resource_lpjdf"), SubResource("Resource_q03qm")])
+preferred_ideology = SubResource("Resource_7pbul")
+weekly_action_ids = Array[StringName]([&"action_necrotic_collective_recover_corpses", &"action_necrotic_collective_prepare_dragon_bait", &"action_necrotic_collective_secure_source", &"action_necrotic_collective_seed_resonance"])

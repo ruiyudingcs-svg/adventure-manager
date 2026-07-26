@@ -1,0 +1,47 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_egqpg"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_wsll5"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_w5kqf"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_lfwhy"]
+
+[sub_resource type="Resource" id="Resource_b5u8u"]
+script = ExtResource("1_egqpg")
+type = &"context_lte"
+key = &"collateral_pressure"
+int_value = 1
+
+[sub_resource type="Resource" id="Resource_n02ja"]
+script = ExtResource("3_w5kqf")
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_b8yt1"]
+script = ExtResource("2_wsll5")
+type = &"modify_reward_percent"
+amount = 15
+reason_code = &"scales_limit_collateral_modify_reward_percent"
+
+[sub_resource type="Resource" id="Resource_267o7"]
+script = ExtResource("2_wsll5")
+type = &"modify_sponsor_relation"
+amount = 3
+reason_code = &"scales_limit_collateral_modify_sponsor_relation"
+
+[sub_resource type="Resource" id="Resource_ei4ym"]
+script = ExtResource("3_w5kqf")
+protect_life = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_lfwhy")
+id = &"scales_limit_collateral"
+display_name_key = &"clause.scales_limit_collateral.name"
+description_key = &"clause.scales_limit_collateral.description"
+category = &"collateral"
+importance = &"bonus"
+all_conditions = Array[ExtResource("1_egqpg")]([SubResource("Resource_b5u8u")])
+success_effects = Array[ExtResource("2_wsll5")]([SubResource("Resource_b8yt1"), SubResource("Resource_267o7")])
+success_ideology_impact = SubResource("Resource_ei4ym")
+failure_ideology_impact = SubResource("Resource_n02ja")
+success_tags = Array[StringName]([&"clause.scales_limit_collateral.satisfied"])
+priority = 30

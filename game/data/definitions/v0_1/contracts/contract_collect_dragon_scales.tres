@@ -1,0 +1,1199 @@
+[gd_resource type="Resource" script_class="ContractDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_rule_resource.gd" id="1_g1ydp"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="2_6lski"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="3_cerfo"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_outcome_definition_resource.gd" id="4_7yj35"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_outcome_table_resource.gd" id="5_a12ls"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/offer_instantiation_rule_resource.gd" id="6_6huqd"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="7_nh3hr"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_definition_resource.gd" id="8_1ddrb"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_stage_definition_resource.gd" id="9_2iyxo"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/capability_weights_resource.gd" id="10_xv27c"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/mission_modifier_resource.gd" id="11_mn3on"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/mission_context_delta_resource.gd" id="12_q10qq"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/member_effect_resource.gd" id="13_v0xv7"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/check_outcome_definition_resource.gd" id="14_7uau5"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/check_outcome_table_resource.gd" id="15_wciqy"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_check_definition_resource.gd" id="16_tqrnk"]
+
+[sub_resource type="Resource" id="Resource_5x7qn"]
+script = ExtResource("2_6lski")
+type = &"phase_is"
+target_id = &"phase_open_conflict"
+
+[sub_resource type="Resource" id="Resource_jp8ny"]
+script = ExtResource("2_6lski")
+type = &"phase_is"
+target_id = &"phase_final_window"
+
+[sub_resource type="Resource" id="Resource_v26d0"]
+script = ExtResource("1_g1ydp")
+id = &"availability_collect_dragon_scales_phase"
+any_conditions = Array[ExtResource("2_6lski")]([SubResource("Resource_5x7qn"), SubResource("Resource_jp8ny")])
+
+[sub_resource type="Resource" id="Resource_ei1kl"]
+script = ExtResource("3_cerfo")
+type = &"create_world_event"
+target_id = &"event_binding_scales_calibrated"
+reason_code = &"event_binding_scales_calibrated_exceptional"
+
+[sub_resource type="Resource" id="Resource_yddee"]
+script = ExtResource("4_7yj35")
+reward_multiplier = 1.3
+fatigue_multiplier = 0.9
+injury_risk_modifier = -10
+sponsor_relation_delta = 10
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_ei1kl")])
+outcome_tags = Array[StringName]([&"contract.exceptional"])
+
+[sub_resource type="Resource" id="Resource_du5kl"]
+script = ExtResource("4_7yj35")
+reward_multiplier = 0.2
+fatigue_multiplier = 1.3
+injury_risk_modifier = 10
+sponsor_relation_delta = -5
+outcome_tags = Array[StringName]([&"contract.failure"])
+
+[sub_resource type="Resource" id="Resource_t1jty"]
+script = ExtResource("4_7yj35")
+reward_multiplier = 0.6
+fatigue_multiplier = 1.15
+sponsor_relation_delta = 1
+outcome_tags = Array[StringName]([&"contract.partial"])
+
+[sub_resource type="Resource" id="Resource_llhra"]
+script = ExtResource("4_7yj35")
+reward_multiplier = 0.0
+fatigue_multiplier = 1.5
+injury_risk_modifier = 20
+sponsor_relation_delta = -10
+outcome_tags = Array[StringName]([&"contract.severe_failure"])
+
+[sub_resource type="Resource" id="Resource_jrlgh"]
+script = ExtResource("3_cerfo")
+type = &"create_world_event"
+target_id = &"event_binding_scales_calibrated"
+reason_code = &"event_binding_scales_calibrated_success"
+
+[sub_resource type="Resource" id="Resource_krea7"]
+script = ExtResource("4_7yj35")
+injury_risk_modifier = -5
+sponsor_relation_delta = 6
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_jrlgh")])
+outcome_tags = Array[StringName]([&"contract.success"])
+
+[sub_resource type="Resource" id="Resource_wlnaq"]
+script = ExtResource("5_a12ls")
+exceptional = SubResource("Resource_yddee")
+success = SubResource("Resource_krea7")
+partial = SubResource("Resource_t1jty")
+failure = SubResource("Resource_du5kl")
+severe = SubResource("Resource_llhra")
+
+[sub_resource type="Resource" id="Resource_4k3yd"]
+script = ExtResource("7_nh3hr")
+respect_authority = 1
+seek_knowledge = 5
+pursue_profit = 2
+taboo_tolerance = 2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_r7i2j"]
+script = ExtResource("10_xv27c")
+scouting = 0.45
+support = 0.1
+arcana = 0.2
+discipline = 0.25
+
+[sub_resource type="Resource" id="Resource_xoka4"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 2
+reason_code = &"scales_track_target_exceptional_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_6jg0o"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = 4
+reason_code = &"scales_track_target_exceptional_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_gh5nc"]
+script = ExtResource("12_q10qq")
+key = &"route_safety"
+amount = 3
+source_id = &"scales_track_target"
+
+[sub_resource type="Resource" id="Resource_lp8bp"]
+script = ExtResource("12_q10qq")
+key = &"intel"
+amount = 2
+source_id = &"scales_track_target"
+
+[sub_resource type="Resource" id="Resource_h3fga"]
+script = ExtResource("12_q10qq")
+key = &"alert_level"
+amount = -1
+source_id = &"scales_track_target"
+
+[sub_resource type="Resource" id="Resource_1l61u"]
+script = ExtResource("7_nh3hr")
+seek_knowledge = 4
+pursue_profit = 2
+taboo_tolerance = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_srfjr"]
+script = ExtResource("14_7uau5")
+context_deltas = Array[ExtResource("12_q10qq")]([SubResource("Resource_gh5nc"), SubResource("Resource_lp8bp"), SubResource("Resource_h3fga")])
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_xoka4"), SubResource("Resource_6jg0o")])
+ideology_impact = SubResource("Resource_1l61u")
+outcome_tags = Array[StringName]([&"scales_track_target_exceptional"])
+
+[sub_resource type="Resource" id="Resource_rof3d"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = -1
+reason_code = &"scales_track_target_failure_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_8j18v"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 2
+reason_code = &"scales_track_target_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_ppcep"]
+script = ExtResource("12_q10qq")
+key = &"alert_level"
+amount = 1
+source_id = &"scales_track_target"
+
+[sub_resource type="Resource" id="Resource_3scdo"]
+script = ExtResource("12_q10qq")
+key = &"time_pressure"
+amount = 2
+source_id = &"scales_track_target"
+
+[sub_resource type="Resource" id="Resource_57vll"]
+script = ExtResource("7_nh3hr")
+protect_life = -2
+seek_knowledge = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_1qwwi"]
+script = ExtResource("13_v0xv7")
+type = &"injury_risk"
+amount = 8
+reason_code = &"scales_track_target_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_mkfsm"]
+script = ExtResource("14_7uau5")
+context_deltas = Array[ExtResource("12_q10qq")]([SubResource("Resource_ppcep"), SubResource("Resource_3scdo")])
+member_effects = Array[ExtResource("13_v0xv7")]([SubResource("Resource_1qwwi")])
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_rof3d"), SubResource("Resource_8j18v")])
+ideology_impact = SubResource("Resource_57vll")
+outcome_tags = Array[StringName]([&"scales_track_target_failure"])
+
+[sub_resource type="Resource" id="Resource_be36a"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = 2
+reason_code = &"scales_track_target_partial_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_fvhu0"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 1
+reason_code = &"scales_track_target_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_kcpce"]
+script = ExtResource("12_q10qq")
+key = &"route_safety"
+amount = 1
+source_id = &"scales_track_target"
+
+[sub_resource type="Resource" id="Resource_r1tec"]
+script = ExtResource("12_q10qq")
+key = &"time_pressure"
+amount = 1
+source_id = &"scales_track_target"
+
+[sub_resource type="Resource" id="Resource_cuj3r"]
+script = ExtResource("7_nh3hr")
+seek_knowledge = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_8g57d"]
+script = ExtResource("13_v0xv7")
+type = &"injury_risk"
+amount = 3
+reason_code = &"scales_track_target_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_gu28i"]
+script = ExtResource("14_7uau5")
+context_deltas = Array[ExtResource("12_q10qq")]([SubResource("Resource_kcpce"), SubResource("Resource_r1tec")])
+member_effects = Array[ExtResource("13_v0xv7")]([SubResource("Resource_8g57d")])
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_be36a"), SubResource("Resource_fvhu0")])
+ideology_impact = SubResource("Resource_cuj3r")
+outcome_tags = Array[StringName]([&"scales_track_target_partial"])
+
+[sub_resource type="Resource" id="Resource_25rmx"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = -2
+reason_code = &"scales_track_target_severe_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_lvipu"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = -1
+reason_code = &"scales_track_target_severe_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_4a5xi"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 3
+reason_code = &"scales_track_target_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_cdjf5"]
+script = ExtResource("12_q10qq")
+key = &"alert_level"
+amount = 2
+source_id = &"scales_track_target"
+
+[sub_resource type="Resource" id="Resource_um4jw"]
+script = ExtResource("12_q10qq")
+key = &"enemy_pressure"
+amount = 2
+source_id = &"scales_track_target"
+
+[sub_resource type="Resource" id="Resource_tgcf0"]
+script = ExtResource("7_nh3hr")
+protect_life = -4
+seek_knowledge = -3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_kvbra"]
+script = ExtResource("13_v0xv7")
+type = &"injury_risk"
+amount = 15
+reason_code = &"scales_track_target_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_lm3an"]
+script = ExtResource("14_7uau5")
+context_deltas = Array[ExtResource("12_q10qq")]([SubResource("Resource_cdjf5"), SubResource("Resource_um4jw")])
+member_effects = Array[ExtResource("13_v0xv7")]([SubResource("Resource_kvbra")])
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_25rmx"), SubResource("Resource_lvipu"), SubResource("Resource_4a5xi")])
+ideology_impact = SubResource("Resource_tgcf0")
+outcome_tags = Array[StringName]([&"scales_track_target_severe"])
+
+[sub_resource type="Resource" id="Resource_0h26x"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 1
+reason_code = &"scales_track_target_success_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_6en52"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = 3
+reason_code = &"scales_track_target_success_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_vmy2g"]
+script = ExtResource("12_q10qq")
+key = &"route_safety"
+amount = 2
+source_id = &"scales_track_target"
+
+[sub_resource type="Resource" id="Resource_wapdg"]
+script = ExtResource("12_q10qq")
+key = &"intel"
+amount = 1
+source_id = &"scales_track_target"
+
+[sub_resource type="Resource" id="Resource_sc347"]
+script = ExtResource("7_nh3hr")
+seek_knowledge = 3
+pursue_profit = 1
+taboo_tolerance = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_py4d7"]
+script = ExtResource("14_7uau5")
+context_deltas = Array[ExtResource("12_q10qq")]([SubResource("Resource_vmy2g"), SubResource("Resource_wapdg")])
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_0h26x"), SubResource("Resource_6en52")])
+ideology_impact = SubResource("Resource_sc347")
+outcome_tags = Array[StringName]([&"scales_track_target_success"])
+
+[sub_resource type="Resource" id="Resource_11lic"]
+script = ExtResource("15_wciqy")
+exceptional = SubResource("Resource_srfjr")
+success = SubResource("Resource_py4d7")
+partial = SubResource("Resource_gu28i")
+failure = SubResource("Resource_mkfsm")
+severe = SubResource("Resource_lm3an")
+
+[sub_resource type="Resource" id="Resource_2hm0b"]
+script = ExtResource("16_tqrnk")
+id = &"scales_track_target"
+check_type = &"reconnaissance"
+capability_weights = SubResource("Resource_r7i2j")
+difficulty = 29
+result_weight = 0.15
+failure_result_cap = &"partial"
+method_tags = Array[StringName]([&"reconnaissance", &"research"])
+approach_profile = &"careful"
+outcome_table = SubResource("Resource_11lic")
+
+[sub_resource type="Resource" id="Resource_phsm1"]
+script = ExtResource("9_2iyxo")
+id = &"collect_dragon_scales_stage_approach"
+phase = &"approach"
+check = SubResource("Resource_2hm0b")
+
+[sub_resource type="Resource" id="Resource_81ob4"]
+script = ExtResource("10_xv27c")
+frontline = 0.25
+offense = 0.35
+scouting = 0.1
+support = 0.05
+arcana = 0.05
+discipline = 0.2
+
+[sub_resource type="Resource" id="Resource_pcx7c"]
+script = ExtResource("11_mn3on")
+condition_type = &"context_gte"
+operand = &"intel"
+threshold = 1
+amount = 2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_26djr"]
+script = ExtResource("11_mn3on")
+condition_type = &"context_gte"
+operand = &"alert_level"
+threshold = 1
+amount = -2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_gfra3"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 8
+reason_code = &"scales_force_opening_exceptional_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_7qawt"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = 4
+reason_code = &"scales_force_opening_exceptional_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_n4iqm"]
+script = ExtResource("12_q10qq")
+key = &"enemy_pressure"
+amount = -2
+source_id = &"scales_force_opening"
+
+[sub_resource type="Resource" id="Resource_bq0uq"]
+script = ExtResource("7_nh3hr")
+seek_knowledge = 4
+pursue_profit = 2
+taboo_tolerance = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_lhhhi"]
+script = ExtResource("14_7uau5")
+context_deltas = Array[ExtResource("12_q10qq")]([SubResource("Resource_n4iqm")])
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_gfra3"), SubResource("Resource_7qawt")])
+ideology_impact = SubResource("Resource_bq0uq")
+outcome_tags = Array[StringName]([&"scales_force_opening_exceptional", &"target_alive"])
+
+[sub_resource type="Resource" id="Resource_smgol"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 8
+reason_code = &"scales_force_opening_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_ud7ey"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = -2
+reason_code = &"scales_force_opening_failure_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_pr7q1"]
+script = ExtResource("12_q10qq")
+key = &"team_strain"
+amount = 2
+source_id = &"scales_force_opening"
+
+[sub_resource type="Resource" id="Resource_22u4j"]
+script = ExtResource("12_q10qq")
+key = &"collateral_pressure"
+amount = 2
+source_id = &"scales_force_opening"
+
+[sub_resource type="Resource" id="Resource_1ua1p"]
+script = ExtResource("7_nh3hr")
+protect_life = -2
+seek_knowledge = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_sa5a2"]
+script = ExtResource("13_v0xv7")
+type = &"injury_risk"
+amount = 15
+reason_code = &"scales_force_opening_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_l1ean"]
+script = ExtResource("14_7uau5")
+context_deltas = Array[ExtResource("12_q10qq")]([SubResource("Resource_pr7q1"), SubResource("Resource_22u4j")])
+member_effects = Array[ExtResource("13_v0xv7")]([SubResource("Resource_sa5a2")])
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_smgol"), SubResource("Resource_ud7ey")])
+ideology_impact = SubResource("Resource_1ua1p")
+outcome_tags = Array[StringName]([&"scales_force_opening_failure", &"target_alive"])
+
+[sub_resource type="Resource" id="Resource_61pds"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 5
+reason_code = &"scales_force_opening_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_71xhh"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 2
+reason_code = &"scales_force_opening_partial_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_rvp7g"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = 2
+reason_code = &"scales_force_opening_partial_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_aq35c"]
+script = ExtResource("12_q10qq")
+key = &"team_strain"
+amount = 1
+source_id = &"scales_force_opening"
+
+[sub_resource type="Resource" id="Resource_57kjj"]
+script = ExtResource("12_q10qq")
+key = &"collateral_pressure"
+amount = 1
+source_id = &"scales_force_opening"
+
+[sub_resource type="Resource" id="Resource_f7xju"]
+script = ExtResource("7_nh3hr")
+seek_knowledge = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_ialrn"]
+script = ExtResource("13_v0xv7")
+type = &"injury_risk"
+amount = 8
+reason_code = &"scales_force_opening_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_riimk"]
+script = ExtResource("14_7uau5")
+context_deltas = Array[ExtResource("12_q10qq")]([SubResource("Resource_aq35c"), SubResource("Resource_57kjj")])
+member_effects = Array[ExtResource("13_v0xv7")]([SubResource("Resource_ialrn")])
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_61pds"), SubResource("Resource_71xhh"), SubResource("Resource_rvp7g")])
+ideology_impact = SubResource("Resource_f7xju")
+outcome_tags = Array[StringName]([&"scales_force_opening_partial", &"target_alive"])
+
+[sub_resource type="Resource" id="Resource_no4i3"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 10
+reason_code = &"scales_force_opening_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_oppso"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = -4
+reason_code = &"scales_force_opening_severe_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_lbsfl"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = -1
+reason_code = &"scales_force_opening_severe_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_wn6ud"]
+script = ExtResource("12_q10qq")
+key = &"team_strain"
+amount = 3
+source_id = &"scales_force_opening"
+
+[sub_resource type="Resource" id="Resource_o5dc7"]
+script = ExtResource("12_q10qq")
+key = &"collateral_pressure"
+amount = 3
+source_id = &"scales_force_opening"
+
+[sub_resource type="Resource" id="Resource_yvury"]
+script = ExtResource("12_q10qq")
+key = &"extraction_pressure"
+amount = 1
+source_id = &"scales_force_opening"
+
+[sub_resource type="Resource" id="Resource_vj8tm"]
+script = ExtResource("7_nh3hr")
+protect_life = -4
+seek_knowledge = -3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_573mx"]
+script = ExtResource("13_v0xv7")
+type = &"injury_risk"
+amount = 25
+reason_code = &"scales_force_opening_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_mbwws"]
+script = ExtResource("14_7uau5")
+context_deltas = Array[ExtResource("12_q10qq")]([SubResource("Resource_wn6ud"), SubResource("Resource_o5dc7"), SubResource("Resource_yvury")])
+member_effects = Array[ExtResource("13_v0xv7")]([SubResource("Resource_573mx")])
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_no4i3"), SubResource("Resource_oppso"), SubResource("Resource_lbsfl")])
+ideology_impact = SubResource("Resource_vj8tm")
+outcome_tags = Array[StringName]([&"scales_force_opening_severe", &"target_escaped"])
+
+[sub_resource type="Resource" id="Resource_71d7e"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 2
+reason_code = &"scales_force_opening_success_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_doprk"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 6
+reason_code = &"scales_force_opening_success_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_l5qqj"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = 3
+reason_code = &"scales_force_opening_success_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_qx2xa"]
+script = ExtResource("12_q10qq")
+key = &"enemy_pressure"
+amount = -1
+source_id = &"scales_force_opening"
+
+[sub_resource type="Resource" id="Resource_2bfjr"]
+script = ExtResource("7_nh3hr")
+seek_knowledge = 3
+pursue_profit = 1
+taboo_tolerance = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_4dr5o"]
+script = ExtResource("13_v0xv7")
+type = &"injury_risk"
+amount = 3
+reason_code = &"scales_force_opening_success_injury_risk"
+
+[sub_resource type="Resource" id="Resource_8cobg"]
+script = ExtResource("14_7uau5")
+context_deltas = Array[ExtResource("12_q10qq")]([SubResource("Resource_qx2xa")])
+member_effects = Array[ExtResource("13_v0xv7")]([SubResource("Resource_4dr5o")])
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_71d7e"), SubResource("Resource_doprk"), SubResource("Resource_l5qqj")])
+ideology_impact = SubResource("Resource_2bfjr")
+outcome_tags = Array[StringName]([&"scales_force_opening_success", &"target_alive"])
+
+[sub_resource type="Resource" id="Resource_tslca"]
+script = ExtResource("15_wciqy")
+exceptional = SubResource("Resource_lhhhi")
+success = SubResource("Resource_8cobg")
+partial = SubResource("Resource_riimk")
+failure = SubResource("Resource_l1ean")
+severe = SubResource("Resource_mbwws")
+
+[sub_resource type="Resource" id="Resource_wm10g"]
+script = ExtResource("16_tqrnk")
+id = &"scales_force_opening"
+check_type = &"confrontation"
+capability_weights = SubResource("Resource_81ob4")
+difficulty = 35
+result_weight = 0.3
+failure_result_cap = &"partial"
+method_tags = Array[StringName]([&"confrontation", &"nonlethal"])
+context_modifiers = Array[ExtResource("11_mn3on")]([SubResource("Resource_pcx7c"), SubResource("Resource_26djr")])
+approach_profile = &"forceful"
+outcome_table = SubResource("Resource_tslca")
+
+[sub_resource type="Resource" id="Resource_emi10"]
+script = ExtResource("9_2iyxo")
+id = &"collect_dragon_scales_stage_main_action"
+phase = &"main_action"
+check = SubResource("Resource_wm10g")
+
+[sub_resource type="Resource" id="Resource_c0s52"]
+script = ExtResource("10_xv27c")
+frontline = 0.05
+offense = 0.05
+scouting = 0.15
+support = 0.3
+arcana = 0.25
+discipline = 0.2
+
+[sub_resource type="Resource" id="Resource_kxwta"]
+script = ExtResource("11_mn3on")
+condition_type = &"context_gte"
+operand = &"intel"
+threshold = 1
+amount = 1
+per_context_point = true
+maximum_absolute_amount = 4
+
+[sub_resource type="Resource" id="Resource_hv184"]
+script = ExtResource("11_mn3on")
+condition_type = &"context_gte"
+operand = &"team_strain"
+threshold = 1
+amount = -2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_spqcv"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 5
+reason_code = &"scales_extract_samples_exceptional_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_cs4e0"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = 12
+reason_code = &"scales_extract_samples_exceptional_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_ojbcq"]
+script = ExtResource("12_q10qq")
+key = &"collected_resources"
+amount = 4
+source_id = &"scales_extract_samples"
+
+[sub_resource type="Resource" id="Resource_q3eat"]
+script = ExtResource("7_nh3hr")
+seek_knowledge = 4
+pursue_profit = 2
+taboo_tolerance = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_p0puj"]
+script = ExtResource("14_7uau5")
+context_deltas = Array[ExtResource("12_q10qq")]([SubResource("Resource_ojbcq")])
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_spqcv"), SubResource("Resource_cs4e0")])
+ideology_impact = SubResource("Resource_q3eat")
+outcome_tags = Array[StringName]([&"scales_extract_samples_exceptional", &"sample_intact"])
+
+[sub_resource type="Resource" id="Resource_tp5tj"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 5
+reason_code = &"scales_extract_samples_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_1ru7i"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = -1
+reason_code = &"scales_extract_samples_failure_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_o22hj"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = 2
+reason_code = &"scales_extract_samples_failure_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_ks57v"]
+script = ExtResource("12_q10qq")
+key = &"collected_resources"
+amount = 1
+source_id = &"scales_extract_samples"
+
+[sub_resource type="Resource" id="Resource_r7hg8"]
+script = ExtResource("12_q10qq")
+key = &"alert_level"
+amount = 2
+source_id = &"scales_extract_samples"
+
+[sub_resource type="Resource" id="Resource_yqax1"]
+script = ExtResource("7_nh3hr")
+protect_life = -2
+seek_knowledge = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_n7egq"]
+script = ExtResource("13_v0xv7")
+type = &"injury_risk"
+amount = 15
+reason_code = &"scales_extract_samples_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_jjltg"]
+script = ExtResource("14_7uau5")
+context_deltas = Array[ExtResource("12_q10qq")]([SubResource("Resource_ks57v"), SubResource("Resource_r7hg8")])
+member_effects = Array[ExtResource("13_v0xv7")]([SubResource("Resource_n7egq")])
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_tp5tj"), SubResource("Resource_1ru7i"), SubResource("Resource_o22hj")])
+ideology_impact = SubResource("Resource_yqax1")
+outcome_tags = Array[StringName]([&"scales_extract_samples_failure"])
+
+[sub_resource type="Resource" id="Resource_13upm"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 3
+reason_code = &"scales_extract_samples_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_xc4uu"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 2
+reason_code = &"scales_extract_samples_partial_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_ikk20"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = 6
+reason_code = &"scales_extract_samples_partial_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_xdi77"]
+script = ExtResource("12_q10qq")
+key = &"collected_resources"
+amount = 2
+source_id = &"scales_extract_samples"
+
+[sub_resource type="Resource" id="Resource_n7yb1"]
+script = ExtResource("12_q10qq")
+key = &"time_pressure"
+amount = 1
+source_id = &"scales_extract_samples"
+
+[sub_resource type="Resource" id="Resource_qinvx"]
+script = ExtResource("7_nh3hr")
+seek_knowledge = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_el3wr"]
+script = ExtResource("13_v0xv7")
+type = &"injury_risk"
+amount = 8
+reason_code = &"scales_extract_samples_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_wh21t"]
+script = ExtResource("14_7uau5")
+context_deltas = Array[ExtResource("12_q10qq")]([SubResource("Resource_xdi77"), SubResource("Resource_n7yb1")])
+member_effects = Array[ExtResource("13_v0xv7")]([SubResource("Resource_el3wr")])
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_13upm"), SubResource("Resource_xc4uu"), SubResource("Resource_ikk20")])
+ideology_impact = SubResource("Resource_qinvx")
+outcome_tags = Array[StringName]([&"scales_extract_samples_partial"])
+
+[sub_resource type="Resource" id="Resource_6ddfo"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 6
+reason_code = &"scales_extract_samples_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_lnwvj"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = -2
+reason_code = &"scales_extract_samples_severe_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_kty7x"]
+script = ExtResource("12_q10qq")
+key = &"alert_level"
+amount = 3
+source_id = &"scales_extract_samples"
+
+[sub_resource type="Resource" id="Resource_wvov7"]
+script = ExtResource("12_q10qq")
+key = &"extraction_pressure"
+amount = 2
+source_id = &"scales_extract_samples"
+
+[sub_resource type="Resource" id="Resource_yyegd"]
+script = ExtResource("7_nh3hr")
+protect_life = -4
+seek_knowledge = -3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_ftp0c"]
+script = ExtResource("13_v0xv7")
+type = &"injury_risk"
+amount = 25
+reason_code = &"scales_extract_samples_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_0rtgm"]
+script = ExtResource("14_7uau5")
+context_deltas = Array[ExtResource("12_q10qq")]([SubResource("Resource_kty7x"), SubResource("Resource_wvov7")])
+member_effects = Array[ExtResource("13_v0xv7")]([SubResource("Resource_ftp0c")])
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_6ddfo"), SubResource("Resource_lnwvj")])
+ideology_impact = SubResource("Resource_yyegd")
+outcome_tags = Array[StringName]([&"scales_extract_samples_severe"])
+
+[sub_resource type="Resource" id="Resource_lq83a"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 1
+reason_code = &"scales_extract_samples_success_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_fltkp"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 4
+reason_code = &"scales_extract_samples_success_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_xk0eg"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = 10
+reason_code = &"scales_extract_samples_success_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_w2n0b"]
+script = ExtResource("12_q10qq")
+key = &"collected_resources"
+amount = 3
+source_id = &"scales_extract_samples"
+
+[sub_resource type="Resource" id="Resource_pjc3d"]
+script = ExtResource("7_nh3hr")
+seek_knowledge = 3
+pursue_profit = 1
+taboo_tolerance = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_0ai5t"]
+script = ExtResource("13_v0xv7")
+type = &"injury_risk"
+amount = 3
+reason_code = &"scales_extract_samples_success_injury_risk"
+
+[sub_resource type="Resource" id="Resource_xq2yo"]
+script = ExtResource("14_7uau5")
+context_deltas = Array[ExtResource("12_q10qq")]([SubResource("Resource_w2n0b")])
+member_effects = Array[ExtResource("13_v0xv7")]([SubResource("Resource_0ai5t")])
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_lq83a"), SubResource("Resource_fltkp"), SubResource("Resource_xk0eg")])
+ideology_impact = SubResource("Resource_pjc3d")
+outcome_tags = Array[StringName]([&"scales_extract_samples_success", &"sample_intact"])
+
+[sub_resource type="Resource" id="Resource_mlq2t"]
+script = ExtResource("15_wciqy")
+exceptional = SubResource("Resource_p0puj")
+success = SubResource("Resource_xq2yo")
+partial = SubResource("Resource_wh21t")
+failure = SubResource("Resource_jjltg")
+severe = SubResource("Resource_0rtgm")
+
+[sub_resource type="Resource" id="Resource_xbq58"]
+script = ExtResource("16_tqrnk")
+id = &"scales_extract_samples"
+check_type = &"salvage"
+capability_weights = SubResource("Resource_c0s52")
+difficulty = 34
+result_weight = 0.35
+failure_result_cap = &"partial"
+method_tags = Array[StringName]([&"research", &"preservation"])
+context_modifiers = Array[ExtResource("11_mn3on")]([SubResource("Resource_kxwta"), SubResource("Resource_hv184")])
+outcome_table = SubResource("Resource_mlq2t")
+
+[sub_resource type="Resource" id="Resource_oy2h8"]
+script = ExtResource("9_2iyxo")
+id = &"collect_dragon_scales_stage_special_objective"
+phase = &"special_objective"
+check = SubResource("Resource_xbq58")
+
+[sub_resource type="Resource" id="Resource_nwkx5"]
+script = ExtResource("10_xv27c")
+frontline = 0.15
+scouting = 0.3
+support = 0.25
+arcana = 0.05
+discipline = 0.25
+
+[sub_resource type="Resource" id="Resource_40fuw"]
+script = ExtResource("11_mn3on")
+condition_type = &"context_gte"
+operand = &"route_safety"
+threshold = 1
+amount = 2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_8qx87"]
+script = ExtResource("11_mn3on")
+condition_type = &"context_gte"
+operand = &"alert_level"
+threshold = 1
+amount = -3
+per_context_point = true
+maximum_absolute_amount = 9
+
+[sub_resource type="Resource" id="Resource_bum5e"]
+script = ExtResource("11_mn3on")
+condition_type = &"context_gte"
+operand = &"extraction_pressure"
+threshold = 1
+amount = -3
+per_context_point = true
+maximum_absolute_amount = 9
+
+[sub_resource type="Resource" id="Resource_rjfau"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 2
+reason_code = &"scales_escape_pursuit_exceptional_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_ddsd6"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = 3
+reason_code = &"scales_escape_pursuit_exceptional_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_he8w0"]
+script = ExtResource("7_nh3hr")
+seek_knowledge = 4
+pursue_profit = 2
+taboo_tolerance = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_k68t6"]
+script = ExtResource("14_7uau5")
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_rjfau"), SubResource("Resource_ddsd6")])
+ideology_impact = SubResource("Resource_he8w0")
+outcome_tags = Array[StringName]([&"scales_escape_pursuit_exceptional", &"sample_delivered"])
+
+[sub_resource type="Resource" id="Resource_075cs"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 3
+reason_code = &"scales_escape_pursuit_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_7uwh6"]
+script = ExtResource("7_nh3hr")
+protect_life = -2
+seek_knowledge = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_7me2h"]
+script = ExtResource("13_v0xv7")
+type = &"injury_risk"
+amount = 18
+reason_code = &"scales_escape_pursuit_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_3yt0b"]
+script = ExtResource("14_7uau5")
+member_effects = Array[ExtResource("13_v0xv7")]([SubResource("Resource_7me2h")])
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_075cs")])
+ideology_impact = SubResource("Resource_7uwh6")
+outcome_tags = Array[StringName]([&"scales_escape_pursuit_failure"])
+
+[sub_resource type="Resource" id="Resource_ylwou"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 1
+reason_code = &"scales_escape_pursuit_partial_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_5s5o2"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = 1
+reason_code = &"scales_escape_pursuit_partial_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_1ocuo"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 2
+reason_code = &"scales_escape_pursuit_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_g4vnu"]
+script = ExtResource("7_nh3hr")
+seek_knowledge = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_07n0g"]
+script = ExtResource("13_v0xv7")
+type = &"injury_risk"
+amount = 8
+reason_code = &"scales_escape_pursuit_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_522v5"]
+script = ExtResource("14_7uau5")
+member_effects = Array[ExtResource("13_v0xv7")]([SubResource("Resource_07n0g")])
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_ylwou"), SubResource("Resource_5s5o2"), SubResource("Resource_1ocuo")])
+ideology_impact = SubResource("Resource_g4vnu")
+outcome_tags = Array[StringName]([&"scales_escape_pursuit_partial", &"sample_delivered"])
+
+[sub_resource type="Resource" id="Resource_kl55a"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = -1
+reason_code = &"scales_escape_pursuit_severe_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_n3q0m"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = -1
+reason_code = &"scales_escape_pursuit_severe_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_0083m"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 4
+reason_code = &"scales_escape_pursuit_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_pkugy"]
+script = ExtResource("7_nh3hr")
+protect_life = -4
+seek_knowledge = -3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_jje3d"]
+script = ExtResource("13_v0xv7")
+type = &"injury_risk"
+amount = 30
+reason_code = &"scales_escape_pursuit_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_5gxnd"]
+script = ExtResource("14_7uau5")
+member_effects = Array[ExtResource("13_v0xv7")]([SubResource("Resource_jje3d")])
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_kl55a"), SubResource("Resource_n3q0m"), SubResource("Resource_0083m")])
+ideology_impact = SubResource("Resource_pkugy")
+outcome_tags = Array[StringName]([&"scales_escape_pursuit_severe"])
+
+[sub_resource type="Resource" id="Resource_o7744"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"dragon_exhaustion"
+amount = 1
+reason_code = &"scales_escape_pursuit_success_dragon_exhaustion"
+
+[sub_resource type="Resource" id="Resource_madco"]
+script = ExtResource("3_cerfo")
+type = &"modify_clock"
+target_id = &"capture_preparation"
+amount = 2
+reason_code = &"scales_escape_pursuit_success_capture_preparation"
+
+[sub_resource type="Resource" id="Resource_mdayr"]
+script = ExtResource("7_nh3hr")
+seek_knowledge = 3
+pursue_profit = 1
+taboo_tolerance = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_2bq7r"]
+script = ExtResource("13_v0xv7")
+type = &"injury_risk"
+amount = 3
+reason_code = &"scales_escape_pursuit_success_injury_risk"
+
+[sub_resource type="Resource" id="Resource_kfeex"]
+script = ExtResource("14_7uau5")
+member_effects = Array[ExtResource("13_v0xv7")]([SubResource("Resource_2bq7r")])
+campaign_effects = Array[ExtResource("3_cerfo")]([SubResource("Resource_o7744"), SubResource("Resource_madco")])
+ideology_impact = SubResource("Resource_mdayr")
+outcome_tags = Array[StringName]([&"scales_escape_pursuit_success", &"sample_delivered"])
+
+[sub_resource type="Resource" id="Resource_w51hf"]
+script = ExtResource("15_wciqy")
+exceptional = SubResource("Resource_k68t6")
+success = SubResource("Resource_kfeex")
+partial = SubResource("Resource_522v5")
+failure = SubResource("Resource_3yt0b")
+severe = SubResource("Resource_5gxnd")
+
+[sub_resource type="Resource" id="Resource_edhbk"]
+script = ExtResource("16_tqrnk")
+id = &"scales_escape_pursuit"
+check_type = &"extraction"
+capability_weights = SubResource("Resource_nwkx5")
+difficulty = 33
+result_weight = 0.2
+failure_result_cap = &"failure"
+method_tags = Array[StringName]([&"stealth", &"extraction"])
+context_modifiers = Array[ExtResource("11_mn3on")]([SubResource("Resource_40fuw"), SubResource("Resource_8qx87"), SubResource("Resource_bum5e")])
+approach_profile = &"careful"
+outcome_table = SubResource("Resource_w51hf")
+
+[sub_resource type="Resource" id="Resource_mosfy"]
+script = ExtResource("9_2iyxo")
+id = &"collect_dragon_scales_stage_extraction"
+phase = &"extraction"
+check = SubResource("Resource_edhbk")
+
+[resource]
+script = ExtResource("8_1ddrb")
+id = &"contract_collect_dragon_scales"
+title_key = &"contract.contract_collect_dragon_scales.title"
+description_key = &"contract.contract_collect_dragon_scales.description"
+sponsor_faction_id = &"faction_arcane_guild"
+related_problem_id = &"problem_dragon_capture_window"
+target_lock_key = &"dragon_capture.collect_scales"
+target_problem_tags = Array[StringName]([&"capture_research"])
+agenda_tags = Array[StringName]([&"capture", &"research", &"target_alive"])
+allow_agenda_origin = true
+starts_unlocked = false
+proposal_base_priority = 15
+urgency_weight = 30
+recent_repeat_cooldown = 2
+base_reward = 280
+base_fatigue = 15
+risk_level = 4
+offer_duration_weeks = 2
+intent_ideology_vector = SubResource("Resource_4k3yd")
+expected_method_tags = Array[StringName]([&"reconnaissance", &"research", &"confrontation", &"nonlethal", &"preservation", &"stealth", &"extraction"])
+stages = Array[ExtResource("9_2iyxo")]([SubResource("Resource_phsm1"), SubResource("Resource_emi10"), SubResource("Resource_oy2h8"), SubResource("Resource_mosfy")])
+clause_ids = Array[StringName]([&"scales_keep_target_alive", &"scales_deliver_intact_samples", &"scales_limit_collateral"])
+allowed_supply_tags = Array[StringName]([&"scouting", &"protection", &"arcane_binding", &"rations"])
+final_outcome_table = SubResource("Resource_wlnaq")
+availability_rules = Array[ExtResource("1_g1ydp")]([SubResource("Resource_v26d0")])
+unhandled_policy = &"npc_or_expire"
+npc_completion_action_id = &"action_arcane_guild_collect_dragon_scales"

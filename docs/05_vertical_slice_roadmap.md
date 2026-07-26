@@ -95,12 +95,15 @@
 
 ### 工作项
 
+- Football Manager 风格应用外壳
+- CampaignSetupDefinition / CampaignBootstrapper / GameSession
 - Dashboard
 - Roster
 - Contract Planning
 - Resolution
 - SceneRouter
 - ViewData / Presenter
+- 64样本 ContractForecastService
 - 基本输入验证
 
 ### 退出条件
@@ -109,6 +112,7 @@
 - 结算页能按阶段展示原因。
 - UI 刷新不会重新投掷结果。
 - 所有核心规则仍可 headless 测试。
+- 新战役、预测和应用外壳遵守 Gate F。
 
 ## 6. Milestone 4：世界危机与阵营
 
@@ -116,7 +120,10 @@
 
 让合同选择产生 10 至 15 周的长期方向。
 
-内容设计进度：局势阶段、结局、阵营目标和五条钟已经在 `docs/17_dragon_invasion_scenario_spec.md` 定案；九个问题、阵营行动、合同覆盖与结局路径已经在 `docs/18_dragon_invasion_problem_and_action_catalog.md` 定案。Milestone 4 的内容设计前置已完成，领域实现与测试仍未完成。
+Milestone 4 的领域循环和内容已由 Task 008—013 完成：局势阶段、结局、阵营目标和
+五条钟见 `docs/17_dragon_invasion_scenario_spec.md`；九个问题、十四项行动、合同
+覆盖与结局路径见 `docs/18_dragon_invasion_problem_and_action_catalog.md`。第四批
+只消费这些稳定 API，不重新实现世界规则。
 
 ### 工作项
 
@@ -179,6 +186,7 @@
 
 - SaveService
 - 存档版本号
+- planning-only JSON schema、原子写入和备份恢复
 - 加载验证
 - 关键遥测输出
 - 数值平衡
@@ -192,6 +200,7 @@
 - 加载后已锁定结果不改变。
 - 新玩家不依赖开发者解释即可完成一局。
 - 10 次完整测试中无阻断 bug。
+- Windows 测试构建可以启动并完成至少两周。
 
 ## 8. 每周个人开发节奏
 

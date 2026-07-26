@@ -1,0 +1,1127 @@
+[gd_resource type="Resource" script_class="ContractDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_rule_resource.gd" id="1_nd3wt"]
+[ext_resource type="Script" path="res://game/data/definitions/situations/world_condition_resource.gd" id="2_qlu0y"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/world_effect_resource.gd" id="3_frwbt"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_outcome_definition_resource.gd" id="4_g165w"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_outcome_table_resource.gd" id="5_1namh"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/offer_instantiation_rule_resource.gd" id="6_p3sdp"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="7_m3d1m"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_definition_resource.gd" id="8_yhx3l"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_stage_definition_resource.gd" id="9_s5t7c"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/capability_weights_resource.gd" id="10_mgwll"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/mission_modifier_resource.gd" id="11_o5jpw"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/mission_context_delta_resource.gd" id="12_6wdsb"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/member_effect_resource.gd" id="13_r5g73"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/check_outcome_definition_resource.gd" id="14_8n5eq"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/check_outcome_table_resource.gd" id="15_v2onf"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_check_definition_resource.gd" id="16_hjkcr"]
+
+[sub_resource type="Resource" id="Resource_3lsej"]
+script = ExtResource("2_qlu0y")
+type = &"phase_is"
+target_id = &"phase_early_crisis"
+
+[sub_resource type="Resource" id="Resource_vj5cs"]
+script = ExtResource("2_qlu0y")
+type = &"phase_is"
+target_id = &"phase_open_conflict"
+
+[sub_resource type="Resource" id="Resource_3bev6"]
+script = ExtResource("2_qlu0y")
+type = &"phase_is"
+target_id = &"phase_final_window"
+
+[sub_resource type="Resource" id="Resource_j6qjo"]
+script = ExtResource("1_nd3wt")
+id = &"availability_escort_field_healers_phase"
+any_conditions = Array[ExtResource("2_qlu0y")]([SubResource("Resource_3lsej"), SubResource("Resource_vj5cs"), SubResource("Resource_3bev6")])
+
+[sub_resource type="Resource" id="Resource_4o8o8"]
+script = ExtResource("3_frwbt")
+type = &"create_world_event"
+target_id = &"event_field_healers_delivered"
+reason_code = &"event_field_healers_delivered_exceptional"
+
+[sub_resource type="Resource" id="Resource_gymvk"]
+script = ExtResource("4_g165w")
+reward_multiplier = 1.25
+fatigue_multiplier = 0.9
+injury_risk_modifier = -10
+sponsor_relation_delta = 8
+campaign_effects = Array[ExtResource("3_frwbt")]([SubResource("Resource_4o8o8")])
+outcome_tags = Array[StringName]([&"contract.exceptional"])
+
+[sub_resource type="Resource" id="Resource_1bb6w"]
+script = ExtResource("4_g165w")
+reward_multiplier = 0.25
+fatigue_multiplier = 1.25
+injury_risk_modifier = 10
+sponsor_relation_delta = -4
+outcome_tags = Array[StringName]([&"contract.failure"])
+
+[sub_resource type="Resource" id="Resource_o886p"]
+script = ExtResource("4_g165w")
+reward_multiplier = 0.65
+fatigue_multiplier = 1.1
+sponsor_relation_delta = 1
+outcome_tags = Array[StringName]([&"contract.partial"])
+
+[sub_resource type="Resource" id="Resource_yt0jp"]
+script = ExtResource("4_g165w")
+reward_multiplier = 0.0
+fatigue_multiplier = 1.4
+injury_risk_modifier = 20
+sponsor_relation_delta = -8
+outcome_tags = Array[StringName]([&"contract.severe_failure"])
+
+[sub_resource type="Resource" id="Resource_fb2ia"]
+script = ExtResource("3_frwbt")
+type = &"create_world_event"
+target_id = &"event_field_healers_delivered"
+reason_code = &"event_field_healers_delivered_success"
+
+[sub_resource type="Resource" id="Resource_3ipee"]
+script = ExtResource("4_g165w")
+injury_risk_modifier = -5
+sponsor_relation_delta = 5
+campaign_effects = Array[ExtResource("3_frwbt")]([SubResource("Resource_fb2ia")])
+outcome_tags = Array[StringName]([&"contract.success"])
+
+[sub_resource type="Resource" id="Resource_u1w7j"]
+script = ExtResource("5_1namh")
+exceptional = SubResource("Resource_gymvk")
+success = SubResource("Resource_3ipee")
+partial = SubResource("Resource_o886p")
+failure = SubResource("Resource_1bb6w")
+severe = SubResource("Resource_yt0jp")
+
+[sub_resource type="Resource" id="Resource_spcx2"]
+script = ExtResource("7_m3d1m")
+protect_life = 4
+respect_authority = 1
+pursue_profit = -1
+taboo_tolerance = -2
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_0h1qi"]
+script = ExtResource("10_mgwll")
+frontline = 0.05
+scouting = 0.55
+support = 0.15
+discipline = 0.25
+
+[sub_resource type="Resource" id="Resource_6cruc"]
+script = ExtResource("12_6wdsb")
+key = &"route_safety"
+amount = 3
+source_id = &"healers_find_route"
+
+[sub_resource type="Resource" id="Resource_m3mkl"]
+script = ExtResource("12_6wdsb")
+key = &"intel"
+amount = 2
+source_id = &"healers_find_route"
+
+[sub_resource type="Resource" id="Resource_2s7jg"]
+script = ExtResource("12_6wdsb")
+key = &"alert_level"
+amount = -1
+source_id = &"healers_find_route"
+
+[sub_resource type="Resource" id="Resource_dnqn8"]
+script = ExtResource("7_m3d1m")
+protect_life = 4
+respect_authority = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_ea1nt"]
+script = ExtResource("14_8n5eq")
+context_deltas = Array[ExtResource("12_6wdsb")]([SubResource("Resource_6cruc"), SubResource("Resource_m3mkl"), SubResource("Resource_2s7jg")])
+ideology_impact = SubResource("Resource_dnqn8")
+outcome_tags = Array[StringName]([&"healers_find_route_exceptional"])
+
+[sub_resource type="Resource" id="Resource_kjqbq"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 2
+reason_code = &"healers_find_route_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_rn1w6"]
+script = ExtResource("12_6wdsb")
+key = &"alert_level"
+amount = 1
+source_id = &"healers_find_route"
+
+[sub_resource type="Resource" id="Resource_br52w"]
+script = ExtResource("12_6wdsb")
+key = &"time_pressure"
+amount = 2
+source_id = &"healers_find_route"
+
+[sub_resource type="Resource" id="Resource_2e73q"]
+script = ExtResource("7_m3d1m")
+protect_life = -3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_g24yd"]
+script = ExtResource("13_r5g73")
+type = &"injury_risk"
+amount = 8
+reason_code = &"healers_find_route_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_5tgky"]
+script = ExtResource("14_8n5eq")
+context_deltas = Array[ExtResource("12_6wdsb")]([SubResource("Resource_rn1w6"), SubResource("Resource_br52w")])
+member_effects = Array[ExtResource("13_r5g73")]([SubResource("Resource_g24yd")])
+campaign_effects = Array[ExtResource("3_frwbt")]([SubResource("Resource_kjqbq")])
+ideology_impact = SubResource("Resource_2e73q")
+outcome_tags = Array[StringName]([&"healers_find_route_failure"])
+
+[sub_resource type="Resource" id="Resource_dbewv"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 1
+reason_code = &"healers_find_route_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_gahck"]
+script = ExtResource("12_6wdsb")
+key = &"route_safety"
+amount = 1
+source_id = &"healers_find_route"
+
+[sub_resource type="Resource" id="Resource_oiuwn"]
+script = ExtResource("12_6wdsb")
+key = &"time_pressure"
+amount = 1
+source_id = &"healers_find_route"
+
+[sub_resource type="Resource" id="Resource_fctt1"]
+script = ExtResource("7_m3d1m")
+protect_life = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_6huh2"]
+script = ExtResource("13_r5g73")
+type = &"injury_risk"
+amount = 3
+reason_code = &"healers_find_route_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_lnkme"]
+script = ExtResource("14_8n5eq")
+context_deltas = Array[ExtResource("12_6wdsb")]([SubResource("Resource_gahck"), SubResource("Resource_oiuwn")])
+member_effects = Array[ExtResource("13_r5g73")]([SubResource("Resource_6huh2")])
+campaign_effects = Array[ExtResource("3_frwbt")]([SubResource("Resource_dbewv")])
+ideology_impact = SubResource("Resource_fctt1")
+outcome_tags = Array[StringName]([&"healers_find_route_partial"])
+
+[sub_resource type="Resource" id="Resource_vyd3u"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 3
+reason_code = &"healers_find_route_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_sfiiy"]
+script = ExtResource("12_6wdsb")
+key = &"alert_level"
+amount = 2
+source_id = &"healers_find_route"
+
+[sub_resource type="Resource" id="Resource_yrvaq"]
+script = ExtResource("12_6wdsb")
+key = &"enemy_pressure"
+amount = 2
+source_id = &"healers_find_route"
+
+[sub_resource type="Resource" id="Resource_og0ue"]
+script = ExtResource("7_m3d1m")
+protect_life = -5
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_k8kd1"]
+script = ExtResource("13_r5g73")
+type = &"injury_risk"
+amount = 15
+reason_code = &"healers_find_route_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_7e882"]
+script = ExtResource("14_8n5eq")
+context_deltas = Array[ExtResource("12_6wdsb")]([SubResource("Resource_sfiiy"), SubResource("Resource_yrvaq")])
+member_effects = Array[ExtResource("13_r5g73")]([SubResource("Resource_k8kd1")])
+campaign_effects = Array[ExtResource("3_frwbt")]([SubResource("Resource_vyd3u")])
+ideology_impact = SubResource("Resource_og0ue")
+outcome_tags = Array[StringName]([&"healers_find_route_severe"])
+
+[sub_resource type="Resource" id="Resource_fnc7k"]
+script = ExtResource("12_6wdsb")
+key = &"route_safety"
+amount = 2
+source_id = &"healers_find_route"
+
+[sub_resource type="Resource" id="Resource_tw61w"]
+script = ExtResource("12_6wdsb")
+key = &"intel"
+amount = 1
+source_id = &"healers_find_route"
+
+[sub_resource type="Resource" id="Resource_bhnm8"]
+script = ExtResource("7_m3d1m")
+protect_life = 3
+respect_authority = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_wfbwm"]
+script = ExtResource("14_8n5eq")
+context_deltas = Array[ExtResource("12_6wdsb")]([SubResource("Resource_fnc7k"), SubResource("Resource_tw61w")])
+ideology_impact = SubResource("Resource_bhnm8")
+outcome_tags = Array[StringName]([&"healers_find_route_success"])
+
+[sub_resource type="Resource" id="Resource_hulxv"]
+script = ExtResource("15_v2onf")
+exceptional = SubResource("Resource_ea1nt")
+success = SubResource("Resource_wfbwm")
+partial = SubResource("Resource_lnkme")
+failure = SubResource("Resource_5tgky")
+severe = SubResource("Resource_7e882")
+
+[sub_resource type="Resource" id="Resource_xgbl4"]
+script = ExtResource("16_hjkcr")
+id = &"healers_find_route"
+check_type = &"navigation"
+capability_weights = SubResource("Resource_0h1qi")
+difficulty = 21
+result_weight = 0.15
+failure_result_cap = &"partial"
+method_tags = Array[StringName]([&"scouting", &"medical"])
+approach_profile = &"careful"
+outcome_table = SubResource("Resource_hulxv")
+
+[sub_resource type="Resource" id="Resource_5nvsk"]
+script = ExtResource("9_s5t7c")
+id = &"escort_field_healers_stage_approach"
+phase = &"approach"
+check = SubResource("Resource_xgbl4")
+
+[sub_resource type="Resource" id="Resource_rcnot"]
+script = ExtResource("10_mgwll")
+frontline = 0.45
+offense = 0.05
+scouting = 0.05
+support = 0.25
+discipline = 0.2
+
+[sub_resource type="Resource" id="Resource_7ut84"]
+script = ExtResource("11_o5jpw")
+condition_type = &"context_gte"
+operand = &"intel"
+threshold = 1
+amount = 2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_pblsv"]
+script = ExtResource("11_o5jpw")
+condition_type = &"context_gte"
+operand = &"alert_level"
+threshold = 1
+amount = -2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_08dqa"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 3
+reason_code = &"healers_guard_column_exceptional_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_ngacv"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = -2
+reason_code = &"healers_guard_column_exceptional_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_s3ktt"]
+script = ExtResource("12_6wdsb")
+key = &"enemy_pressure"
+amount = -2
+source_id = &"healers_guard_column"
+
+[sub_resource type="Resource" id="Resource_gtfie"]
+script = ExtResource("7_m3d1m")
+protect_life = 4
+respect_authority = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_llh0p"]
+script = ExtResource("14_8n5eq")
+context_deltas = Array[ExtResource("12_6wdsb")]([SubResource("Resource_s3ktt")])
+campaign_effects = Array[ExtResource("3_frwbt")]([SubResource("Resource_08dqa"), SubResource("Resource_ngacv")])
+ideology_impact = SubResource("Resource_gtfie")
+outcome_tags = Array[StringName]([&"healers_guard_column_exceptional", &"healers_safe"])
+
+[sub_resource type="Resource" id="Resource_bychb"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 1
+reason_code = &"healers_guard_column_failure_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_pmcv5"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 5
+reason_code = &"healers_guard_column_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_jvrev"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 3
+reason_code = &"healers_guard_column_failure_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_1y6fg"]
+script = ExtResource("12_6wdsb")
+key = &"team_strain"
+amount = 2
+source_id = &"healers_guard_column"
+
+[sub_resource type="Resource" id="Resource_7u0rp"]
+script = ExtResource("12_6wdsb")
+key = &"collateral_pressure"
+amount = 2
+source_id = &"healers_guard_column"
+
+[sub_resource type="Resource" id="Resource_5hjwm"]
+script = ExtResource("7_m3d1m")
+protect_life = -3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_gwhhi"]
+script = ExtResource("13_r5g73")
+type = &"injury_risk"
+amount = 15
+reason_code = &"healers_guard_column_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_yxl36"]
+script = ExtResource("14_8n5eq")
+context_deltas = Array[ExtResource("12_6wdsb")]([SubResource("Resource_1y6fg"), SubResource("Resource_7u0rp")])
+member_effects = Array[ExtResource("13_r5g73")]([SubResource("Resource_gwhhi")])
+campaign_effects = Array[ExtResource("3_frwbt")]([SubResource("Resource_bychb"), SubResource("Resource_pmcv5"), SubResource("Resource_jvrev")])
+ideology_impact = SubResource("Resource_5hjwm")
+outcome_tags = Array[StringName]([&"healers_guard_column_failure"])
+
+[sub_resource type="Resource" id="Resource_w0amr"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 2
+reason_code = &"healers_guard_column_partial_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_na1wq"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 3
+reason_code = &"healers_guard_column_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_g3mi2"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 1
+reason_code = &"healers_guard_column_partial_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_6typh"]
+script = ExtResource("12_6wdsb")
+key = &"team_strain"
+amount = 1
+source_id = &"healers_guard_column"
+
+[sub_resource type="Resource" id="Resource_5pofv"]
+script = ExtResource("12_6wdsb")
+key = &"collateral_pressure"
+amount = 1
+source_id = &"healers_guard_column"
+
+[sub_resource type="Resource" id="Resource_e6mq7"]
+script = ExtResource("7_m3d1m")
+protect_life = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_werex"]
+script = ExtResource("13_r5g73")
+type = &"injury_risk"
+amount = 8
+reason_code = &"healers_guard_column_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_k3ayy"]
+script = ExtResource("14_8n5eq")
+context_deltas = Array[ExtResource("12_6wdsb")]([SubResource("Resource_6typh"), SubResource("Resource_5pofv")])
+member_effects = Array[ExtResource("13_r5g73")]([SubResource("Resource_werex")])
+campaign_effects = Array[ExtResource("3_frwbt")]([SubResource("Resource_w0amr"), SubResource("Resource_na1wq"), SubResource("Resource_g3mi2")])
+ideology_impact = SubResource("Resource_e6mq7")
+outcome_tags = Array[StringName]([&"healers_guard_column_partial"])
+
+[sub_resource type="Resource" id="Resource_qvm8r"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 6
+reason_code = &"healers_guard_column_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_qhhwa"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 4
+reason_code = &"healers_guard_column_severe_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_rg1uh"]
+script = ExtResource("12_6wdsb")
+key = &"team_strain"
+amount = 3
+source_id = &"healers_guard_column"
+
+[sub_resource type="Resource" id="Resource_btyml"]
+script = ExtResource("12_6wdsb")
+key = &"collateral_pressure"
+amount = 3
+source_id = &"healers_guard_column"
+
+[sub_resource type="Resource" id="Resource_0jjj3"]
+script = ExtResource("12_6wdsb")
+key = &"extraction_pressure"
+amount = 1
+source_id = &"healers_guard_column"
+
+[sub_resource type="Resource" id="Resource_anjmx"]
+script = ExtResource("7_m3d1m")
+protect_life = -5
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_b3jb7"]
+script = ExtResource("13_r5g73")
+type = &"injury_risk"
+amount = 25
+reason_code = &"healers_guard_column_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_f1bih"]
+script = ExtResource("14_8n5eq")
+context_deltas = Array[ExtResource("12_6wdsb")]([SubResource("Resource_rg1uh"), SubResource("Resource_btyml"), SubResource("Resource_0jjj3")])
+member_effects = Array[ExtResource("13_r5g73")]([SubResource("Resource_b3jb7")])
+campaign_effects = Array[ExtResource("3_frwbt")]([SubResource("Resource_qvm8r"), SubResource("Resource_qhhwa")])
+ideology_impact = SubResource("Resource_anjmx")
+outcome_tags = Array[StringName]([&"healers_guard_column_severe"])
+
+[sub_resource type="Resource" id="Resource_584yu"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 2
+reason_code = &"healers_guard_column_success_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_jpdmd"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 1
+reason_code = &"healers_guard_column_success_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_hg558"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = -1
+reason_code = &"healers_guard_column_success_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_cjh7e"]
+script = ExtResource("12_6wdsb")
+key = &"enemy_pressure"
+amount = -1
+source_id = &"healers_guard_column"
+
+[sub_resource type="Resource" id="Resource_wg4ou"]
+script = ExtResource("7_m3d1m")
+protect_life = 3
+respect_authority = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_pokpu"]
+script = ExtResource("13_r5g73")
+type = &"injury_risk"
+amount = 3
+reason_code = &"healers_guard_column_success_injury_risk"
+
+[sub_resource type="Resource" id="Resource_1wljt"]
+script = ExtResource("14_8n5eq")
+context_deltas = Array[ExtResource("12_6wdsb")]([SubResource("Resource_cjh7e")])
+member_effects = Array[ExtResource("13_r5g73")]([SubResource("Resource_pokpu")])
+campaign_effects = Array[ExtResource("3_frwbt")]([SubResource("Resource_584yu"), SubResource("Resource_jpdmd"), SubResource("Resource_hg558")])
+ideology_impact = SubResource("Resource_wg4ou")
+outcome_tags = Array[StringName]([&"healers_guard_column_success", &"healers_safe"])
+
+[sub_resource type="Resource" id="Resource_av1ec"]
+script = ExtResource("15_v2onf")
+exceptional = SubResource("Resource_llh0p")
+success = SubResource("Resource_1wljt")
+partial = SubResource("Resource_k3ayy")
+failure = SubResource("Resource_yxl36")
+severe = SubResource("Resource_f1bih")
+
+[sub_resource type="Resource" id="Resource_1sno6"]
+script = ExtResource("16_hjkcr")
+id = &"healers_guard_column"
+check_type = &"protection"
+capability_weights = SubResource("Resource_rcnot")
+difficulty = 27
+result_weight = 0.3
+failure_result_cap = &"partial"
+method_tags = Array[StringName]([&"protection", &"medical"])
+context_modifiers = Array[ExtResource("11_o5jpw")]([SubResource("Resource_7ut84"), SubResource("Resource_pblsv")])
+approach_profile = &"careful"
+outcome_table = SubResource("Resource_av1ec")
+
+[sub_resource type="Resource" id="Resource_hngy6"]
+script = ExtResource("9_s5t7c")
+id = &"escort_field_healers_stage_main_action"
+phase = &"main_action"
+check = SubResource("Resource_1sno6")
+
+[sub_resource type="Resource" id="Resource_rlx55"]
+script = ExtResource("10_mgwll")
+frontline = 0.05
+offense = 0.05
+scouting = 0.15
+support = 0.3
+arcana = 0.25
+discipline = 0.2
+
+[sub_resource type="Resource" id="Resource_eu25r"]
+script = ExtResource("11_o5jpw")
+condition_type = &"context_gte"
+operand = &"intel"
+threshold = 1
+amount = 1
+per_context_point = true
+maximum_absolute_amount = 4
+
+[sub_resource type="Resource" id="Resource_v3h54"]
+script = ExtResource("11_o5jpw")
+condition_type = &"context_gte"
+operand = &"team_strain"
+threshold = 1
+amount = -2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_g2sm2"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 3
+reason_code = &"healers_recover_crates_exceptional_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_vr04s"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = -3
+reason_code = &"healers_recover_crates_exceptional_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_spuc3"]
+script = ExtResource("12_6wdsb")
+key = &"collected_resources"
+amount = 4
+source_id = &"healers_recover_crates"
+
+[sub_resource type="Resource" id="Resource_7fm8r"]
+script = ExtResource("7_m3d1m")
+protect_life = 4
+respect_authority = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_34mvi"]
+script = ExtResource("14_8n5eq")
+context_deltas = Array[ExtResource("12_6wdsb")]([SubResource("Resource_spuc3")])
+campaign_effects = Array[ExtResource("3_frwbt")]([SubResource("Resource_g2sm2"), SubResource("Resource_vr04s")])
+ideology_impact = SubResource("Resource_7fm8r")
+outcome_tags = Array[StringName]([&"healers_recover_crates_exceptional"])
+
+[sub_resource type="Resource" id="Resource_yx4fb"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 3
+reason_code = &"healers_recover_crates_failure_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_vba68"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 3
+reason_code = &"healers_recover_crates_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_47oxp"]
+script = ExtResource("12_6wdsb")
+key = &"collected_resources"
+amount = 1
+source_id = &"healers_recover_crates"
+
+[sub_resource type="Resource" id="Resource_e81uh"]
+script = ExtResource("12_6wdsb")
+key = &"alert_level"
+amount = 2
+source_id = &"healers_recover_crates"
+
+[sub_resource type="Resource" id="Resource_8s0ix"]
+script = ExtResource("7_m3d1m")
+protect_life = -3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_cp3cq"]
+script = ExtResource("13_r5g73")
+type = &"injury_risk"
+amount = 15
+reason_code = &"healers_recover_crates_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_usap0"]
+script = ExtResource("14_8n5eq")
+context_deltas = Array[ExtResource("12_6wdsb")]([SubResource("Resource_47oxp"), SubResource("Resource_e81uh")])
+member_effects = Array[ExtResource("13_r5g73")]([SubResource("Resource_cp3cq")])
+campaign_effects = Array[ExtResource("3_frwbt")]([SubResource("Resource_yx4fb"), SubResource("Resource_vba68")])
+ideology_impact = SubResource("Resource_8s0ix")
+outcome_tags = Array[StringName]([&"healers_recover_crates_failure"])
+
+[sub_resource type="Resource" id="Resource_tiiew"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 1
+reason_code = &"healers_recover_crates_partial_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_eepyp"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 1
+reason_code = &"healers_recover_crates_partial_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_6l0xm"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 2
+reason_code = &"healers_recover_crates_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_o8hsm"]
+script = ExtResource("12_6wdsb")
+key = &"collected_resources"
+amount = 2
+source_id = &"healers_recover_crates"
+
+[sub_resource type="Resource" id="Resource_7l3dw"]
+script = ExtResource("12_6wdsb")
+key = &"time_pressure"
+amount = 1
+source_id = &"healers_recover_crates"
+
+[sub_resource type="Resource" id="Resource_iwv6p"]
+script = ExtResource("7_m3d1m")
+protect_life = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_thc47"]
+script = ExtResource("13_r5g73")
+type = &"injury_risk"
+amount = 8
+reason_code = &"healers_recover_crates_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_x6iqr"]
+script = ExtResource("14_8n5eq")
+context_deltas = Array[ExtResource("12_6wdsb")]([SubResource("Resource_o8hsm"), SubResource("Resource_7l3dw")])
+member_effects = Array[ExtResource("13_r5g73")]([SubResource("Resource_thc47")])
+campaign_effects = Array[ExtResource("3_frwbt")]([SubResource("Resource_tiiew"), SubResource("Resource_eepyp"), SubResource("Resource_6l0xm")])
+ideology_impact = SubResource("Resource_iwv6p")
+outcome_tags = Array[StringName]([&"healers_recover_crates_partial"])
+
+[sub_resource type="Resource" id="Resource_kq6pe"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 4
+reason_code = &"healers_recover_crates_severe_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_bcyta"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 4
+reason_code = &"healers_recover_crates_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_c82u8"]
+script = ExtResource("12_6wdsb")
+key = &"alert_level"
+amount = 3
+source_id = &"healers_recover_crates"
+
+[sub_resource type="Resource" id="Resource_15hke"]
+script = ExtResource("12_6wdsb")
+key = &"extraction_pressure"
+amount = 2
+source_id = &"healers_recover_crates"
+
+[sub_resource type="Resource" id="Resource_mnbh2"]
+script = ExtResource("7_m3d1m")
+protect_life = -5
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_eovol"]
+script = ExtResource("13_r5g73")
+type = &"injury_risk"
+amount = 25
+reason_code = &"healers_recover_crates_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_6uvu1"]
+script = ExtResource("14_8n5eq")
+context_deltas = Array[ExtResource("12_6wdsb")]([SubResource("Resource_c82u8"), SubResource("Resource_15hke")])
+member_effects = Array[ExtResource("13_r5g73")]([SubResource("Resource_eovol")])
+campaign_effects = Array[ExtResource("3_frwbt")]([SubResource("Resource_kq6pe"), SubResource("Resource_bcyta")])
+ideology_impact = SubResource("Resource_mnbh2")
+outcome_tags = Array[StringName]([&"healers_recover_crates_severe"])
+
+[sub_resource type="Resource" id="Resource_g8ibv"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 2
+reason_code = &"healers_recover_crates_success_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_2eyrr"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = -2
+reason_code = &"healers_recover_crates_success_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_tsatx"]
+script = ExtResource("12_6wdsb")
+key = &"collected_resources"
+amount = 3
+source_id = &"healers_recover_crates"
+
+[sub_resource type="Resource" id="Resource_efo64"]
+script = ExtResource("7_m3d1m")
+protect_life = 3
+respect_authority = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_6e5h3"]
+script = ExtResource("13_r5g73")
+type = &"injury_risk"
+amount = 3
+reason_code = &"healers_recover_crates_success_injury_risk"
+
+[sub_resource type="Resource" id="Resource_6usoo"]
+script = ExtResource("14_8n5eq")
+context_deltas = Array[ExtResource("12_6wdsb")]([SubResource("Resource_tsatx")])
+member_effects = Array[ExtResource("13_r5g73")]([SubResource("Resource_6e5h3")])
+campaign_effects = Array[ExtResource("3_frwbt")]([SubResource("Resource_g8ibv"), SubResource("Resource_2eyrr")])
+ideology_impact = SubResource("Resource_efo64")
+outcome_tags = Array[StringName]([&"healers_recover_crates_success"])
+
+[sub_resource type="Resource" id="Resource_gspqi"]
+script = ExtResource("15_v2onf")
+exceptional = SubResource("Resource_34mvi")
+success = SubResource("Resource_6usoo")
+partial = SubResource("Resource_x6iqr")
+failure = SubResource("Resource_usap0")
+severe = SubResource("Resource_6uvu1")
+
+[sub_resource type="Resource" id="Resource_61tli"]
+script = ExtResource("16_hjkcr")
+id = &"healers_recover_crates"
+check_type = &"salvage"
+capability_weights = SubResource("Resource_rlx55")
+difficulty = 24
+result_weight = 0.3
+failure_result_cap = &"partial"
+method_tags = Array[StringName]([&"medical", &"research"])
+context_modifiers = Array[ExtResource("11_o5jpw")]([SubResource("Resource_eu25r"), SubResource("Resource_v3h54")])
+outcome_table = SubResource("Resource_gspqi")
+
+[sub_resource type="Resource" id="Resource_2bjow"]
+script = ExtResource("9_s5t7c")
+id = &"escort_field_healers_stage_special_objective"
+phase = &"special_objective"
+check = SubResource("Resource_61tli")
+
+[sub_resource type="Resource" id="Resource_oh8ni"]
+script = ExtResource("10_mgwll")
+frontline = 0.15
+scouting = 0.3
+support = 0.25
+arcana = 0.05
+discipline = 0.25
+
+[sub_resource type="Resource" id="Resource_c68fs"]
+script = ExtResource("11_o5jpw")
+condition_type = &"context_gte"
+operand = &"route_safety"
+threshold = 1
+amount = 2
+per_context_point = true
+maximum_absolute_amount = 6
+
+[sub_resource type="Resource" id="Resource_rgnva"]
+script = ExtResource("11_o5jpw")
+condition_type = &"context_gte"
+operand = &"alert_level"
+threshold = 1
+amount = -3
+per_context_point = true
+maximum_absolute_amount = 9
+
+[sub_resource type="Resource" id="Resource_p4js4"]
+script = ExtResource("11_o5jpw")
+condition_type = &"context_gte"
+operand = &"extraction_pressure"
+threshold = 1
+amount = -3
+per_context_point = true
+maximum_absolute_amount = 9
+
+[sub_resource type="Resource" id="Resource_h34pq"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 5
+reason_code = &"healers_deliver_camp_exceptional_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_og1hd"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = -2
+reason_code = &"healers_deliver_camp_exceptional_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_t44qn"]
+script = ExtResource("7_m3d1m")
+protect_life = 4
+respect_authority = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_ld1oy"]
+script = ExtResource("14_8n5eq")
+campaign_effects = Array[ExtResource("3_frwbt")]([SubResource("Resource_h34pq"), SubResource("Resource_og1hd")])
+ideology_impact = SubResource("Resource_t44qn")
+outcome_tags = Array[StringName]([&"healers_deliver_camp_exceptional", &"medical_supplies_delivered"])
+
+[sub_resource type="Resource" id="Resource_ca7ki"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 1
+reason_code = &"healers_deliver_camp_failure_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_c03f8"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 4
+reason_code = &"healers_deliver_camp_failure_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_kea52"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 2
+reason_code = &"healers_deliver_camp_failure_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_2o7l7"]
+script = ExtResource("7_m3d1m")
+protect_life = -3
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_4hqam"]
+script = ExtResource("13_r5g73")
+type = &"injury_risk"
+amount = 18
+reason_code = &"healers_deliver_camp_failure_injury_risk"
+
+[sub_resource type="Resource" id="Resource_nt4q4"]
+script = ExtResource("14_8n5eq")
+member_effects = Array[ExtResource("13_r5g73")]([SubResource("Resource_4hqam")])
+campaign_effects = Array[ExtResource("3_frwbt")]([SubResource("Resource_ca7ki"), SubResource("Resource_c03f8"), SubResource("Resource_kea52")])
+ideology_impact = SubResource("Resource_2o7l7")
+outcome_tags = Array[StringName]([&"healers_deliver_camp_failure"])
+
+[sub_resource type="Resource" id="Resource_mu25g"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 3
+reason_code = &"healers_deliver_camp_partial_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_egxmc"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 3
+reason_code = &"healers_deliver_camp_partial_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_l5t1q"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 1
+reason_code = &"healers_deliver_camp_partial_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_suoyj"]
+script = ExtResource("7_m3d1m")
+protect_life = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_beqvv"]
+script = ExtResource("13_r5g73")
+type = &"injury_risk"
+amount = 8
+reason_code = &"healers_deliver_camp_partial_injury_risk"
+
+[sub_resource type="Resource" id="Resource_86rnb"]
+script = ExtResource("14_8n5eq")
+member_effects = Array[ExtResource("13_r5g73")]([SubResource("Resource_beqvv")])
+campaign_effects = Array[ExtResource("3_frwbt")]([SubResource("Resource_mu25g"), SubResource("Resource_egxmc"), SubResource("Resource_l5t1q")])
+ideology_impact = SubResource("Resource_suoyj")
+outcome_tags = Array[StringName]([&"healers_deliver_camp_partial", &"medical_supplies_delivered"])
+
+[sub_resource type="Resource" id="Resource_xdg21"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 5
+reason_code = &"healers_deliver_camp_severe_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_gf4gd"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = 3
+reason_code = &"healers_deliver_camp_severe_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_rttsy"]
+script = ExtResource("7_m3d1m")
+protect_life = -5
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_u2ex6"]
+script = ExtResource("13_r5g73")
+type = &"injury_risk"
+amount = 30
+reason_code = &"healers_deliver_camp_severe_injury_risk"
+
+[sub_resource type="Resource" id="Resource_qxfc6"]
+script = ExtResource("14_8n5eq")
+member_effects = Array[ExtResource("13_r5g73")]([SubResource("Resource_u2ex6")])
+campaign_effects = Array[ExtResource("3_frwbt")]([SubResource("Resource_xdg21"), SubResource("Resource_gf4gd")])
+ideology_impact = SubResource("Resource_rttsy")
+outcome_tags = Array[StringName]([&"healers_deliver_camp_severe"])
+
+[sub_resource type="Resource" id="Resource_f5san"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"villagers_evacuated"
+amount = 4
+reason_code = &"healers_deliver_camp_success_villagers_evacuated"
+
+[sub_resource type="Resource" id="Resource_805ln"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"settlement_destruction"
+amount = 1
+reason_code = &"healers_deliver_camp_success_settlement_destruction"
+
+[sub_resource type="Resource" id="Resource_w83m1"]
+script = ExtResource("3_frwbt")
+type = &"modify_clock"
+target_id = &"necrotic_corruption"
+amount = -1
+reason_code = &"healers_deliver_camp_success_necrotic_corruption"
+
+[sub_resource type="Resource" id="Resource_lr6g7"]
+script = ExtResource("7_m3d1m")
+protect_life = 3
+respect_authority = 1
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_v62x7"]
+script = ExtResource("13_r5g73")
+type = &"injury_risk"
+amount = 3
+reason_code = &"healers_deliver_camp_success_injury_risk"
+
+[sub_resource type="Resource" id="Resource_ak0kf"]
+script = ExtResource("14_8n5eq")
+member_effects = Array[ExtResource("13_r5g73")]([SubResource("Resource_v62x7")])
+campaign_effects = Array[ExtResource("3_frwbt")]([SubResource("Resource_f5san"), SubResource("Resource_805ln"), SubResource("Resource_w83m1")])
+ideology_impact = SubResource("Resource_lr6g7")
+outcome_tags = Array[StringName]([&"healers_deliver_camp_success", &"medical_supplies_delivered"])
+
+[sub_resource type="Resource" id="Resource_1c2t6"]
+script = ExtResource("15_v2onf")
+exceptional = SubResource("Resource_ld1oy")
+success = SubResource("Resource_ak0kf")
+partial = SubResource("Resource_86rnb")
+failure = SubResource("Resource_nt4q4")
+severe = SubResource("Resource_qxfc6")
+
+[sub_resource type="Resource" id="Resource_tuat5"]
+script = ExtResource("16_hjkcr")
+id = &"healers_deliver_camp"
+check_type = &"extraction"
+capability_weights = SubResource("Resource_oh8ni")
+difficulty = 26
+failure_result_cap = &"failure"
+method_tags = Array[StringName]([&"extraction", &"medical"])
+context_modifiers = Array[ExtResource("11_o5jpw")]([SubResource("Resource_c68fs"), SubResource("Resource_rgnva"), SubResource("Resource_p4js4")])
+approach_profile = &"careful"
+outcome_table = SubResource("Resource_1c2t6")
+
+[sub_resource type="Resource" id="Resource_0g7ig"]
+script = ExtResource("9_s5t7c")
+id = &"escort_field_healers_stage_extraction"
+phase = &"extraction"
+check = SubResource("Resource_tuat5")
+
+[resource]
+script = ExtResource("8_yhx3l")
+id = &"contract_escort_field_healers"
+title_key = &"contract.contract_escort_field_healers.title"
+description_key = &"contract.contract_escort_field_healers.description"
+sponsor_faction_id = &"faction_free_adventurers"
+related_problem_id = &"problem_field_medical_collapse"
+target_lock_key = &"field_hospital.escort_healers"
+target_problem_tags = Array[StringName]([&"field_medical"])
+agenda_tags = Array[StringName]([&"rescue", &"protection"])
+allow_agenda_origin = true
+starts_unlocked = false
+proposal_base_priority = 14
+urgency_weight = 30
+recent_repeat_cooldown = 2
+base_reward = 210
+base_fatigue = 10
+risk_level = 2
+offer_duration_weeks = 2
+intent_ideology_vector = SubResource("Resource_spcx2")
+expected_method_tags = Array[StringName]([&"scouting", &"medical", &"protection", &"research", &"extraction"])
+stages = Array[ExtResource("9_s5t7c")]([SubResource("Resource_5nvsk"), SubResource("Resource_hngy6"), SubResource("Resource_2bjow"), SubResource("Resource_0g7ig")])
+clause_ids = Array[StringName]([&"healers_keep_team_alive", &"healers_deliver_supplies", &"healers_preserve_guild_medicine"])
+allowed_supply_tags = Array[StringName]([&"scouting", &"protection", &"medical", &"rations"])
+final_outcome_table = SubResource("Resource_u1w7j")
+availability_rules = Array[ExtResource("1_nd3wt")]([SubResource("Resource_j6qjo")])
+unhandled_policy = &"escalate"

@@ -1,0 +1,51 @@
+[gd_resource type="Resource" script_class="ContractClauseDefinitionResource" format=3]
+
+[ext_resource type="Script" path="res://game/data/definitions/contracts/trace_condition_resource.gd" id="1_n0uc5"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_effect_resource.gd" id="2_2duw4"]
+[ext_resource type="Script" path="res://game/data/definitions/adventurers/ideology_vector_resource.gd" id="3_bo42i"]
+[ext_resource type="Script" path="res://game/data/definitions/contracts/contract_clause_definition_resource.gd" id="4_gog40"]
+
+[sub_resource type="Resource" id="Resource_0ks82"]
+script = ExtResource("1_n0uc5")
+type = &"context_gte"
+key = &"collected_resources"
+int_value = 4
+
+[sub_resource type="Resource" id="Resource_db2qd"]
+script = ExtResource("1_n0uc5")
+type = &"outcome_tag_present"
+tag_value = &"remains_stable"
+
+[sub_resource type="Resource" id="Resource_vy0h0"]
+script = ExtResource("3_bo42i")
+task_accumulation = true
+
+[sub_resource type="Resource" id="Resource_xkv5k"]
+script = ExtResource("2_2duw4")
+type = &"modify_reward_percent"
+amount = 20
+reason_code = &"clause_corpse_residue_reward"
+
+[sub_resource type="Resource" id="Resource_242sb"]
+script = ExtResource("2_2duw4")
+type = &"modify_sponsor_relation"
+amount = 2
+reason_code = &"clause_corpse_residue_relation"
+
+[sub_resource type="Resource" id="Resource_54l86"]
+script = ExtResource("3_bo42i")
+seek_knowledge = 1
+task_accumulation = true
+
+[resource]
+script = ExtResource("4_gog40")
+id = &"corpse_arcane_residue"
+display_name_key = &"clause.corpse_arcane_residue.name"
+description_key = &"clause.corpse_arcane_residue.description"
+category = &"delivery"
+importance = &"bonus"
+all_conditions = Array[ExtResource("1_n0uc5")]([SubResource("Resource_0ks82"), SubResource("Resource_db2qd")])
+success_effects = Array[ExtResource("2_2duw4")]([SubResource("Resource_xkv5k"), SubResource("Resource_242sb")])
+success_ideology_impact = SubResource("Resource_54l86")
+failure_ideology_impact = SubResource("Resource_vy0h0")
+priority = 30
